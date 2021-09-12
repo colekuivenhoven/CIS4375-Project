@@ -1,0 +1,8 @@
+// Add all to local repo
+git add .
+
+// Commit local repo with message
+git commit -m "Update 2 8/15/21"
+
+// Push to remote repo
+git push -u origin master

@@ -1,0 +1,29 @@
+@font-face {
+    font-family: 'Round';
+    src: local('Round'), url('../fonts/VarelaRound-Regular.ttf');
+}
+
+.container-home {
+    background-color: rgb(255, 245, 232);
+    box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
+    width: 100vw;
+    top: 5vmin;
+    bottom: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 2vmin;
+    animation: home-background-animation 0.75s linear forwards;
+}
+
+/* Animations */
+@keyframes home-background-animation {
+    0% {
+        background-color: rgb(255, 255, 255);
+    }
+    100% {
+        background-color: rgb(255, 245, 232);
+    }
+}
