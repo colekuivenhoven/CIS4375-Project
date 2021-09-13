@@ -35,6 +35,15 @@
     color: rgba(255,255,255,1);
 }
 
+.row-container {
+    background-color: rgba(0,255,0,0.0);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .test-container {
     background-color: white;
     border-radius: 1vmin;
