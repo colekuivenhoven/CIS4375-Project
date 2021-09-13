@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Minor notes update"
+git commit -m "Chart Examples Added"
 
 // Push to remote repo
 git push -u origin master

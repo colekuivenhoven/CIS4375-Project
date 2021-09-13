@@ -98,7 +98,7 @@ function AdminHome() {
             <V.VictoryChart
                 theme={V.VictoryTheme.material}
                 domainPadding={30}
-                animate={{duration: 400}}
+                animate={{duration: 400, onLoad: {duration: 100}}}
                 events={[
                     {
                         target: "data",
@@ -153,7 +153,7 @@ function AdminHome() {
             <V.VictoryChart
                 theme={V.VictoryTheme.material}
                 domainPadding={30}
-                animate={{duration: 400}}
+                animate={{duration: 400, onLoad: {duration: 200}}}
             >
                 <V.VictoryAxis
                     tickValues={[1, 2, 3, 4]}
