@@ -2,7 +2,10 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Update 2 8/15/21"
+git commit -m "Minor notes update"
 
 // Push to remote repo
 git push -u origin master
+
+// Pull changes
+git pull
