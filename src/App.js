@@ -86,6 +86,7 @@ function App() {
             ></div>
           </div>
           <div className="menu-modal-window-body">
+            {/* Visible link elements to different pages */}
             <Link className="route-link-menu" to="/" onClick={() => {handleMenuButton()}}>🏡 Home</Link>
             <Link className="route-link-menu" to="/about" onClick={() => {handleMenuButton()}}>❓ About</Link>
             <Link className="route-link-menu" to="/contact" onClick={() => {handleMenuButton()}}>📞 Contact</Link>
