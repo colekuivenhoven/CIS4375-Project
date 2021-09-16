@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Needed pages added, menu changed, and text messaging test system added"
+git commit -m "Tweaked Modal"
 
 // Push to remote repo
 git push -u origin master

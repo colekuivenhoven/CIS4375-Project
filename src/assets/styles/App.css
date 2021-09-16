@@ -215,24 +215,26 @@
 
 .menu-modal-window.active {
     position: absolute;
-    top: 1vmin;
-    bottom: 1vmin;
+    top: 0vmin;
+    bottom: 0vmin;
     right: 0;
     width: 45vmin;
     background-color: rgba(245,245,245,1);
     border-radius: 1vmin 0 0 1vmin;
+    box-shadow: -8px 0px 18px 2px rgba(0,0,0,0.1);
 
     transition: all 0.3s cubic-bezier(.68,.2,.29,1.3);
 }
 
 .menu-modal-window {
     position: absolute;
-    top: 1vmin;
-    bottom: 1vmin;
+    top: 0vmin;
+    bottom: 0vmin;
     right: 0;
     width: 0vmin;
     background-color: rgba(255,255,255,1);
     border-radius: 1vmin 0 0 1vmin;
+    box-shadow: -8px 0px 18px 2px rgba(0,0,0,0.1);
 
     transition: all 0.3s cubic-bezier(.68,.2,.29,1.3);
 }
