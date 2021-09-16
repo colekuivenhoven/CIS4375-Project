@@ -1,0 +1,129 @@
+@font-face {
+    font-family: 'Round';
+    src: local('Round'), url('../fonts/VarelaRound-Regular.ttf');
+}
+
+.container-test {
+    box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
+    width: 100vw;
+    top: 5vmin;
+    bottom: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 2vmin;
+    animation: test-background-animation 0.75s linear forwards;
+}
+
+.test-form-container {
+    width: 80vmin;
+    height: 90%;
+    margin-top: 1vmin;
+    border-radius: 1vmin;
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.test-text-container {
+    width: 60%;
+    height: 25vmin;
+    margin-top: 1vmin;
+    border-radius: 1vmin;
+    background-color: rgba(255,255,255,1);
+    border: 2px solid rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.test-input-container {
+    width: 60%;
+    height: 5vmin;
+    margin-top: 1vmin;
+    border-radius: 0.5vmin;
+    background-color: rgb(219, 245, 255);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 1vmin;
+    font-family: Round;
+}
+
+.test-input-phone {
+    width: 100%;
+    text-decoration: none;
+    outline: none;
+    border: 0;
+}
+
+.test-input-content {
+    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+    text-decoration: none;
+    outline: none;
+    border: 0;
+}
+
+.test-text-submit {
+    width: 20%;
+    height: 2vmin;
+    margin-top: 1vmin;
+    border-radius: 0.5vmin;
+    background-color: rgb(219, 245, 255);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1vmin;
+    font-family: Round;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.15s linear;
+}
+
+.test-text-submit:hover {
+    background-color: rgb(172, 231, 255);
+}
+
+.test-text-modal.active {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.2);
+    backdrop-filter: blur(5px);
+    pointer-events: auto;
+    transition: all 0.15s linear;
+}
+
+.test-text-modal {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0,0,0,0.0);
+    backdrop-filter: blur(0px);
+    pointer-events: none;
+    transition: all 0.15s linear;
+}
+
+/* Animations */
+@keyframes test-background-animation {
+    0% {
+        background-color: rgb(255, 255, 255);
+    }
+    100% {
+        background-color: rgb(240, 240, 240);
+    }
+}

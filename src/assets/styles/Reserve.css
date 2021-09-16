@@ -3,7 +3,7 @@
     src: local('Round'), url('../fonts/VarelaRound-Regular.ttf');
 }
 
-.container-account {
+.container-reserve {
     box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
     width: 100vw;
     top: 5vmin;
@@ -14,15 +14,24 @@
     justify-content: flex-start;
     align-items: center;
     padding-top: 2vmin;
-    animation: account-background-animation 0.75s linear forwards;
+    animation: reserve-background-animation 0.75s linear forwards;
+}
+
+.reserve-form-container {
+    width: 80vmin;
+    height: 90%;
+    margin-top: 1vmin;
+    border-radius: 1vmin;
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.05);
 }
 
 /* Animations */
-@keyframes account-background-animation {
+@keyframes reserve-background-animation {
     0% {
         background-color: rgb(255, 255, 255);
     }
     100% {
-        background-color: rgb(223, 241, 255);
+        background-color: rgb(240, 240, 240);
     }
 }
