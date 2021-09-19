@@ -26,7 +26,7 @@ function Reserve(props) {
             mainContainer.style.top = "15vmin"
 
             fontLarge.forEach(el => {
-                el.style.fontSize = "10vmin"
+                el.style.fontSize = "8vmin"
             });
 
             fontMed.forEach(el => {
@@ -64,7 +64,7 @@ function Reserve(props) {
                 {/* Variables can be inserted inside of brackets as shown below */}
                 <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
                 <div className="reserve-form-container">
-
+                    
                 </div>
             </div>
         </>

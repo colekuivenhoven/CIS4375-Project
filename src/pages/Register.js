@@ -1,6 +1,6 @@
 // All imports must be done before the main function
     // Importing this page's CSS file
-import '../assets/styles/Login.css';
+import '../assets/styles/Register.css';
 
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
@@ -9,7 +9,7 @@ import React, { useEffect, useRef, useState } from "react";
 var localNumberRaw = 0;
 
 // Main function for the specific 'page'
-function Login(props) {
+function Register(props) {
     // 'Reactive' variables that will cause the page to update when their values change
         // 'useState' at the end of each describes their initial value
     const [localNumber, setLocalNumber] = useState(localNumberRaw)
@@ -20,18 +20,18 @@ function Login(props) {
     const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0)
 
     // Regular varaible declaration
-    const pageTitle = "Login"
+    const pageTitle = "Register"
     var isMobile = props.isMobile;
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
-        var mainContainer = document.querySelector(".container-login");
+        var mainContainer = document.querySelector(".container-register");
         var fontLarge = document.querySelectorAll(".font-round-large");
         var fontMed = document.querySelectorAll(".font-round-medium");
         var addButton = document.querySelectorAll(".container-add");
 
         if(isMobile) {
-            mainContainer.style.top = "0vmin"
+            mainContainer.style.top = "15vmin"
 
             fontLarge.forEach(el => {
                 el.style.fontSize = "10vmin"
@@ -47,7 +47,7 @@ function Login(props) {
             });
         }
         else {
-            mainContainer.style.top = "0vmin"
+            mainContainer.style.top = "5vmin"
             fontLarge.forEach(el => {
                 el.style.fontSize = "4vmin"
             });
@@ -77,34 +77,28 @@ function Login(props) {
     return (
         // Empty root element. The return can have only one root element
         <>
-            <div className="container-login">
+            <div className="container-register">
                 {/* Variables can be inserted inside of brackets as shown below */}
-                <div className="login-window-container">
-                    <div className="login-window-head">
-                        <span className="font-round-medium">Login</span>
-                        <span className="register-text">Don't have an account? 
-                            <a href="/register" className="register-link">Register Here</a>
-                        </span>
-                    </div>
-                    <div className="login-window-body">
-                        <form className="login-form">
-                            <div className="login-input-container">
-                                <span className="login-input-label">Username: </span>
-                                <input className="login-input"
-
-                                />
-                            </div>
-                            <div className="login-input-container">
-                                <span className="login-input-label">Password: </span>
-                                <input className="login-input" type="password"
-
-                                />
-                            </div>
-                            <div className="login-submit-button">
-                                Login
-                            </div>
-                        </form>
-                    </div>
+                <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
+                <div className="test-container">
+                    <span className="font-round-medium unselectable">Local Number: {localNumber}</span>
+                    <div 
+                        className="container-add unselectable" 
+                        onClick={() => {
+                            // Calling the appropriate handle function when the element has been clicked.
+                            handleAddButtonLocal();
+                        }}
+                    ></div>
+                </div>
+                <div className="test-container">
+                    <span className="font-round-medium unselectable">Global Number: {globalNumber}</span>
+                    <div 
+                        className="container-add unselectable" 
+                        onClick={() => {
+                            // Calling the appropriate handle function when the element has been clicked.
+                            handleAddButtonGlobal();
+                        }}
+                    ></div>
                 </div>
             </div>
         </>
@@ -112,4 +106,4 @@ function Login(props) {
 }
 
 // Function must be 'exposed' to rest of the application at the end of the file as shown below.
-export default Login;
+export default Register;

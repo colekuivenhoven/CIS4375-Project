@@ -10,6 +10,7 @@ import About from './pages/About.js';
 import Contact from './pages/Contact.js';
 import Reserve from './pages/Reserve.js';
 import Login from './pages/Login.js';
+import Register from './pages/Register.js';
 import Test from './pages/Test.js';
 
   // Importing the router files
@@ -121,6 +122,9 @@ function App() {
           </Route>
           <Route path="/login">
             <Login isMobile={isMobile} />
+          </Route>
+          <Route path="/register">
+            <Register isMobile={isMobile} />
           </Route>
           <Route path="/test">
             <Test isMobile={isMobile} />
