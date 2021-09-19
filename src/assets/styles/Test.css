@@ -43,57 +43,6 @@
     align-items: center;
 }
 
-.test-input-container {
-    width: 60%;
-    height: 5vmin;
-    margin-top: 1vmin;
-    border-radius: 0.5vmin;
-    background-color: rgb(219, 245, 255);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 1vmin;
-    font-family: Round;
-}
-
-.test-input-phone {
-    width: 100%;
-    text-decoration: none;
-    outline: none;
-    border: 0;
-}
-
-.test-input-content {
-    width: 100%;
-    max-width: 100%;
-    min-width: 100%;
-    text-decoration: none;
-    outline: none;
-    border: 0;
-}
-
-.test-text-submit {
-    width: 20%;
-    height: 2vmin;
-    margin-top: 1vmin;
-    border-radius: 0.5vmin;
-    background-color: rgb(219, 245, 255);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 1vmin;
-    font-family: Round;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.15s linear;
-}
-
-.test-text-submit:hover {
-    background-color: rgb(172, 231, 255);
-}
-
 .test-text-modal.active {
     position: absolute;
     top: 0;
