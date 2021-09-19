@@ -12,7 +12,7 @@ import * as V from 'victory';
 var localNumberRaw = 0;
 
 // Main function for the specific 'page'
-function AdminHome() {
+function AdminHome(props) {
     // 'Reactive' variables that will cause the page to update when their values change
         // 'useState' at the end of each describes their initial value
     const [localNumber, setLocalNumber] = useState(localNumberRaw)
@@ -24,6 +24,47 @@ function AdminHome() {
 
     // Regular varaible declaration
     const pageTitle = "Admin"
+    var isMobile = props.isMobile;
+
+    // 'useEffect' runs once for every render of the page
+    useEffect(() => {
+        var mainContainer = document.querySelector(".container-admin");
+        var fontLarge = document.querySelectorAll(".font-round-large");
+        var fontMed = document.querySelectorAll(".font-round-medium");
+        var addButton = document.querySelectorAll(".container-add");
+
+        if(isMobile) {
+            mainContainer.style.top = "15vmin"
+
+            fontLarge.forEach(el => {
+                el.style.fontSize = "10vmin"
+            });
+
+            fontMed.forEach(el => {
+                el.style.fontSize = "5.5vmin"
+            });
+
+            addButton.forEach(el => {
+                el.style.width = "5.5vmin"
+                el.style.marginLeft = "3vmin"
+            });
+        }
+        else {
+            mainContainer.style.top = "5vmin"
+            fontLarge.forEach(el => {
+                el.style.fontSize = "4vmin"
+            });
+
+            fontMed.forEach(el => {
+                el.style.fontSize = "2.25vmin"
+            });
+
+            addButton.forEach(el => {
+                el.style.width = "2.5vmin"
+                el.style.marginLeft = "1vmin"
+            });
+        }
+    });
 
     // Chart data
         // Data for bar chart

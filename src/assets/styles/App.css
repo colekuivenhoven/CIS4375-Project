@@ -3,6 +3,7 @@
     src: local('Round'), url('../fonts/VarelaRound-Regular.ttf');
 }
 
+/* Desktop Navigation Bar */
 .app-navigation {
     background-color: rgb(255, 214, 110);
     position: absolute;
@@ -13,6 +14,20 @@
     justify-content: flex-start;
     align-items: center;
 }
+/* --- */
+
+/* Mobile Navigation Bar */
+.app-navigation-mobile {
+    background-color: rgb(255, 214, 110);
+    position: absolute;
+    width: 100vw;
+    height: 15vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+/* --- */
 
 .route-link {
     background-color: rgba(255,255,255,1);
@@ -61,8 +76,9 @@
     color: rgba(255,255,255,1);
 }
 
+/* Desktop Business Logo */
 .route-link-logo {
-    background-color: rgb(231, 186, 73);
+    background-color: rgba(231, 186, 73, 0.5);
     padding: 1vmin;
     margin-left: 1vmin;
     border-radius: 0.5vmin;
@@ -80,13 +96,29 @@
     text-shadow: 0vmin 0.25vmin 0.3vmin rgba(0,0,0,0.2);
     transition: all 0.15s linear;
 }
+/* --- */
 
-.route-link-logo:hover {
-    color: rgba(255,255,255,0.8);
-    text-shadow: 0vmin 0.25vmin 0.3vmin rgba(0,0,0,0.2);
+/* Mobile Business Logo */
+.route-link-logo-mobile {
+    background-color: rgba(231, 186, 73, 0.5);
+    padding: 1vmin;
+    margin-left: 2vmin;
+    border-radius: 1.5vmin;
     box-shadow: inset 0px 4px 4px 2px rgba(0,0,0,0.025);
-    background-color: rgb(231, 186, 73);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 4vmin;
+    color: rgba(255,255,255,0.8);
+    width: 60vmin;
+    height: 8.5vmin;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 0vmin 0.25vmin 0.3vmin rgba(0,0,0,0.2);
+    transition: all 0.15s linear;
 }
+/* --- */
 
 .row-container {
     background-color: rgba(0,255,0,0.0);
@@ -128,6 +160,7 @@
     text-align: center;
     font-size: 2vmin;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     transition: all 0.15s linear;
 }
 
@@ -168,6 +201,7 @@
     margin-right: 0.3vmin;
     opacity: 0.55;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     transition: all 0.15s linear;
 }
 
@@ -280,6 +314,7 @@
     transform: rotate(45deg);
     opacity: 0.5;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     transition: all 0.15s linear;
 }
 
@@ -297,6 +332,19 @@
     font-size: 2vmin;
     font-weight: bold;
     color: rgba(0, 0, 0, 0.2);
+}
+
+.logo-container {
+    background-color: rgba(255,0,0,0.0);
+    background-image: url('../images/team-images/NDMLogo.png');
+    background-repeat: no-repeat;
+    background-size: 75%;
+    background-position: center center;
+    position: absolute;
+    left: 0vmin;
+    bottom: 0vmin;
+    width: 10vmin;
+    aspect-ratio: 1;
 }
 
 /* Animations */

@@ -30,8 +30,8 @@
     align-items: center;
 }
 
-.test-text-container {
-    width: 60%;
+.test-object-container {
+    width: 60vmin;
     height: 25vmin;
     margin-top: 1vmin;
     border-radius: 1vmin;
@@ -43,7 +43,7 @@
     align-items: center;
 }
 
-.test-text-modal.active {
+.test-modal.active {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -55,7 +55,7 @@
     transition: all 0.15s linear;
 }
 
-.test-text-modal {
+.test-modal {
     position: absolute;
     top: 0;
     bottom: 0;
