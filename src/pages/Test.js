@@ -14,7 +14,7 @@ var gotTestData = false;
 
 // Main function for the specific 'page'
 function Test(props) {
-    const[testData, setTestData] = useState([])
+    const[testData, setTestData] = useState([]);
 
     // Regular varaible declaration
     const pageTitle = "Testing Page"
@@ -62,13 +62,18 @@ function Test(props) {
                 el.style.marginLeft = "1vmin"
             });
         }
-    });
+
+        return () => {
+            gotTestData = false;
+        }
+    }, []);
 
     // Get data functions
     async function getTestData() {
         let response = await fetch("http://3.218.225.62:3040/read");
         response = await response.json();
         testDataRaw = response.visitors;
+        testDataConverted = [];
 
         if (!gotTestData) {
             convertTestData();
