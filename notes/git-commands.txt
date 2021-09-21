@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Minor fixes and login screen stylings"
+git commit -m "Added test function to connect to AWS server"
 
 // Push to remote repo
 git push -u origin master

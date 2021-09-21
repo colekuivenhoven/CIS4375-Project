@@ -32,8 +32,9 @@
 
 .test-object-container {
     width: 60vmin;
-    height: 25vmin;
+    height: auto;
     margin-top: 1vmin;
+    padding-bottom: 1vmin;
     border-radius: 1vmin;
     background-color: rgba(255,255,255,1);
     border: 2px solid rgba(0,0,0,0.05);
