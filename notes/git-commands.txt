@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Fixed test function to connect to AWS server"
+git commit -m "Added connection functionality to MySQL database"
 
 // Push to remote repo
 git push -u origin master

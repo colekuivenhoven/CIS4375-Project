@@ -19,7 +19,7 @@
 
 .test-form-container {
     width: 80vmin;
-    height: 90%;
+    height: 67%;
     margin-top: 1vmin;
     border-radius: 1vmin;
     background-color: rgba(255,255,255,1);
@@ -31,17 +31,173 @@
 }
 
 .test-object-container {
-    width: 60vmin;
-    height: auto;
+    width: calc(100% - 3vmin);
+    height: calc(100% - 5.75vmin);
     margin-top: 1vmin;
-    padding-bottom: 1vmin;
-    border-radius: 1vmin;
-    background-color: rgba(255,255,255,1);
-    border: 2px solid rgba(0,0,0,0.05);
+    padding: 0.5vmin;
+    border-radius: 0.75vmin;
+    background-color: rgba(0,0,0,0.025);
+    /*border: 2px solid rgba(0,0,0,0.05);*/
+    box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.1);
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    transition: all 0.25s linear;
+}
+
+.test-object-container::-webkit-scrollbar {
+    width: 1vmin;
+    background-color: transparent;
+    transition: all 0.25s linear;
+}
+
+.test-object-container::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    width: 1vmin;
+    background-color: rgba(124, 124, 124, 0.75);
+    transition: all 0.25s linear;
+}
+
+.test-add-container {
+    position: absolute;
+    top: 6.85vmin;
+    left: calc(calc(50% + 40vmin) + 1vmin);
+    display: flex; 
+    flex-direction: column; 
+    margin-top: 1vmin;
+    background-color: rgba(255, 255, 255, 1);
+    border-radius: 1vmin;
+    padding: 1vmin;
+    font-family: Round;
+    margin-right: auto;
+    margin-left: 1vmin;
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1);
+}
+
+.test-add-text {
+    margin-bottom: 1vmin;
+    color: rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+}
+
+.test-add-input {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    outline: none;
+    width: calc(100% - 0.5vmin);
+    border-radius: 0.5vmin;
+    padding-left: 0.5vmin;
+    height: 2vmin;
+    transition: all 0.15s linear;
+}
+
+.test-add-input:focus {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.test-add-button {
+    background-color: rgb(99, 213, 118);
+    border: 0;
+    outline: none;
+    width: calc(100% + 0.25vmin);
+    border-radius: 0.5vmin;
+    padding-left: 0.5vmin;
+    height: 5vmin;
+    font-family: Round;
+    color: white;
+    font-weight: bold;
+    font-size: 2vmin;
+    cursor: pointer;
+    transition: all 0.15s linear;
+}
+
+.test-add-button:hover {
+    background-color: rgb(80, 172, 95);
+}
+
+.test-user-container {
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0.5vmin; 
+    background-color: rgb(255, 255,255); 
+    padding: 1vmin;
+    border-radius: 0.5vmin; 
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.155);
+    font-family: Round;
+    font-size: 1.45vmin;
+    cursor: pointer;
+    transition: all 0.1s linear;
+    border: 0.2vmin solid rgba(45, 181, 255, 0);
+}
+
+.test-user-container:hover {
+    border: 0.2vmin solid rgba(45, 181, 255, 1);
+}
+
+.test-user-item {
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    max-width: 25%;
+    min-width: 25%;
+    height: 100%;
+    background-color: rgba(0,255,0,0);
+    color: rgba(0,0,0,0.5);
+    font-size: 1vmin;
+}
+
+.test-object-header {
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 3vmin);
+    margin-left: 0.5vmin; 
+    margin-right: auto;
+    margin-top: 1vmin;
+    background-color: rgba(255,0,0,0); 
+    border-radius: 0vmin; 
+    font-family: Round;
+    font-size: 1.45vmin;
+    padding-left: 1vmin;
+    padding-right: 1vmin;
+}
+
+.test-object-header-item {
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    height: 100%;
+    background-color: rgba(0,255,0,0);
+    margin-left: 1vmin;
+    margin-right: 1vmin;
+    color: rgba(0,0,0,0.6);
+    font-weight: bold;
+}
+
+.test-object-info-container {
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1vmin;
+    width: 80vmin;
+    height: calc(33% - 10vmin);
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.05);
+    margin-top: 1vmin;
+    color: rgba(0,0,0,0.6);
+    font-weight: bold;
 }
 
 .test-modal.active {
