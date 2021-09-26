@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Added connection functionality to MySQL database"
+git commit -m "Reformatted Homepage/stylings"
 
 // Push to remote repo
 git push -u origin master

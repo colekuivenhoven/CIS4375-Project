@@ -4,7 +4,7 @@
 }
 
 .container-home {
-    box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
+    box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.0);
     width: 100vw;
     top: 5vmin;
     bottom: 0;
@@ -17,12 +17,520 @@
     animation: home-background-animation 0.75s linear forwards;
 }
 
+.home-image {
+    background-color: rgba(0,0,0,0.1);
+    box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
+    position: absolute;
+    top: 0vmin;
+    left: 0vmin;
+    right: 0vmin;
+    bottom: 0vmin;
+    border-radius: 0vmin;
+    background-image: url('../images/team-images/tennis4k.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    filter: brightness(1.1) contrast(1.15);
+}
+
+.home-content-container {
+    background-color: rgba(255,255,255,0.25);
+    width: 29vmin;
+    height: 10vmin;
+    border-radius: 1vmin;
+    backdrop-filter: blur(5px);
+    box-shadow: 0px 4px 8px 4px rgba(0,0,0,0.15);
+    margin: 3vmin;
+    margin-bottom: 40vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255,255,255,0.55);
+    text-shadow: 0vmin 0.25vmin 0.3vmin rgba(0,0,0,0.2);
+    font-family: Round;
+    font-size: 4vmin;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.15s all ease-in-out;
+}
+
+.home-content-container:hover {
+    width: 34vmin;
+    height: 12vmin;
+    background-color: rgba(255,255,255,0.45);
+    backdrop-filter: blur(7px);
+}
+
+.logo-container {
+    background-color: rgba(255,0,0,0.0);
+    background-image: url('../images/team-images/NDMLogo.png');
+    background-repeat: no-repeat;
+    background-size: 75%;
+    background-position: center bottom;
+    position: absolute;
+    left: 11vmin;
+    bottom: 0.6vmin;
+    width: 10vmin;
+    filter: brightness(0.82) contrast(1.0);
+    aspect-ratio: 1;
+}
+
+.logo-container2 {
+    background-color: rgba(255,0,0,0.0);
+    background-image: url('../images/team-images/BusinessLogoNOGB.png');
+    background-repeat: no-repeat;
+    background-size: 75%;
+    background-position: 0.5vmin center;
+    position: absolute;
+    left: 0;
+    bottom: 0vmin;
+    width: 15vmin;
+    height: 7.5vmin;
+    border-radius: 0.25vmin;
+}
+
+.home-content-login-container {
+    background-color: rgba(255,255,255,0.0);
+    position: absolute;
+    top: -10vmin;
+    left: -4vmin;
+    width: auto;
+    height: 5vmin;
+    border-radius: 1vmin;
+    backdrop-filter: blur(0px);
+    box-shadow: 0px 4px 8px 4px rgba(0,0,0,0.0);
+    margin: 3vmin;
+    margin-bottom: 45vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255,255,255,0.55);
+    text-shadow: 0vmin 0.25vmin 0.3vmin rgba(0,0,0,0.2);
+    font-family: Round;
+    font-size: 4vmin;
+    font-weight: bold;
+    transition: 0.15s all ease-in-out;
+    padding-top: 1vmin;
+    padding-bottom: 1vmin;
+    padding-left: 1vmin;
+    padding-right: 1vmin;
+}
+
+.home-login-field {
+    font-size: 2vmin;
+    background-color: rgba(255,0,0,0);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    height: 3vmin;
+    margin-left: 1vmin;
+    margin-right: 1vmin;
+}
+
+.home-login-input {
+    border: 0;
+    border-radius: 1vmin;
+    height: 2vmin;
+    outline: none;
+    padding-left: 1vmin;
+    font-family: Round;
+    font-size: 1.25vmin;
+    margin-left: 0.5vmin;
+    background-color: rgba(255,255,255,0.5);
+}
+
+.home-login-button {
+    border-radius: 1vmin;
+    height: 5vmin;
+    width: 12vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 2vmin;
+    margin-left: 1vmin;
+    margin-right: 1vmin;
+    background-color: rgba(213, 181, 99, 0.9);
+    cursor: pointer;
+    color: rgba(255,255,255,0.9);
+    box-shadow: 0px 4px 8px 4px rgba(0,0,0,0.1);
+}
+
+.home-register-button {
+    border-radius: 1vmin;
+    height: 5vmin;
+    width: 12vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 2vmin;
+    margin-left: 1vmin;
+    margin-right: 1vmin;
+    background-color: rgba(213, 158, 99, 1);
+    cursor: pointer;
+    color: rgba(255,255,255,0.9);
+    box-shadow: 0px 4px 8px 4px rgba(0,0,0,0.1);
+}
+
+.new-home-content {
+    background-color: rgba(255,0,255,0.0);
+    width: 100%;
+    height: 50vmin;
+    border-radius: 1vmin;
+    backdrop-filter: blur(5px);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: rgba(255,255,255,0.55);
+    font-family: Round;
+    font-size: 4vmin;
+    font-weight: bold;
+    transition: 0.15s all ease-in-out;
+}
+
+.main-text-panel {
+    background-color: rgba(255,0,0,0.0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 60vmin;
+    height: 100%;
+}
+
+.main-text-title {
+    font-family: Round;
+    font-size: 4.5vmin;
+    font-weight: bold;
+    color: rgb(85, 131, 231);
+    text-shadow: 0vmin 0.25vmin 0.3vmin rgba(0,0,0,0.2);
+}
+
+.main-text-body {
+    font-family: Round;
+    font-size: 2vmin;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.25);
+    margin-top: 2vmin;
+}
+
+.main-image-panel {
+    background-color: rgba(0,255,0,0.0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 60vmin;
+    height: 100%;
+}
+
+.home-image-content {
+    background-color: rgba(0,0,0,0.2);
+    /* background-image: url('../images/team-images/tennis4k.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top; */
+    width: 95%;
+    height: 80%;
+    border-radius: 1vmin;
+    /* overflow-x: scroll; */
+    overflow-x: scroll;
+}
+
+.home-image-content::-webkit-scrollbar {
+    width: 1vmin;
+    background-color: transparent;
+    display: none;
+    transition: all 0.25s linear;
+}
+
+.slide-image-1 {
+    background-image: url('../images/team-images/tennis4k.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    width: 100%;
+    height: 100%;
+}
+
+.slide-image-2 {
+    background-image: url('../images/team-images/tennis4k-2.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    width: 100%;
+    height: 100%;
+}
+
+.slide-image-3 {
+    background-image: url('../images/team-images/tennis4k-3.jpeg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+    width: 100%;
+    height: 100%;
+}
+
+.main-text-body-button-container {
+    width: 100%;
+    height: 20%;
+    background-color: rgba(0,0,255,0);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.main-text-body-button {
+    font-size: 2vmin;
+    background-color: rgb(255, 200, 60);
+    color: rgba(255,255,255,0.9);
+    border-radius: 2vmin;
+    padding: 1vmin;
+    margin-left: 0vmin;
+    margin-right: 1vmin;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s linear;
+}
+
+.main-text-body-button:hover {
+    background-color: rgba(61, 214, 87, 0.2);
+    color: rgba(61, 214, 87, 0.7);
+}
+
+.main-text-body-button-2 {
+    font-size: 2vmin;
+    background-color: rgba(0,0,0,0.05);
+    color: rgba(0,0,0,0.3);
+    border-radius: 2vmin;
+    padding: 1vmin;
+    margin-right: auto;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s linear;
+}
+
+.main-text-body-button-2:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.subcontent-container {
+    width: 100%;
+    height: 50vmin;
+    background-color: rgba(0,0,255,0.0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.subcontent-content {
+    /* position: absolute;
+    top: 49vmin;
+    bottom: 5vmin;
+    left: 4vmin;
+    right: 4vmin; */
+    width: 125vmin;
+    height: 88%;
+    margin-bottom: auto;
+    /* background-color: rgba(108, 194, 254, 0.2); */
+    background: linear-gradient(0deg, rgba(108, 194, 254, 0.2), rgba(108, 194, 254, 0.125));
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    border-radius: 2vmin;
+}
+
+.subcontent-item {
+    background-color: white;
+    border-radius: 2vmin;
+    height: 65%;
+    aspect-ratio: 0.96;
+    margin-bottom: 2vmin;
+    box-shadow: 0px 6px 8px 2px rgba(0,0,0,0.05);
+    margin-right: 2.5vmin;
+    margin-left: 2.5vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.subcontent-title {
+    position: absolute;
+    top: 49.5vmin;
+    /* right: 10vmin; */
+    width: auto;
+    height: 5vmin;
+    background-color: rgba(255,0,0,0);
+    font-family: Round;
+    font-size: 4vmin;
+    font-weight: bold;
+    color: rgba(13, 20, 75, 0.5);
+    text-shadow: 0vmin 0.25vmin 0.3vmin rgba(0,0,0,0.2);
+}
+
+.item-image-1 {
+    background-image: url('../images/svgs/icons/downloaded/tennis.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    width: 50%;
+    aspect-ratio: 1;
+    background-color: rgba(0,0,0,0.0);
+    margin-top: 2vmin;
+}
+
+.item-image-2 {
+    background-image: url('../images/svgs/icons/downloaded/tennis-court\ \(1\).png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    width: 50%;
+    aspect-ratio: 1;
+    background-color: rgba(0,0,0,0.0);
+    margin-top: 2vmin;
+}
+
+.item-image-3 {
+    background-image: url('../images/svgs/icons/downloaded/smartphone.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    width: 50%;
+    aspect-ratio: 1;
+    background-color: rgba(0,0,0,0.0);
+    margin-top: 2vmin;
+}
+
+.item-image-4 {
+    background-image: url('../images/svgs/icons/downloaded/computer.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    width: 50%;
+    aspect-ratio: 1;
+    background-color: rgba(0,0,0,0.0);
+    margin-top: 2vmin;
+}
+
+
+.item-desc {
+    font-family: Round;
+    font-size: 3vmin;
+    color: rgba(13, 20, 75, 0.5);
+    margin-top: 1vmin;
+    text-align: center;
+}
+
+.city-logo {
+    width: 10vmin;
+    height: 5vmin;
+    background-color: rgba(143, 80, 80, 0.0);
+    background-image: url('../images/team-images/BusinessLogo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.team-logo {
+    width: 10vmin;
+    height: 5vmin;
+    background-color: rgba(143, 80, 80, 0.0);
+    background-image: url('../images/team-images/NDMLogoDarker.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    position: absolute;
+    bottom: 0.25vmin;
+    right: 8vmin;
+    filter: brightness(0.97) contrast(1.1);
+}
+
+.image-content-back-button {
+    background-color: rgba(255,255,255,0);
+    background-image: url('../images/svgs/icons/solid/angle-left.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    position: absolute;
+    width: 5vmin;
+    height: 5vmin;
+    left: calc(50% + 2vmin);
+    filter: invert(1) drop-shadow(0 0.25vmin 5px rgba(0,0,0,0.5));
+    transition: all 0.15s ease-in-out;
+    opacity: 0.5;
+}
+
+.image-content-back-button.active {
+    background-color: rgba(255,255,255,0);
+    background-image: url('../images/svgs/icons/solid/angle-left.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    position: absolute;
+    width: 5vmin;
+    height: 5vmin;
+    left: calc(50% + 2vmin);
+    cursor: pointer;
+    filter: invert(1) drop-shadow(0 0.25vmin 5px rgba(0,0,0,0.5));
+    transition: all 0.15s ease-in-out;
+    opacity: 1;
+}
+
+.image-content-next-button {
+    background-color: rgba(255,255,255,0);
+    background-image: url('../images/svgs/icons/solid/angle-right.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    position: absolute;
+    width: 5vmin;
+    height: 5vmin;
+    right: calc(50% - 58vmin);
+    filter: invert(1) drop-shadow(0 0.25vmin 5px rgba(0,0,0,0.5));
+    transition: all 0.15s ease-in-out;
+    opacity: 0.5;
+}
+
+.image-content-next-button.active {
+    background-color: rgba(255,255,255,0);
+    background-image: url('../images/svgs/icons/solid/angle-right.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    position: absolute;
+    width: 5vmin;
+    height: 5vmin;
+    right: calc(50% - 58vmin);
+    cursor: pointer;
+    filter: invert(1) drop-shadow(0 0.25vmin 5px rgba(0,0,0,0.5));
+    transition: all 0.15s ease-in-out;
+    opacity: 1;
+}
+
 /* Animations */
 @keyframes home-background-animation {
     0% {
         background-color: rgb(255, 255, 255);
     }
     100% {
-        background-color: rgb(255, 245, 232);
+        background-color: rgb(250, 250, 250);
     }
 }

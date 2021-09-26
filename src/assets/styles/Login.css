@@ -115,7 +115,7 @@
     margin-left: auto;
     margin-right: 2vmin;
     border-radius: 1vmin;
-    background-color: rgba(86, 139, 255, 0.8);
+    background-color: rgba(99, 213, 118, 0.8);
     font-family: Round;
     font-size: 2vmin;
     font-weight: bold;
@@ -142,7 +142,7 @@
     font-size: 1.5vmin;
     color: rgba(0,0,0,0.55);
     margin-left: 0.5vmin;
-    color: rgba(86, 139, 255, 0.8);
+    color: rgba(99, 213, 118, 0.8);
 }
 
 /* Animations */
@@ -151,6 +151,6 @@
         background-color: rgb(255, 255, 255);
     }
     100% {
-        background-color: rgb(223, 241, 255);
+        background-color: rgb(222, 255, 238);
     }
 }

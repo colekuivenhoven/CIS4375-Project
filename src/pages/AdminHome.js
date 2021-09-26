@@ -50,7 +50,7 @@ function AdminHome(props) {
             });
         }
         else {
-            mainContainer.style.top = "5vmin"
+            mainContainer.style.top = "7vmin"
             fontLarge.forEach(el => {
                 el.style.fontSize = "4vmin"
             });

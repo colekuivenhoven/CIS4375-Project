@@ -5,8 +5,17 @@ import '../assets/styles/Home.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 
+// Importing the router files
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+} from "react-router-dom";
+
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
+var numImages = 3;
 
 // Main function for the specific 'page'
 function Home(props) {
@@ -17,7 +26,8 @@ function Home(props) {
             // if (condition) then (value) else (other_value)
             // Turns into...
             // (condition) ? (value) : (other_value)
-    const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0)
+    const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0);
+    const [imgIndex, setImgIndex] = useState(0);
 
     // Regular varaible declaration
     const pageTitle = "Home"
@@ -47,7 +57,7 @@ function Home(props) {
             });
         }
         else {
-            mainContainer.style.top = "5vmin"
+            mainContainer.style.top = "7vmin"
             fontLarge.forEach(el => {
                 el.style.fontSize = "4vmin"
             });
@@ -74,32 +84,138 @@ function Home(props) {
         window.sessionStorage.setItem("num_global", parseInt(globalNumber)+1);
     }
 
+    function handleImageNext() {
+        var el_next = document.querySelector(".image-content-next-button");
+        var el_back = document.querySelector(".image-content-back-button");
+        var el_scrollContainer = document.querySelector(".home-image-content");
+
+        if(imgIndex < numImages-1) {
+            setImgIndex(imgIndex+1);
+            el_back.classList.add("active");
+            el_scrollContainer.scrollTo({
+                top: el_scrollContainer.getBoundingClientRect().height * (imgIndex+1),
+                left: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        if(imgIndex == numImages-2) {
+            el_next.classList.remove("active");
+        }
+    }
+
+    function handleImageBack() {
+        var el_next = document.querySelector(".image-content-next-button");
+        var el_back = document.querySelector(".image-content-back-button");
+        var el_scrollContainer = document.querySelector(".home-image-content");
+
+        if(imgIndex > 0) {
+            setImgIndex(imgIndex-1);
+            el_next.classList.add("active");
+            el_scrollContainer.scrollTo({
+                top: el_scrollContainer.getBoundingClientRect().height * (imgIndex-1),
+                left: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        if(imgIndex == 1) {
+            el_back.classList.remove("active");
+        }
+    }
+
+    // Home Templates
+    function oldHome() {
+        return (
+            <div className="home-image">
+                {/* <div className="test-home-content">
+
+                </div> */}
+                <div className="home-content-container">📅 Schedule</div>
+                <div className="home-content-container">🔍 About Us</div>
+                <div className="home-content-container">📱 Contact</div>
+
+                {/* Logo Elements */}
+                <div className="logo-container"></div>
+                <div className="logo-container2"></div>
+
+                <div className="home-content-login-container">
+                    {/* <div className="home-login-field">Username: <input className="home-login-input"/></div>
+                    <div className="home-login-field">Password: <input className="home-login-input"/></div> */}
+                    <div className="home-login-button">Login</div>
+                    <div className="home-register-button">Register</div>
+                </div>
+            </div>
+        )
+    }
+
+    function newHome() {
+        return (
+            <>
+                <div className="new-home-content">
+                    <div className="main-text-panel">
+                        <div className="main-text-title">Schedule Your Next Tennis Session With Us</div>
+                        <div className="main-text-body">The Homer Ford Tennis Center is the perfect place to play tennis. Whether it's a tournament, 
+                                                        a practice game, or even a couples' date night, the Homer Ford Tennis Center is the place for you!
+                        </div>
+                        <div className="main-text-body-button-container">
+                            <Link className="main-text-body-button" to="/reserve">Schedule Now</Link>
+                            <Link className="main-text-body-button-2" to="/about">More Info</Link>
+                        </div>
+                    </div>
+                    <div className="main-image-panel">
+                        <div className="home-image-content"
+
+                        >
+                            <div className="slide-image-1"></div>
+                            <div className="slide-image-2"></div>
+                            <div className="slide-image-3"></div>
+                        </div>
+                        <div className="image-content-back-button"
+                            onClick={() => {
+                                handleImageBack();
+                            }}
+                        ></div>
+                        <div className="image-content-next-button active"
+                            onClick={() => {
+                                handleImageNext();  
+                            }}
+                        ></div>
+                    </div>
+                </div>
+                <div className="subcontent-container">
+                    <div className="subcontent-content">
+                        <div className="subcontent-title">Our Services</div>
+                        <div className="subcontent-item">
+                            <div className="item-image-1"></div>
+                            <div className="item-desc">Equipment Rental</div>
+                        </div>
+                        <div className="subcontent-item">
+                            <div className="item-image-2"></div>
+                            <div className="item-desc">Court Reservations</div>
+                        </div>
+                        <div className="subcontent-item">
+                            <div className="item-image-3"></div>
+                            <div className="item-desc">Auto Alert System</div>
+                        </div>
+                        <div className="subcontent-item">
+                            <div className="item-image-4"></div>
+                            <div className="item-desc">Smart Web Application</div>
+                        </div>
+                    </div>
+                </div>
+                {/* <div className="city-logo"></div>
+                <div className="team-logo"></div> */}
+            </>
+        )
+    }
+
     return (
         // Empty root element. The return can have only one root element
         <>
             <div className="container-home">
                 {/* Variables can be inserted inside of brackets as shown below */}
-                <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
-                <div className="test-container">
-                    <span className="font-round-medium unselectable">Local Number: {localNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonLocal();
-                        }}
-                    ></div>
-                </div>
-                <div className="test-container">
-                    <span className="font-round-medium unselectable">Global Number: {globalNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonGlobal();
-                        }}
-                    ></div>
-                </div>
+                {newHome()}
             </div>
         </>
     )

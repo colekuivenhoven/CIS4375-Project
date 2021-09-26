@@ -19,6 +19,7 @@ function Test(props) {
     const[testPassword, setTestPassword] = useState('');
     const[testPhone, setTestPhone] = useState('');
     const[testEmail, setTestEmail] = useState('');
+    const[selectedUser, setSelectedUser] = useState(null);
 
     // Regular varaible declaration
     const pageTitle = "Testing Page"
@@ -52,7 +53,7 @@ function Test(props) {
             });
         }
         else {
-            mainContainer.style.top = "5vmin"
+            mainContainer.style.top = "7vmin"
             fontLarge.forEach(el => {
                 el.style.fontSize = "4vmin"
             });
@@ -90,6 +91,9 @@ function Test(props) {
                 <div 
                     key={index} 
                     className="test-user-container"
+                    onClick={() =>{
+                        setSelectedUser(user)
+                    }}
                 >
                     <div className="test-user-item">{user.username}</div>
                     <div className="test-user-item">{user.password}</div>
@@ -104,7 +108,7 @@ function Test(props) {
     }
 
     function addUser(data) {
-        fetch("http://3.218.225.62:3040/users/add", {
+        fetch("http://3.218.225.62:3040/user/add", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -139,6 +143,14 @@ function Test(props) {
         setTestPassword('');
         setTestPhone('');
         setTestEmail('');
+    }
+
+    function handleDelete() {
+        
+    }
+
+    function handleEdit() {
+        
     }
 
     return (
@@ -176,7 +188,37 @@ function Test(props) {
                     </div>
                 </div>
                 <div className="test-object-info-container">
-
+                    {selectedUser != null && 
+                        <>
+                            <div>
+                                <div>Username: {selectedUser.username}</div>
+                                <div>Password: {selectedUser.password}</div>
+                                <div>Phone #: {selectedUser.phone}</div>
+                                <div>Email: {selectedUser.email}</div>
+                            </div>
+                            <div 
+                                className="info-edit"
+                                onClick={() => {
+                                    handleEdit();
+                                }}
+                            >
+                                📝
+                            </div>
+                            <div 
+                                className="info-delete"
+                                onClick={() => {
+                                    handleDelete();
+                                }}
+                            >
+                                🗑️
+                            </div>
+                        </>
+                    }
+                    {selectedUser == null && 
+                        <div>
+                            No user selected
+                        </div>
+                    }
                 </div>
             </div>
             <div className="test-modal">

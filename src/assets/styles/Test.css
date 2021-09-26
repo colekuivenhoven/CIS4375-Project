@@ -6,7 +6,7 @@
 .container-test {
     box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
     width: 100vw;
-    top: 5vmin;
+    top: 7vmin;
     bottom: 0;
     position: absolute;
     display: flex;
@@ -188,16 +188,51 @@
 .test-object-info-container {
     display: flex; 
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     border-radius: 1vmin;
-    width: 80vmin;
+    width: 78vmin;
     height: calc(33% - 10vmin);
     background-color: rgba(255,255,255,1);
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.05);
     margin-top: 1vmin;
     color: rgba(0,0,0,0.6);
     font-weight: bold;
+    padding: 1vmin;
+}
+
+.info-delete {
+    background-color: rgba(0,0,0,0.05);
+    width: 3vmin;
+    aspect-ratio: 1;
+    margin-left: 1vmin;
+    border-radius: 0.5vmin;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s linear;
+}
+
+.info-delete:hover {
+    background-color: rgba(225, 91, 91, 0.2);
+}
+
+.info-edit {
+    background-color: rgba(0,0,0,0.05);
+    width: 3vmin;
+    aspect-ratio: 1;
+    margin-left: auto;
+    border-radius: 0.5vmin;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s linear;
+}
+
+.info-edit:hover {
+    background-color: rgba(99, 213, 118, 0.2);
 }
 
 .test-modal.active {
