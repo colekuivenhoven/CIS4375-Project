@@ -17,7 +17,9 @@ function Contact(props) {
             // if (condition) then (value) else (other_value)
             // Turns into...
             // (condition) ? (value) : (other_value)
-    const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0)
+    const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0);
+    const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
+    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
 
     // Regular varaible declaration
     const pageTitle = "Contact"
@@ -100,6 +102,7 @@ function Contact(props) {
                         }}
                     ></div>
                 </div>
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
             </div>
         </>
     )

@@ -28,6 +28,8 @@ function Home(props) {
             // (condition) ? (value) : (other_value)
     const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0);
     const [imgIndex, setImgIndex] = useState(0);
+    const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
+    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
 
     // Regular varaible declaration
     const pageTitle = "Home"
@@ -125,30 +127,6 @@ function Home(props) {
     }
 
     // Home Templates
-    function oldHome() {
-        return (
-            <div className="home-image">
-                {/* <div className="test-home-content">
-
-                </div> */}
-                <div className="home-content-container">📅 Schedule</div>
-                <div className="home-content-container">🔍 About Us</div>
-                <div className="home-content-container">📱 Contact</div>
-
-                {/* Logo Elements */}
-                <div className="logo-container"></div>
-                <div className="logo-container2"></div>
-
-                <div className="home-content-login-container">
-                    {/* <div className="home-login-field">Username: <input className="home-login-input"/></div>
-                    <div className="home-login-field">Password: <input className="home-login-input"/></div> */}
-                    <div className="home-login-button">Login</div>
-                    <div className="home-register-button">Register</div>
-                </div>
-            </div>
-        )
-    }
-
     function newHome() {
         return (
             <>
@@ -204,8 +182,7 @@ function Home(props) {
                         </div>
                     </div>
                 </div>
-                {/* <div className="city-logo"></div>
-                <div className="team-logo"></div> */}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
             </>
         )
     }

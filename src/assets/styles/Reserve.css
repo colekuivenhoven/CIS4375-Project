@@ -4,9 +4,8 @@
 }
 
 .container-reserve {
-    box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
     width: 100vw;
-    top: 5vmin;
+    top: 7vmin;
     bottom: 0;
     position: absolute;
     display: flex;
@@ -14,7 +13,7 @@
     justify-content: flex-start;
     align-items: center;
     padding-top: 2vmin;
-    animation: reserve-background-animation 0.75s linear forwards;
+    background-color: rgb(250, 250, 250);
 }
 
 .reserve-form-container {
@@ -27,11 +26,3 @@
 }
 
 /* Animations */
-@keyframes reserve-background-animation {
-    0% {
-        background-color: rgb(255, 255, 255);
-    }
-    100% {
-        background-color: rgb(222, 255, 238);
-    }
-}

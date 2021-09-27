@@ -6,7 +6,7 @@
 .container-login {
     box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
     width: 100vw;
-    top: 5vmin;
+    top: 0vmin;
     bottom: 0;
     position: absolute;
     display: flex;
@@ -14,7 +14,8 @@
     justify-content: center;
     align-items: center;
     padding-top: 2vmin;
-    animation: login-background-animation 0.75s linear forwards;
+    overflow: hidden;
+    background-color: rgba(250,250,250,1);
 }
 
 .login-window-container {
@@ -28,6 +29,27 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: all 0.4 ease-in-out;
+    transform: translateY(-70vmin);
+    opacity: 0;
+    animation: login-window-animation-reverse 0.4s ease-in-out;
+}
+
+.login-window-container.active {
+    background-color: rgba(255,255,255,1);
+    position: absolute;
+    width: 50vmin;
+    aspect-ratio: 1;
+    border-radius: 1vmin;
+    box-shadow: 0px 8px 18px 2px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4 ease-in-out;
+    transform: translateY(0vmin);
+    opacity: 100%;
+    animation: login-window-animation 0.4s ease-in-out;
 }
 
 .login-window-head {
@@ -40,8 +62,15 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: center;
+    align-items: flex-end;
     padding-left: 1vmin;
+}
+
+.login-title {
+    font-family: Round;
+    font-size: 3.25vmin;
+    font-weight: bold;
+    color: rgba(0,0,0,0.5)
 }
 
 .login-window-body {
@@ -140,17 +169,266 @@
 .register-link {
     font-family: Round;
     font-size: 1.5vmin;
-    color: rgba(0,0,0,0.55);
     margin-left: 0.5vmin;
     color: rgba(99, 213, 118, 0.8);
+    background-color: rgba(99, 213, 118, 0.0);
+    padding: 0.5vmin;
+    border-radius: 0.5vmin;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.register-link:hover {
+    background-color: rgba(99, 213, 118, 0.15);
+}
+
+.login-back-button {
+    position: absolute;
+    width: 5vmin;
+    aspect-ratio: 1;
+    top: 0.5vmin;
+    left: -7vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50vmin;
+    box-shadow: 0px 8px 18px 2px rgba(0,0,0,0.05);
+    background-color: rgba(255,255,255,1);
+}
+
+.login-back-button-image {
+    background-image: url('../images/svgs/icons/solid/angle-left.svg');
+    background-repeat: no-repeat;
+    background-size: 30%;
+    background-position: center center;
+    width: 100%;
+    margin-right: 0.25vmin;
+    aspect-ratio: 1;
+    opacity: 0.6;
+}
+
+/* REGISTER STYLES */
+
+.register-window-container {
+    background-color: rgba(255,255,255,1);
+    position: absolute;
+    width: 50vmin;
+    aspect-ratio: 1;
+    border-radius: 1vmin;
+    box-shadow: 0px 8px 18px 2px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4 ease-in-out;
+    transform: translateY(-70vmin);
+    opacity: 0;
+}
+
+.register-window-container.active {
+    background-color: rgba(255,255,255,1);
+    position: absolute;
+    width: 50vmin;
+    aspect-ratio: 1;
+    border-radius: 1vmin;
+    box-shadow: 0px 8px 18px 2px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.4 ease-in-out;
+    transform: translateY(0vmin);
+    opacity: 100%;
+}
+
+.register-window-head {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 5vmin;
+    background-color: rgba(255,0,0,0.0);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-end;
+    padding-left: 1vmin;
+}
+
+.register-title {
+    font-family: Round;
+    font-size: 3.25vmin;
+    font-weight: bold;
+    color: rgba(0,0,0,0.5)
+}
+
+.register-window-body {
+    position: absolute;
+    bottom: 0;
+    top: 5vmin;
+    right: 0;
+    left: 0;
+    background-color: rgba(0,0,255,0.0);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form {
+    position: absolute;
+    bottom: 1vmin;
+    top: 1vmin;
+    right: 1vmin;
+    left: 1vmin;
+    background-color: rgba(245,245,245,1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 1vmin;
+    box-shadow: inset 0px 8px 18px 2px rgba(0,0,0,0.025);
+}
+
+.register-input-container {
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 8px 18px 2px rgba(0,0,0,0.05);
+    width: 90%;
+    height: 8vmin;
+    border-radius: 1vmin;
+    margin-top: 2vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 1vmin;
+    padding-right: 1vmin;
+}
+
+.register-input-label {
+    font-size: 2vmin;
+    color: rgba(0,0,0,0.5);
+    font-family: Round;
+}
+
+.register-input {
+    height: 70%;
+    width: 100%;
+    margin-left: 1vmin;
+    border-radius: 0.5vmin;
+    font-size: 2.5vmin;
+    border: 0;
+    outline: none;
+    color: rgba(86, 139, 255, 0.8);
+    font-family: Round;
+    background-color: rgba(250,250,250,1);
+    box-shadow: inset 0px 3px 10px 2px rgba(0,0,0,0.025);
+    padding-left: 1vmin;
+}
+
+.register-submit-button {
+    width: 30%;
+    height: 6vmin;
+    margin-top: 1.5vmin;
+    margin-left: auto;
+    margin-right: 2vmin;
+    border-radius: 1vmin;
+    background-color: rgba(99, 213, 118, 0.8);
+    font-family: Round;
+    font-size: 2vmin;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 8px 18px 2px rgba(0,0,0,0.05);
+}
+
+.register-input-tip-container {
+    position: absolute;
+    right: -35vmin;
+    width: 30vmin;
+    height: 5vmin;
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 8px 18px 2px rgba(0,0,0,0.05);
+    border-radius: 2vmin;
+    opacity: 0;
+    transform: translateX(50vmin);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    font-family: Round;
+    color: rgba(0,0,0,0.5);
+    padding-left: 1vmin;
+    padding-right: 1vmin;
+    text-align: center;
+    transition: all 0.15s ease-in-out;
+}
+
+.register-input-container:hover > .register-input-tip-container {
+    opacity: 100%;
+    transform: translateX(0vmin);
+}
+
+.login-response-container {
+    position: absolute;
+    bottom: 0;
+    width: 50vmin;
+    height: 5vmin;
+    background-color: rgba(255,0,0,0.0);
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Animations */
-@keyframes login-background-animation {
+@keyframes login-window-animation {
     0% {
-        background-color: rgb(255, 255, 255);
+        transform: translateY(-70vmin);
+        opacity: 0;
     }
     100% {
-        background-color: rgb(222, 255, 238);
+        transform: translateY(0vmin);
+        opacity: 100%;
+    }
+}
+
+@keyframes login-window-animation-reverse {
+    0% {
+        transform: translateY(0vmin);
+        opacity: 100%;
+    }
+    100% {
+        transform: translateY(70vmin);
+        opacity: 0;
+    }
+}
+
+@keyframes register-window-animation {
+    0% {
+        transform: translateY(-70vmin);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0vmin);
+        opacity: 100%;
+    }
+}
+
+@keyframes register-window-animation-reverse {
+    0% {
+        transform: translateY(0vmin);
+        opacity: 100%;
+    }
+    100% {
+        transform: translateY(70vmin);
+        opacity: 0;
     }
 }

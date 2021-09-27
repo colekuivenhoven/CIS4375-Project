@@ -17,7 +17,9 @@ function Register(props) {
             // if (condition) then (value) else (other_value)
             // Turns into...
             // (condition) ? (value) : (other_value)
-    const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0)
+    const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0);
+    const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
+    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
 
     // Regular varaible declaration
     const pageTitle = "Register"
@@ -79,27 +81,31 @@ function Register(props) {
         <>
             <div className="container-register">
                 {/* Variables can be inserted inside of brackets as shown below */}
-                <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
-                <div className="test-container">
-                    <span className="font-round-medium unselectable">Local Number: {localNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonLocal();
-                        }}
-                    ></div>
-                </div>
-                <div className="test-container">
-                    <span className="font-round-medium unselectable">Global Number: {globalNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonGlobal();
-                        }}
-                    ></div>
-                </div>
+                {/* <div className="register-window-container">
+                    <div className="register-window-head">
+                        <span className="register-title">register</span>
+                    </div>
+                    <div className="register-window-body">
+                        <form className="register-form">
+                            <div className="register-input-container">
+                                <span className="register-input-label">Username: </span>
+                                <input className="register-input"
+
+                                />
+                            </div>
+                            <div className="register-input-container">
+                                <span className="register-input-label">Password: </span>
+                                <input className="register-input" type="password"
+
+                                />
+                            </div>
+                            <div className="register-submit-button">
+                                register
+                            </div>
+                        </form>
+                    </div>
+                </div> */}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
             </div>
         </>
     )

@@ -4,6 +4,7 @@ import '../assets/styles/Test.css';
 
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
+import bcrypt from "bcryptjs";
 
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
@@ -20,9 +21,13 @@ function Test(props) {
     const[testPhone, setTestPhone] = useState('');
     const[testEmail, setTestEmail] = useState('');
     const[selectedUser, setSelectedUser] = useState(null);
+    const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
+    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
+
+    const[guessMatched, setGuessMatched] = useState('false');
 
     // Regular varaible declaration
-    const pageTitle = "Testing Page"
+    const pageTitle = ""
     var isMobile = props.isMobile;
 
     // 'useEffect' runs once for every render of the page
@@ -75,7 +80,7 @@ function Test(props) {
 
     // Get data functions
     async function getTestData() {
-        let response = await fetch("http://3.218.225.62:3040/test/mysql");
+        let response = await fetch("http://3.218.225.62:3040/users/getall");
         response = await response.json();
         testDataRaw = response.users.reverse();
         testDataConverted = [];
@@ -95,10 +100,12 @@ function Test(props) {
                         setSelectedUser(user)
                     }}
                 >
-                    <div className="test-user-item">{user.username}</div>
-                    <div className="test-user-item">{user.password}</div>
-                    <div className="test-user-item">{user.phone}</div>
-                    <div className="test-user-item">{user.email}</div>
+                    <div className="test-user-item">{user.User_id}</div>
+                    <div className="test-user-item">{user.User_type == 0 ? 'Customer' : 'Employee'}</div>
+                    <div className="test-user-item">{user.User_name}</div>
+                    <div className="test-user-item">{user.User_phone}</div>
+                    <div className="test-user-item">{user.User_email}</div>
+                    <div className="test-user-item">{user.User_getAnnouncements == 0 ? 'False' : 'True'}</div>
                 </div>
             )
         });
@@ -109,6 +116,22 @@ function Test(props) {
 
     function addUser(data) {
         fetch("http://3.218.225.62:3040/user/add", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .then(() => {
+            gotTestData = false;
+            getTestData();
+        })
+    }
+
+    function deleteUser(data) {
+        fetch("http://3.218.225.62:3040/user/delete", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -145,12 +168,26 @@ function Test(props) {
         setTestEmail('');
     }
 
-    function handleDelete() {
-        
+    function handleDelete(userid) {
+        var data = {
+            id: userid
+        }
+
+        deleteUser(data);
+        setSelectedUser(null);
     }
 
     function handleEdit() {
         
+    }
+
+    function passwordGuess(guess, hashedAnswer) {
+        if (bcrypt.compareSync(guess, hashedAnswer)) {
+            setGuessMatched('true');
+        }
+        else {
+            setGuessMatched('false');
+        }
     }
 
     return (
@@ -162,10 +199,13 @@ function Test(props) {
                 <div className="test-form-container">
                     <div className="test-object-header">
                         <div className="test-object-header-item">
-                            Username
+                            ID
                         </div>
                         <div className="test-object-header-item">
-                            Password
+                            Type
+                        </div>
+                        <div className="test-object-header-item">
+                            Username
                         </div>
                         <div className="test-object-header-item">
                             Phone #
@@ -173,10 +213,13 @@ function Test(props) {
                         <div className="test-object-header-item">
                             Email
                         </div>
+                        <div className="test-object-header-item">
+                            Announceable
+                        </div>
                     </div>
                     <div className="test-object-container">
                         
-                        <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', transition: 'all 0.25s linear'}}>{testData}</div>
+                        <div style={{display: 'flex', flexDirection: 'column', width: '100%', transition: 'all 0.25s linear'}}>{testData}</div>
                     </div>
                     <div className="test-add-container">
                         <b style={{color: 'rgb(255, 214, 110)', marginLeft: 'auto', fontSize: '2vmin', marginBottom: '1vmin'}}>Add User</b>
@@ -191,10 +234,21 @@ function Test(props) {
                     {selectedUser != null && 
                         <>
                             <div>
-                                <div>Username: {selectedUser.username}</div>
-                                <div>Password: {selectedUser.password}</div>
-                                <div>Phone #: {selectedUser.phone}</div>
-                                <div>Email: {selectedUser.email}</div>
+                                <div>ID: {selectedUser.User_id}</div>
+                                <div>Type: {selectedUser.User_type}</div>
+                                <div>Username: {selectedUser.User_name}</div>
+                                <div>Password: {selectedUser.User_password}</div>
+                                <div>Phone #: {selectedUser.User_phone}</div>
+                                <div>Email: {selectedUser.User_email}</div>
+                                <div>Announceable: {selectedUser.User_getAnnouncements}</div>
+                                <div className="test-password-compare-container">Password Guess: 
+                                    <input className="test-password-guess-input"
+                                        onChange={e => {
+                                            passwordGuess(e.target.value, selectedUser.User_password);
+                                        }}
+                                    />
+                                    <span> Match? {guessMatched}</span>
+                                </div>
                             </div>
                             <div 
                                 className="info-edit"
@@ -207,7 +261,7 @@ function Test(props) {
                             <div 
                                 className="info-delete"
                                 onClick={() => {
-                                    handleDelete();
+                                    handleDelete(selectedUser.User_id);
                                 }}
                             >
                                 🗑️
@@ -220,6 +274,7 @@ function Test(props) {
                         </div>
                     }
                 </div>
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
             </div>
             <div className="test-modal">
                 

@@ -117,6 +117,7 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    cursor: pointer;
     transition: all 0.15s linear;
 }
 
@@ -436,6 +437,23 @@
     font-size: 2vmin;
     font-weight: bold;
     color: rgba(0, 0, 0, 0.2);
+}
+
+.user-welcome {
+    position: absolute;
+    top: 0;
+    right: 1vmin;
+    width: 30vmin;
+    height: 4vmin;
+    background-color: rgba(255,0,0,0.0);
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-start;
+    text-align: right;
+    font-family: Round;
+    font-size: 2vmin;
+    color: rgba(0,0,0,0.25);
 }
 
 /* Animations */

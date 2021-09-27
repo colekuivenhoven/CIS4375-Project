@@ -10,7 +10,9 @@ var localNumberRaw = 0;
 
 // Main function for the specific 'page'
 function Reserve(props) {
-
+    const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
+    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
+    
     // Regular varaible declaration
     const pageTitle = "Reserve Your Court"
     var isMobile = props.isMobile;
@@ -66,6 +68,7 @@ function Reserve(props) {
                 <div className="reserve-form-container">
                     
                 </div>
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
             </div>
         </>
     )

@@ -4,7 +4,6 @@
 }
 
 .container-test {
-    box-shadow: inset 0px 4px 8px 0px rgba(0,0,0,0.15);
     width: 100vw;
     top: 7vmin;
     bottom: 0;
@@ -14,7 +13,7 @@
     justify-content: flex-start;
     align-items: center;
     padding-top: 2vmin;
-    animation: test-background-animation 0.75s linear forwards;
+    background-color: rgb(250, 250, 250);
 }
 
 .test-form-container {
@@ -123,8 +122,8 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    margin: 0.5vmin; 
+    width: auto;
+    margin-bottom: 0.5vmin;
     background-color: rgb(255, 255,255); 
     padding: 1vmin;
     border-radius: 0.5vmin; 
@@ -143,15 +142,16 @@
 .test-user-item {
     display: flex; 
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    width: 25%;
-    max-width: 25%;
-    min-width: 25%;
+    width: 17%;
+    max-width: 17%;
+    min-width: 17%;
     height: 100%;
     background-color: rgba(0,255,0,0);
     color: rgba(0,0,0,0.5);
     font-size: 1vmin;
+    border: 0px solid black;
 }
 
 .test-object-header {
@@ -159,7 +159,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: calc(100% - 3vmin);
+    width: calc(100% - 4vmin);
     margin-left: 0.5vmin; 
     margin-right: auto;
     margin-top: 1vmin;
@@ -174,15 +174,14 @@
 .test-object-header-item {
     display: flex; 
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    width: 25%;
+    width: 17%;
     height: 100%;
     background-color: rgba(0,255,0,0);
-    margin-left: 1vmin;
-    margin-right: 1vmin;
     color: rgba(0,0,0,0.6);
     font-weight: bold;
+    border: 0px solid black;
 }
 
 .test-object-info-container {
@@ -260,11 +259,3 @@
 }
 
 /* Animations */
-@keyframes test-background-animation {
-    0% {
-        background-color: rgb(255, 255, 255);
-    }
-    100% {
-        background-color: rgb(240, 240, 240);
-    }
-}
