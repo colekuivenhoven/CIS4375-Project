@@ -344,27 +344,6 @@ function AdminHome(props) {
         <>
             <div className="container-admin">
                 {/* Variables can be inserted inside of brackets as shown below */}
-                <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
-                <div className="test-container">
-                    <span className="font-round-medium unselectable">Local Number: {localNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonLocal();
-                        }}
-                    ></div>
-                </div>
-                <div className="test-container">
-                    <span className="font-round-medium unselectable">Global Number: {globalNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonGlobal();
-                        }}
-                    ></div>
-                </div>
                 <div className="row-container">
                     <div className="chart-container">
                     <div className="chart-title">Example - Quarterly Profits(1 Year)</div>

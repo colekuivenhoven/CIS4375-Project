@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Added initial login system"
+git commit -m "Minor Changes Made"
 
 // Push to remote repo
 git push -u origin master
