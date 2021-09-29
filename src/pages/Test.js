@@ -227,7 +227,7 @@ function Test(props) {
                         <span className="test-add-text">Password: <input className="test-add-input" value={testPassword} onChange={(e) => {setTestPassword(e.target.value)}}/></span>
                         <span className="test-add-text">Phone: <input className="test-add-input" value={testPhone} onChange={(e) => {setTestPhone(e.target.value)}}/></span>
                         <span className="test-add-text">Email: <input className="test-add-input" value={testEmail} onChange={(e) => {setTestEmail(e.target.value)}}/></span>
-                        <button className="test-add-button" onClick={() => {handleSubmit()}}>++ Add</button>
+                        <button className="test-add-button" onClick={() => {handleSubmit()}}>+ Add</button>
                     </div>
                 </div>
                 <div className="test-object-info-container">
