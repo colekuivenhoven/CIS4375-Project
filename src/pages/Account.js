@@ -22,7 +22,7 @@ function Account(props) {
     const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
 
     // Regular varaible declaration
-    const pageTitle = "Account"
+    const pageTitle = "My Account"
     var isMobile = props.isMobile;
 
     // 'useEffect' runs once for every render of the page
@@ -66,11 +66,6 @@ function Account(props) {
     });
 
     // Handling functions
-    function handleAddButtonLocal() {
-        localNumberRaw += 1;
-        setLocalNumber(localNumberRaw);
-    }
-
     function handleAddButtonGlobal() {
         setGlobalNumber(parseInt(globalNumber)+1);
         window.sessionStorage.setItem("num_global", parseInt(globalNumber)+1);
@@ -83,24 +78,25 @@ function Account(props) {
                 {/* Variables can be inserted inside of brackets as shown below */}
                 <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
                 <div className="test-container">
-                    <span className="font-round-medium unselectable">Local Number: {localNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonLocal();
-                        }}
-                    ></div>
+                <div class="main-text-panel">
+                    <span>
+                <div class="main-text-body">
+                        <img src="https://www.seekpng.com/png/detail/414-4140251_you-profile-picture-question-mark.png" height="200px" width="180px"></img>
+                        
+                    </div>
+                    <div class="main-text-body">
+                       
+                        <p>First Name: John</p>
+                        <p>Last Name: Smith</p>
+                        <p>Phone Number: 000-000-0000</p>
+                        <p>Email: email@gmail.com</p>
+                    </div>
+                    </span>
+                    </div>
+                    
                 </div>
                 <div className="test-container">
-                    <span className="font-round-medium unselectable">Global Number: {globalNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonGlobal();
-                        }}
-                    ></div>
+                    
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
             </div>

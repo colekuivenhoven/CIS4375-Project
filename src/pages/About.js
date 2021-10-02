@@ -66,10 +66,6 @@ function About(props) {
     });
 
     // Handling functions
-    function handleAddButtonLocal() {
-        localNumberRaw += 1;
-        setLocalNumber(localNumberRaw);
-    }
 
     function handleAddButtonGlobal() {
         setGlobalNumber(parseInt(globalNumber)+1);
@@ -83,24 +79,18 @@ function About(props) {
                 {/* Variables can be inserted inside of brackets as shown below */}
                 <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
                 <div className="test-container">
-                    <span className="font-round-medium unselectable">Local Number: {localNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonLocal();
-                        }}
-                    ></div>
+                    <p></p>
+                    <div class="main-text-panel">
+                    <div class="main-text-body">Homer Ford Tennis Center provides a comfortable tennis experience. Our services include equipment rental, 
+                        easy to navigate court reservation, and a text message alert system to notify you when your court is available.
+                        Choose us for your next play session or tournament, and you won't be disappointed. 
+                    </div>
+                    </div>
+                    
                 </div>
                 <div className="test-container">
-                    <span className="font-round-medium unselectable">Global Number: {globalNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonGlobal();
-                        }}
-                    ></div>
+                    
+                    
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
             </div>
