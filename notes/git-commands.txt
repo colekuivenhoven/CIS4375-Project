@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Reservation template started"
+git commit -m "Added drone video to homepage"
 
 // Push to remote repo
 git push -u origin master

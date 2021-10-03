@@ -150,7 +150,7 @@ function Home(props) {
                             <div className="player-wrapper">
                                 <ReactPlayer 
                                     playing={true}
-                                    playbackRate={1.5}
+                                    playbackRate={1}
                                     loop={true}
                                     muted={true}
                                     url={video}
