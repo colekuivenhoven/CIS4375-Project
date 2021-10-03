@@ -93,6 +93,21 @@
     height: 100%;
 }
 
+.player-wrapper {
+    position: relative;
+    background-color: rgba(255,0,0,0.0);
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.react-player video {
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: scale(1.25);
+}
+
 .slide-image-2 {
     background-image: url('../images/team-images/tennis4k-2.jpg');
     background-repeat: no-repeat;

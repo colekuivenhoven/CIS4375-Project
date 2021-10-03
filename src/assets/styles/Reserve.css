@@ -17,12 +17,178 @@
 }
 
 .reserve-form-container {
-    width: 80vmin;
-    aspect-ratio: 1;
+    width: 100vmin;
+    height: 85vmin;
     margin-top: 1vmin;
     border-radius: 1vmin;
     background-color: rgba(255,255,255,1);
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.05);
+    padding-right: 1vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+}
+
+.table-labels-container {
+    background-color: rgba(255,0,0,0.0);
+    width: calc(100% - 5vmin);
+    height: 4vmin;
+    margin-top: 1vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-label {
+    background-color: rgba(255,0,0,0.5);
+    width: 14%;
+    height: 3vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 1.25vmin;
+    font-weight: bold;
+    color: white;
+    border-radius: 0.25vmin;
+}
+
+.table-content-container {
+    background-color: rgba(255,0,0,0.0);
+    width: calc(100% - 5vmin);
+    height: 75vmin;
+    margin-top: 1vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-hours-container {
+    position: absolute;
+    margin-left: -5vmin;
+    background-color: rgba(22, 118, 62, 0.0);
+    width: 5vmin;
+    height: 75vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.table-hours-item-container {
+    background-color: rgba(0, 0, 0, 0.0);
+    width: 5vmin;
+    height: 7%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: Round;
+    font-weight: bold;
+    font-size: 0.99vmin;
+}
+
+.table-content-column {
+    background-color: rgba(0,0,255,0.0);
+    width: 14%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+
+.table-column-item-container-open {
+    background-color: rgba(0, 0, 0, 0.0);
+    width: 100%;
+    height: 7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 1.25vmin;
+}
+
+.table-column-item-container-open-sub {
+    background-color: rgba(31, 158, 19, 0.1);
+    width: 100%;
+    height: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 1.25vmin;
+    cursor: pointer;
+    transition: all 0.1s ease-in-out;
+}
+
+.table-hours-item-container-sub {
+    background-color: rgba(0, 0, 0, 0.0);
+    position: absolute;
+    left: calc(50% - 55.5vmin);
+    width: 5vmin;
+    height: 1vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 0.99vmin;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.1s ease-in-out;
+}
+
+.table-column-item-container-open-sub:hover {
+    background-color: rgba(31, 158, 19, 0.4);
+}
+
+.table-column-item-container-open-sub:hover > .table-hours-item-container-sub {
+    opacity: 100%;
+    left: calc(50% - 50.5vmin);
+    color: rgb(0,0,0);
+}
+
+.table-column-item-container-reserved{
+    background-color: rgba(0, 51, 255, 0.4);
+    width: 100%;
+    height: 7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 1.25vmin;
+}
+
+.table-column-item-container-closed {
+    background-color: rgba(0, 0, 0, 0.15);
+    width: 100%;
+    height: 7%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 1.25vmin;
 }
 
 /* Animations */
+@keyframes column-item-open-animation {
+    0% {
+        background-color: rgba(31, 158, 19, 0.1);
+    }
+    50% {
+        background-color: rgba(31, 158, 19, 0.4);
+    }
+    100% {
+        background-color: rgba(31, 158, 19, 0.1);
+    }
+}

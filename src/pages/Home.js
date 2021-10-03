@@ -4,6 +4,7 @@ import '../assets/styles/Home.css';
 
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
+import ReactPlayer from 'react-player/lazy';
 
 // Importing the router files
 import {
@@ -12,6 +13,9 @@ import {
     Route,
     Link
 } from "react-router-dom";
+
+// Importing locally used objects
+import video from '../assets/images/team-images/Dronefootage1-converted.webm';
 
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
@@ -95,7 +99,7 @@ function Home(props) {
             setImgIndex(imgIndex+1);
             el_back.classList.add("active");
             el_scrollContainer.scrollTo({
-                top: el_scrollContainer.getBoundingClientRect().height * (imgIndex+1),
+                top: el_scrollContainer.getBoundingClientRect().height * (imgIndex+1) + 1,
                 left: 0,
                 behavior: 'smooth'
             });
@@ -115,7 +119,7 @@ function Home(props) {
             setImgIndex(imgIndex-1);
             el_next.classList.add("active");
             el_scrollContainer.scrollTo({
-                top: el_scrollContainer.getBoundingClientRect().height * (imgIndex-1),
+                top: el_scrollContainer.getBoundingClientRect().height * (imgIndex-1) + 1,
                 left: 0,
                 behavior: 'smooth'
             });
@@ -142,10 +146,19 @@ function Home(props) {
                         </div>
                     </div>
                     <div className="main-image-panel">
-                        <div className="home-image-content"
-
-                        >
-                            <div className="slide-image-1"></div>
+                        <div className="home-image-content">
+                            <div className="player-wrapper">
+                                <ReactPlayer 
+                                    playing={true}
+                                    playbackRate={1.5}
+                                    loop={true}
+                                    muted={true}
+                                    url={video}
+                                    width={'100%'} 
+                                    height={'100%'}
+                                    className="react-player"
+                                />
+                            </div>
                             <div className="slide-image-2"></div>
                             <div className="slide-image-3"></div>
                         </div>

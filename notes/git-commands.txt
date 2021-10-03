@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Test Change Reverse"
+git commit -m "Reservation template started"
 
 // Push to remote repo
 git push -u origin master
