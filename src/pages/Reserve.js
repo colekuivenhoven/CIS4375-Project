@@ -30,6 +30,11 @@ function Reserve(props) {
             timeStart: '8:45am',
             duration: 2
         },
+        {
+            date: '10/3/2021',
+            timeStart: '2:30pm',
+            duration: 1.5
+        },
     ]
 
     var timeslotsJSON = [
@@ -481,10 +486,24 @@ function Reserve(props) {
             var amOrPM = (slot.time).substring((slot.time).length - 2);
             var timeHour = timeRaw.split(':')[0];
             var timeMinutes = timeRaw.split(':')[1];
+            var blockRadius = '1vmin';
+            var borderWidth = '0.0vmin';
+            var borderColor = 'rgb(165, 216, 161, 1)';
 
             if(slot.status == 'open') {
                 returnData.push(
-                    <div key={index} className="table-column-item-container-open-2">
+                    <div key={index} className="table-column-item-container-open-2"
+                        style={
+                            slots[index-1].status != 'open' ? 
+                                {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius, 
+                                    borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderTop: borderWidth+' solid '+borderColor} : 
+                                slots[index+1].status != 'open' ? 
+                                    {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius,
+                                        borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderBottom: borderWidth+' solid '+borderColor} :
+                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin', 
+                                        borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor}
+                        }
+                    >
                         {(timeMinutes != '00') && <div className="table-hours-item-container-sub">{timeHour}:{timeMinutes}{amOrPM}</div>}
                         <div className="table-hours-highlight-container"></div>
                     </div>
@@ -492,12 +511,28 @@ function Reserve(props) {
             }
             else if(slot.status == 'closed') {
                 returnData.push(
-                    <div key={index} className="table-column-item-container-closed-2"></div>
+                    <div key={index} className="table-column-item-container-closed-2"
+                        style={
+                            slots[index-1] != null && slots[index-1].status != 'closed' ? 
+                                {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius} : 
+                                slots[index+1] != null && slots[index+1].status != 'closed' ? 
+                                    {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius} :
+                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin'}
+                        }
+                    ></div>
                 )
             }
             else if(slot.status == 'reserved') {
                 returnData.push(
-                    <div key={index} className="table-column-item-container-reserved-2"></div>
+                    <div key={index} className="table-column-item-container-reserved-2"
+                        style={
+                            slots[index-1].status != 'reserved' ? 
+                                {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius} : 
+                                slots[index+1].status != 'reserved' ? 
+                                    {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius} :
+                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin'}
+                        }
+                    ></div>
                 )
             }
         });
@@ -506,9 +541,6 @@ function Reserve(props) {
     }
 
     // Handling functions
-    function checkReservationSlot(date, time) {
-        return false;
-    }
 
     return (
         // Empty root element. The return can have only one root element
@@ -516,7 +548,7 @@ function Reserve(props) {
             <div className="container-reserve">
                 {/* Variables can be inserted inside of brackets as shown below */}
                 {/* <div className="page-title"><span className="font-round-large">{pageTitle}</span></div> */}
-
+                <div className="reservation-content-title">Court 1</div>
                 <div className="reserve-form-container">
                     <div className="table-labels-container">
                         <div className="table-label">
