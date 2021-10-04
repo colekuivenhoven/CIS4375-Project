@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Updated reservation page"
+git commit -m "Minor update on reservation page"
 
 // Push to remote repo
 git push -u origin master

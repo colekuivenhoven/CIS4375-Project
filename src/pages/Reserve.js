@@ -405,6 +405,9 @@ function Reserve(props) {
                     if(timeHour >= 6 && timeHour != 12 && amOrPM == 'pm') {
                         slot.status = 'closed'
                     }
+                    else if(timeHour == 7 && timeMinutes < 30 && amOrPM == 'am') {
+                        slot.status = 'closed'
+                    }
                     else {
                         slot.status = 'open'
                     }
@@ -418,6 +421,9 @@ function Reserve(props) {
                     var timeMinutes = timeRaw.split(':')[1];
 
                     if(timeHour >= 9 && timeHour != 12 && amOrPM == 'pm') {
+                        slot.status = 'closed'
+                    }
+                    else if(timeHour == 7 && timeMinutes < 30 && amOrPM == 'am') {
                         slot.status = 'closed'
                     }
                     else {
