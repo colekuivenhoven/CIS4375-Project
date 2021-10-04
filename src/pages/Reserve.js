@@ -22,77 +22,257 @@ function Reserve(props) {
     const reservations = [
         {
             date: '10/7/2021',
-            timeStart: '10am',
-            duration: 4
+            timeStart: '10:15am',
+            duration: 3.5
         },
         {
             date: '10/9/2021',
-            timeStart: '8am',
+            timeStart: '8:45am',
             duration: 2
         },
     ]
 
     var timeslotsJSON = [
         {
-            time: '7am',
+            time: '7:00am',
             status: 'open'
         },
+            {
+                time: '7:15am',
+                status: 'open'
+            },
+            {
+                time: '7:30am',
+                status: 'open'
+            },
+            {
+                time: '7:45am',
+                status: 'open'
+            },
         {
-            time: '8am',
+            time: '8:00am',
             status: 'open'
         },
+            {
+                time: '8:15am',
+                status: 'open'
+            },
+            {
+                time: '8:30am',
+                status: 'open'
+            },
+            {
+                time: '8:45am',
+                status: 'open'
+            },
         {
-            time: '9am',
+            time: '9:00am',
             status: 'open'
         },
+            {
+                time: '9:15am',
+                status: 'open'
+            },
+            {
+                time: '9:30am',
+                status: 'open'
+            },
+            {
+                time: '9:45am',
+                status: 'open'
+            },
         {
-            time: '10am',
+            time: '10:00am',
             status: 'open'
         },
+            {
+                time: '10:15am',
+                status: 'open'
+            },
+            {
+                time: '10:30am',
+                status: 'open'
+            },
+            {
+                time: '10:45am',
+                status: 'open'
+            },
         {
-            time: '11am',
+            time: '11:00am',
             status: 'open'
         },
+            {
+                time: '11:15am',
+                status: 'open'
+            },
+            {
+                time: '11:30am',
+                status: 'open'
+            },
+            {
+                time: '11:45am',
+                status: 'open'
+            },
         {
-            time: '12pm',
+            time: '12:00pm',
             status: 'open'
         },
+            {
+                time: '12:15pm',
+                status: 'open'
+            },
+            {
+                time: '12:30pm',
+                status: 'open'
+            },
+            {
+                time: '12:45pm',
+                status: 'open'
+            },
         {
-            time: '1pm',
+            time: '1:00pm',
             status: 'open'
         },
+            {
+                time: '1:15pm',
+                status: 'open'
+            },
+            {
+                time: '1:30pm',
+                status: 'open'
+            },
+            {
+                time: '1:45pm',
+                status: 'open'
+            },
         {
-            time: '2pm',
+            time: '2:00pm',
             status: 'open'
         },
+            {
+                time: '2:15pm',
+                status: 'open'
+            },
+            {
+                time: '2:30pm',
+                status: 'open'
+            },
+            {
+                time: '2:45pm',
+                status: 'open'
+            },
         {
-            time: '3pm',
+            time: '3:00pm',
             status: 'open'
         },
+            {
+                time: '3:15pm',
+                status: 'open'
+            },
+            {
+                time: '3:30pm',
+                status: 'open'
+            },
+            {
+                time: '3:45pm',
+                status: 'open'
+            },
         {
-            time: '4pm',
+            time: '4:00pm',
             status: 'open'
         },
+            {
+                time: '4:15pm',
+                status: 'open'
+            },
+            {
+                time: '4:30pm',
+                status: 'open'
+            },
+            {
+                time: '4:45pm',
+                status: 'open'
+            },
         {
-            time: '5pm',
+            time: '5:00pm',
             status: 'open'
         },
+            {
+                time: '5:15pm',
+                status: 'open'
+            },
+            {
+                time: '5:30pm',
+                status: 'open'
+            },
+            {
+                time: '5:45pm',
+                status: 'open'
+            },
         {
-            time: '6pm',
+            time: '6:00pm',
             status: 'open'
         },
+            {
+                time: '6:15pm',
+                status: 'open'
+            },
+            {
+                time: '6:30pm',
+                status: 'open'
+            },
+            {
+                time: '6:45pm',
+                status: 'open'
+            },
         {
-            time: '7pm',
+            time: '7:00pm',
             status: 'open'
         },
+            {
+                time: '7:15pm',
+                status: 'open'
+            },
+            {
+                time: '7:30pm',
+                status: 'open'
+            },
+            {
+                time: '7:45pm',
+                status: 'open'
+            },
         {
-            time: '8pm',
+            time: '8:00pm',
             status: 'open'
         },
+            {
+                time: '8:15pm',
+                status: 'open'
+            },
+            {
+                time: '8:30pm',
+                status: 'open'
+            },
+            {
+                time: '8:45pm',
+                status: 'open'
+            },
         {
-            time: '9pm',
+            time: '9:00pm',
             status: 'open'
-        }
+        },
+            {
+                time: '9:15pm',
+                status: 'open'
+            },
+            {
+                time: '9:30pm',
+                status: 'open'
+            },
+            {
+                time: '9:45pm',
+                status: 'open'
+            }
     ]
 
     const columnDays = [
@@ -181,6 +361,32 @@ function Reserve(props) {
     }
 
     // Rendering functions
+    function renderTimeColumn() {
+        var returnData = [];
+        timeslotsJSON.forEach((slot, index) => {
+            var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
+            var amOrPM = (slot.time).substring((slot.time).length - 2);
+            var timeHour = timeRaw.split(':')[0];
+            var timeMinutes = timeRaw.split(':')[1];
+            
+            if(timeMinutes == '00') {
+                returnData.push(
+                    <div className="table-hours-item-container">
+                        {slot.time}
+                        <div className="table-break-highlight-container"></div>
+                    </div>
+                )
+            }
+            else {
+                returnData.push(
+                    <div className="table-hours-item-container"></div>
+                )
+            }
+        })
+
+        return (returnData);
+    }
+
     function renderColumns() {
         var returnData = [];
 
@@ -191,8 +397,10 @@ function Reserve(props) {
 
             if(dateRawDay == 'Sat' || dateRawDay == 'Sun') {
                 dayTimeslots.forEach((slot) => {
-                    var timeHour = (slot.time).substring(0,(slot.time).length - 2);
+                    var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
                     var amOrPM = (slot.time).substring((slot.time).length - 2);
+                    var timeHour = timeRaw.split(':')[0];
+                    var timeMinutes = timeRaw.split(':')[1];
 
                     if(timeHour >= 6 && timeHour != 12 && amOrPM == 'pm') {
                         slot.status = 'closed'
@@ -204,8 +412,10 @@ function Reserve(props) {
             }
             else {
                 dayTimeslots.forEach((slot) => {
-                    var timeHour = (slot.time).substring(0,(slot.time).length - 2);
+                    var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
                     var amOrPM = (slot.time).substring((slot.time).length - 2);
+                    var timeHour = timeRaw.split(':')[0];
+                    var timeMinutes = timeRaw.split(':')[1];
 
                     if(timeHour >= 9 && timeHour != 12 && amOrPM == 'pm') {
                         slot.status = 'closed'
@@ -216,27 +426,32 @@ function Reserve(props) {
                 })
             }
 
-            // reservations.forEach((reservation) => {
-            //     if(reservation.date == day.date) {
-            //         var resStartTime = (reservation.timeStart).substring(0,(reservation.timeStart).length - 2);
-            //         var resAmOrPM = (reservation.timeStart).substring((reservation.timeStart).length - 2);
+            reservations.forEach((reservation) => {
+                if(reservation.date == day.date) {
+                    var resStartTimeRaw = (reservation.timeStart).substring(0,(reservation.timeStart).length - 2);
+                    var resAmOrPM = (reservation.timeStart).substring((reservation.timeStart).length - 2);
 
-            //         var startIndex = -1;
-            //         dayTimeslots.forEach((slot, index) => {
-            //             var timeHour = (slot.time).substring(0,(slot.time).length - 2);
-            //             var amOrPM = (slot.time).substring((slot.time).length - 2);
+                    var resTimeHour = resStartTimeRaw.split(':')[0];
+                    var resTimeMinutes = resStartTimeRaw.split(':')[1];
+
+                    var startIndex = -1;
+                    dayTimeslots.forEach((slot, index) => {
+                        var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
+                        var amOrPM = (slot.time).substring((slot.time).length - 2);
+                        var timeHour = timeRaw.split(':')[0];
+                        var timeMinutes = timeRaw.split(':')[1];
     
-            //             if(timeHour == resStartTime && amOrPM == resAmOrPM ) {
-            //                 slot.status = 'reserved';
-            //                 startIndex = index;
-            //             }
+                        if(timeHour == resTimeHour && timeMinutes == resTimeMinutes && amOrPM == resAmOrPM ) {
+                            slot.status = 'reserved';
+                            startIndex = index;
+                        }
                         
-            //             // if(startIndex > -1 && (index - startIndex < reservation.duration)) {
-            //             //     slot.status = 'reserved';
-            //             // }
-            //         })
-            //     }
-            // })
+                        if(startIndex > -1 && (index - startIndex < reservation.duration * 4)) {
+                            slot.status = 'reserved';
+                        }
+                    })
+                }
+            })
 
             returnData.push(
                 <div key={index} className="table-content-column">
@@ -256,36 +471,29 @@ function Reserve(props) {
         var dateRawDay = dateRaw.toLocaleString('en-us', {  weekday: 'short' });
 
         slots.forEach((slot, index) => {
-            var timeHour = (slot.time).substring(0,(slot.time).length - 2);
+            var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
             var amOrPM = (slot.time).substring((slot.time).length - 2);
+            var timeHour = timeRaw.split(':')[0];
+            var timeMinutes = timeRaw.split(':')[1];
 
             if(slot.status == 'open') {
                 returnData.push(
-                    <div key={index} className="table-column-item-container-open">
-                        <div className="table-column-item-container-open-sub">
-                        </div>
-                        <div className="table-column-item-container-open-sub">
-                            <div className="table-hours-item-container-sub">{timeHour}:15{amOrPM}</div>
-                        </div>
-                        <div className="table-column-item-container-open-sub">
-                            <div className="table-hours-item-container-sub">{timeHour}:30{amOrPM}</div>
-                        </div>
-                        <div className="table-column-item-container-open-sub">
-                            <div className="table-hours-item-container-sub">{timeHour}:45{amOrPM}</div>
-                        </div>
+                    <div key={index} className="table-column-item-container-open-2">
+                        {(timeMinutes != '00') && <div className="table-hours-item-container-sub">{timeHour}:{timeMinutes}{amOrPM}</div>}
+                        <div className="table-hours-highlight-container"></div>
                     </div>
                 )
             }
             else if(slot.status == 'closed') {
                 returnData.push(
-                    <div key={index} className="table-column-item-container-closed"></div>
+                    <div key={index} className="table-column-item-container-closed-2"></div>
                 )
             }
-            // else if(slot.status == 'reserved') {
-            //     returnData.push(
-            //         <div key={index} className="table-column-item-container-reserved">Reserved</div>
-            //     )
-            // }
+            else if(slot.status == 'reserved') {
+                returnData.push(
+                    <div key={index} className="table-column-item-container-reserved-2"></div>
+                )
+            }
         });
 
         return (returnData);
@@ -329,51 +537,7 @@ function Reserve(props) {
                     </div>
                     <div className="table-content-container">
                         <div className="table-hours-container">
-                            <div className="table-hours-item-container">
-                                7:00am
-                            </div>
-                            <div className="table-hours-item-container">
-                                8:00am
-                            </div>
-                            <div className="table-hours-item-container">
-                                9:00am
-                            </div>
-                            <div className="table-hours-item-container">
-                                10:00am
-                            </div>
-                            <div className="table-hours-item-container">
-                                11:00am
-                            </div>
-                            <div className="table-hours-item-container">
-                                12:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                1:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                2:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                3:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                4:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                5:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                6:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                7:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                8:00pm
-                            </div>
-                            <div className="table-hours-item-container">
-                                9:00pm
-                            </div>
+                            {renderTimeColumn()}
                         </div>
 
                         {renderColumns()}
