@@ -9,38 +9,29 @@ import React, { useEffect, useRef, useState } from "react";
 var localNumberRaw = 0;
 const dateToday = new Date();
 
+var resArray = [];
+var resBuffer = [];
+var gotReservationData = false;
+
 // Main function for the specific 'page'
 function Reserve(props) {
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
     const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
+    const [currentCourt, setCurrentCourt] = useState(1);
+    const [selectedDate, setSelectedDate] = useState(null);
+    const [selectedTime, setSelectedTime] = useState(null);
+    const [selectedDuration, setSelectedDuration] = useState(0.75);
+    const [reservations, setReservations] = useState([]);
     
     // Regular varaible declaration
     const pageTitle = "Reserve Your Court"
     var isMobile = props.isMobile;
 
-    // Sample data
-    const reservations = [
-        {
-            date: '10/7/2021',
-            timeStart: '10:15am',
-            duration: 3.5
-        },
-        {
-            date: '10/9/2021',
-            timeStart: '8:45am',
-            duration: 2
-        },
-        {
-            date: '10/3/2021',
-            timeStart: '2:30pm',
-            duration: 1.5
-        },
-    ]
-
     var timeslotsJSON = [
         {
             time: '7:00am',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '7:15am',
@@ -48,235 +39,293 @@ function Reserve(props) {
             },
             {
                 time: '7:30am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '7:45am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '8:00am',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '8:15am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '8:30am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '8:45am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '9:00am',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '9:15am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '9:30am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '9:45am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '10:00am',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '10:15am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '10:30am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '10:45am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '11:00am',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '11:15am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '11:30am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '11:45am',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '12:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '12:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '12:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '12:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '1:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '1:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '1:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '1:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '2:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '2:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '2:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '2:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '3:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '3:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '3:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '3:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '4:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '4:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '4:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '4:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '5:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '5:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '5:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '5:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '6:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '6:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '6:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '6:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '7:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '7:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '7:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '7:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '8:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '8:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '8:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '8:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
         {
             time: '9:00pm',
-            status: 'open'
+            status: 'open',
+            reservation: null
         },
             {
                 time: '9:15pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '9:30pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             },
             {
                 time: '9:45pm',
-                status: 'open'
+                status: 'open',
+                reservation: null
             }
     ]
 
@@ -318,6 +367,10 @@ function Reserve(props) {
         var fontMed = document.querySelectorAll(".font-round-medium");
         var addButton = document.querySelectorAll(".container-add");
 
+        if(!gotReservationData) {
+            getReservationData();
+        }
+
         if(isMobile) {
             mainContainer.style.top = "15vmin"
 
@@ -349,7 +402,60 @@ function Reserve(props) {
                 el.style.marginLeft = "1vmin"
             });
         }
-    });
+
+        return () => {
+            gotReservationData = false;
+        }
+    }, []);
+
+    // Server functions
+    async function getReservationData() {
+        let response = await fetch("http://3.218.225.62:3040/reservations/getall");
+        response = await response.json();
+        resArray = response.reservations;
+        resBuffer = [];
+
+        if(!gotReservationData) {
+            convertReservations();
+        }
+    }
+
+    function convertReservations() {
+        resArray.forEach(res => {
+            resBuffer.push(
+                {
+                    id: res.Reservation_id,
+                    type_id: res.Reservation_type,
+                    status_id: res.Reservation_status,
+                    date: res.Reservation_date,
+                    timeStart: res.Reservation_time,
+                    duration: parseFloat(res.Reservation_duration),
+                    court_id: res.Court_id,
+                    customer_id: res.Customer_id
+                }
+            )
+        });
+
+        setReservations(resBuffer);
+
+        gotReservationData = true;
+    }
+
+    function addReservation(data) {
+        fetch("http://3.218.225.62:3040/reservation/add", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .then(() => {
+            gotReservationData = false;
+            getReservationData();
+        })
+    }
 
     // Formatting functions
     function convertDate(day) {
@@ -376,15 +482,15 @@ function Reserve(props) {
             
             if(timeMinutes == '00') {
                 returnData.push(
-                    <div className="table-hours-item-container">
+                    <div key={index} className="table-hours-item-container">
                         {slot.time}
-                        <div className="table-break-highlight-container"></div>
+                        {/* <div className="table-break-highlight-container"></div> */}
                     </div>
                 )
             }
             else {
                 returnData.push(
-                    <div className="table-hours-item-container"></div>
+                    <div key={index} className="table-hours-item-container"></div>
                 )
             }
         })
@@ -446,21 +552,27 @@ function Reserve(props) {
                     var resTimeMinutes = resStartTimeRaw.split(':')[1];
 
                     var startIndex = -1;
-                    dayTimeslots.forEach((slot, index) => {
-                        var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
-                        var amOrPM = (slot.time).substring((slot.time).length - 2);
-                        var timeHour = timeRaw.split(':')[0];
-                        var timeMinutes = timeRaw.split(':')[1];
-    
-                        if(timeHour == resTimeHour && timeMinutes == resTimeMinutes && amOrPM == resAmOrPM ) {
-                            slot.status = 'reserved';
-                            startIndex = index;
-                        }
-                        
-                        if(startIndex > -1 && (index - startIndex < reservation.duration * 4)) {
-                            slot.status = 'reserved';
-                        }
-                    })
+                    var resIdBuffer = -1;
+                    if(reservation.court_id == currentCourt) {
+                        dayTimeslots.forEach((slot, index) => {
+                            var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
+                            var amOrPM = (slot.time).substring((slot.time).length - 2);
+                            var timeHour = timeRaw.split(':')[0];
+                            var timeMinutes = timeRaw.split(':')[1];
+        
+                            if(timeHour == resTimeHour && timeMinutes == resTimeMinutes && amOrPM == resAmOrPM) {
+                                slot.status = 'reserved';
+                                slot.reservation = reservation.id;
+                                resIdBuffer = reservation.id;
+                                startIndex = index;
+                            }
+                            
+                            if(startIndex > -1 && (index - startIndex < reservation.duration * 4)) {
+                                slot.status = 'reserved';
+                                slot.reservation = resIdBuffer;
+                            }
+                        });
+                    }
                 }
             })
 
@@ -487,22 +599,35 @@ function Reserve(props) {
             var timeHour = timeRaw.split(':')[0];
             var timeMinutes = timeRaw.split(':')[1];
             var blockRadius = '1vmin';
-            var borderWidth = '0.0vmin';
-            var borderColor = 'rgb(165, 216, 161, 1)';
+            var borderWidth = '0.25vmin';
+            var borderColor = 'rgba(255,255,255,1)';
 
             if(slot.status == 'open') {
                 returnData.push(
-                    <div key={index} className="table-column-item-container-open-2"
+                    <div key={index} className={timeMinutes == '00' ? "table-column-item-container-open-2 darker" : "table-column-item-container-open-2"}
                         style={
-                            slots[index-1].status != 'open' ? 
+                            (slots[index-1].status != 'open' && slots[index+1].status == 'open') ? 
                                 {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius, 
                                     borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderTop: borderWidth+' solid '+borderColor} : 
-                                slots[index+1].status != 'open' ? 
+                                (slots[index+1].status != 'open' && slots[index-1].status == 'open') ? 
                                     {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius,
                                         borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderBottom: borderWidth+' solid '+borderColor} :
-                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin', 
-                                        borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor}
+                                    (slots[index+1].status != 'open' && slots[index-1].status != 'open') ? 
+                                        {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius, borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius,
+                                            borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderBottom: borderWidth+' solid '+borderColor, borderTop: borderWidth+' solid '+borderColor} :
+                                        {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin', 
+                                            borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor}
                         }
+                        onClick={() => {
+                            if(loggedIn) {
+                                handleToggleModal();
+                                setSelectedDate(date);
+                                setSelectedTime(slot.time);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
                     >
                         {(timeMinutes != '00') && <div className="table-hours-item-container-sub">{timeHour}:{timeMinutes}{amOrPM}</div>}
                         <div className="table-hours-highlight-container"></div>
@@ -514,10 +639,13 @@ function Reserve(props) {
                     <div key={index} className="table-column-item-container-closed-2"
                         style={
                             slots[index-1] != null && slots[index-1].status != 'closed' ? 
-                                {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius} : 
+                                {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius, 
+                                    borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderTop: borderWidth+' solid '+borderColor} : 
                                 slots[index+1] != null && slots[index+1].status != 'closed' ? 
-                                    {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius} :
-                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin'}
+                                    {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius,
+                                        borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderBottom: borderWidth+' solid '+borderColor} :
+                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin', 
+                                        borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor}
                         }
                     ></div>
                 )
@@ -526,13 +654,30 @@ function Reserve(props) {
                 returnData.push(
                     <div key={index} className="table-column-item-container-reserved-2"
                         style={
-                            slots[index-1].status != 'reserved' ? 
-                                {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius} : 
-                                slots[index+1].status != 'reserved' ? 
-                                    {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius} :
-                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin'}
+                            (slots[index-1].reservation != slots[index].reservation) ? 
+                                {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius, 
+                                    borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderTop: borderWidth+' solid '+borderColor} : 
+                                    (slots[index+1].reservation != slots[index].reservation) ? 
+                                    {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius,
+                                        borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderBottom: borderWidth+' solid '+borderColor} :
+                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin', 
+                                        borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor}
                         }
-                    ></div>
+                    >
+                        {(slots[index-1].reservation != slots[index].reservation) 
+                        ? 
+                        <span className="res-text">
+                            {reservations.find(el => el.id == slots[index].reservation).timeStart + " - "+reservations.find(el => el.id == slots[index].reservation).duration+" hour(s)"}
+                        </span>
+                        : ''}
+
+                        {(slots[index+1].reservation != slots[index].reservation) 
+                        ? 
+                        <span className="res-text" style={{top: '0', color: 'rgba(0,0,0,0.35)'}}>
+                            {"Customer ID: "+reservations.find(el => el.id == slots[index].reservation).customer_id}
+                        </span>
+                        : ''}
+                    </div>
                 )
             }
         });
@@ -541,6 +686,204 @@ function Reserve(props) {
     }
 
     // Handling functions
+    function handleCourtNext() {
+        if(currentCourt < 16) {
+            setCurrentCourt(currentCourt + 1);
+        }
+    }
+
+    function handleCourtBack() {
+        if(currentCourt > 1) {
+            setCurrentCourt(currentCourt - 1);
+        }
+    }
+
+    function handleToggleModal() {
+        document.querySelector(".reserve-modal-main-container").classList.toggle("active");
+        document.querySelector(".reserve-modal-window-container").classList.toggle("active");
+    }
+
+    function handleDurationAdd() {
+        if(selectedDuration < 5) {
+            setSelectedDuration(selectedDuration + 0.25);
+        }
+    }
+
+    function handleDurationSubtract() {
+        if(selectedDuration > 0.75) {
+            setSelectedDuration(selectedDuration - 0.25);
+        }
+    }
+
+    function handleButtonSubmit() {
+        var reservationData = {
+            // id: reservations[reservations.length - 1].id + 1,
+            // court: currentCourt,
+            // date: selectedDate,
+            // timeStart: selectedTime,
+            // duration: selectedDuration, 
+            // user_id: 4,
+            // type_id: 0,
+            // status_id: 0,
+            type_id: 0,
+            status_id: 0,
+            date: selectedDate,
+            timeStart: selectedTime,
+            duration: selectedDuration,
+            court_id: currentCourt,
+            customer_id: 4
+        }
+
+        if(checkValidReservation(reservationData)) {
+            // reservations.push(reservationData);
+            addReservation(reservationData);
+            resetSelectedInfo();
+            handleToggleModal();
+        }
+        else {
+            document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
+        }
+    }
+
+    function checkValidReservation(reservationData) {
+        var valid = true;
+
+        var startTimeRaw = (reservationData.timeStart).substring(0,(reservationData.timeStart).length - 2);
+        var startTimeAmOrPM = (reservationData.timeStart).substring((reservationData.timeStart).length - 2);
+        var startTimeHour = startTimeRaw.split(':')[0];
+        var startTimeMinutes = startTimeRaw.split(':')[1];
+        var durationHours = parseInt(reservationData.duration.toString().split('.')[0]);
+        var durationMinutes = parseInt(parseFloat("."+reservationData.duration.toString().split('.')[1]) * 60);
+
+        var endTimeAmOrPM = startTimeAmOrPM;
+        var endTimeHour = parseInt(startTimeHour) + parseInt(durationHours);
+        var endTimeMinutes = parseInt(startTimeMinutes) + parseInt(durationMinutes);
+
+        if(endTimeMinutes >= 60) {
+            endTimeHour += parseInt(endTimeMinutes / 60);
+            endTimeMinutes = parseInt(parseFloat("."+parseFloat(endTimeMinutes / 60).toString().split('.')[1]) * 60);
+
+            if(isNaN(endTimeMinutes)) {
+                endTimeMinutes = '00';
+            }
+        }
+
+        if(endTimeHour > 12) {
+            endTimeHour -= 12;
+            endTimeAmOrPM = 'pm'
+        }
+
+        reservations.forEach((res) => {
+            var resStartTimeRaw = (res.timeStart).substring(0,(res.timeStart).length - 2);
+            var resAmOrPM = (res.timeStart).substring((res.timeStart).length - 2);
+            var resTimeHour = resStartTimeRaw.split(':')[0];
+            var resTimeMinutes = resStartTimeRaw.split(':')[1];
+            var resDurationHours = parseInt(res.duration.toString().split('.')[0]);
+            var resDurationMinutes = parseInt(parseFloat("."+res.duration.toString().split('.')[1]) * 60);
+
+            var resEndTimeAmOrPM = resAmOrPM;
+            var resEndTimeHour = parseInt(resTimeHour) + parseInt(resDurationHours);
+            var resEndTimeMinutes = parseInt(resTimeMinutes) + parseInt(resDurationMinutes);
+
+            if(resEndTimeMinutes >= 60) {
+                resEndTimeHour += parseInt(resEndTimeMinutes / 60);
+                resEndTimeMinutes = parseInt(parseFloat("."+parseFloat(resEndTimeMinutes / 60).toString().split('.')[1]) * 60);
+
+                if(isNaN(resEndTimeMinutes)) {
+                    resEndTimeMinutes = '00';
+                }
+            }
+
+            if(resEndTimeHour > 12) {
+                resEndTimeHour -= 12;
+                resEndTimeAmOrPM = 'pm'
+            }
+
+            if(res.date == reservationData.date) {
+                if(res.court_id == reservationData.court_id) {
+                    var resBufferStart = convertTo24Hour(res.timeStart);
+                    var resBufferStartHours = parseInt(resBufferStart.split(':')[0]);
+                    var resBufferStartMinutes = parseInt(resBufferStart.split(':')[1]);
+
+                    var resBufferEnd = convertTo24Hour(resEndTimeHour+":"+resEndTimeMinutes+resEndTimeAmOrPM);
+                    var resBufferEndHours = parseInt(resBufferEnd.split(':')[0]);
+                    var resBufferEndMinutes = parseInt(resBufferEnd.split(':')[1]);
+
+                    var reqBufferStart = convertTo24Hour(reservationData.timeStart);
+                    var reqBufferStartHours = parseInt(reqBufferStart.split(':')[0]);
+                    var reqBufferStartMinutes = parseInt(reqBufferStart.split(':')[1]);
+
+                    var reqBufferEnd = convertTo24Hour(endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
+                    var reqBufferEndHours = parseInt(reqBufferEnd.split(':')[0]);
+                    var reqBufferEndMinutes = parseInt(reqBufferEnd.split(':')[1]);
+
+                    var existingStart = parseFloat(resBufferStartHours+parseFloat(resBufferStartMinutes/60));
+                    var existingEnd = existingStart + res.duration;
+
+                    var requestStart = parseFloat(reqBufferStartHours+parseFloat(reqBufferStartMinutes/60));
+                    var requestEnd = requestStart + reservationData.duration;
+
+                    if(existingStart < requestEnd && existingEnd > requestStart) {
+                        valid = false;
+                    }
+                }
+            }
+        });
+
+        if(isWeekday(reservationData.date)) {
+            if(endTimeHour >= 9 && endTimeAmOrPM == "pm") {
+                if(endTimeMinutes == "00" && endTimeHour == 9) {
+                    valid = true;
+                }
+                else {
+                    valid = false;
+                }
+            }
+        }
+        else {
+            if(endTimeHour >= 6 && endTimeAmOrPM == "pm") {
+                if(endTimeMinutes == "00" && endTimeHour == 6) {
+                    valid = true;
+                }
+                else {
+                    valid = false;
+                }
+            }
+        }
+
+        return valid;
+    }
+
+    // Borrowed from https://stackoverflow.com/a/17555888
+    function convertTo24Hour(time) {
+        var hours = parseInt(time.substr(0, 2));
+        if(time.indexOf('am') != -1 && hours == 12) {
+            time = time.replace('12', '0');
+        }
+        if(time.indexOf('pm')  != -1 && hours < 12) {
+            time = time.replace(hours, (hours + 12));
+        }
+        return time.replace(/(am|pm)/, '');
+    }
+
+    function isWeekday(date) {
+        var returnValue = true;
+        var dateRaw = convertToDateFromString(date);
+        var dateDay = dateRaw.toLocaleString('en-us', {  weekday: 'short' });
+
+        if(dateDay == 'Sat' || dateDay == 'Sun') {
+            returnValue = false;
+        }
+
+        return returnValue;
+    }
+
+    function resetSelectedInfo() {
+        setSelectedDate(null);
+        setSelectedTime(null);
+        setSelectedDuration(0.75);
+        document.querySelector(".reserve-modal-window-error").textContent = '';
+    }
 
     return (
         // Empty root element. The return can have only one root element
@@ -548,11 +891,23 @@ function Reserve(props) {
             <div className="container-reserve">
                 {/* Variables can be inserted inside of brackets as shown below */}
                 {/* <div className="page-title"><span className="font-round-large">{pageTitle}</span></div> */}
-                <div className="reservation-content-title">Court 1</div>
+                <div className="reservation-content-title">
+                    <div className="court-back-button"
+                        onClick={() => {
+                            handleCourtBack();
+                        }}
+                    ></div>
+                    Court {currentCourt}
+                    <div className="court-next-button"
+                        onClick={() => {
+                            handleCourtNext();
+                        }}
+                    ></div>
+                </div>
                 <div className="reserve-form-container">
                     <div className="table-labels-container">
                         <div className="table-label">
-                            {convertDate(dateToday.getDate())}
+                            Today
                         </div>
                         <div className="table-label">
                             {convertDate(dateToday.getDate()+1)}
@@ -582,6 +937,45 @@ function Reserve(props) {
                     </div>
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
+            </div>
+            <div className="reserve-modal-main-container">
+                <div className="reserve-modal-window-container">
+                    <div className="reserve-modal-window-title-container">
+                        <div className="reserve-modal-window-title-text">Create Reservation</div>
+                        <div className="reserve-modal-window-button-close"
+                            onClick={() => {
+                                handleToggleModal();
+                                resetSelectedInfo();
+                            }}
+                        ></div> 
+                    </div>
+                    <div className="reserve-modal-window-body-container">
+                        <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
+                        <div className="reserve-modal-window-body-text">Time: {selectedTime}</div>
+                        <div className="reserve-modal-window-body-text">Court: {currentCourt}</div>
+                        <div className="reserve-modal-window-body-text">Duration: 
+                            <div className="reserve-modal-window-button-duration-sub"
+                                onClick={() => {
+                                    handleDurationSubtract();
+                                }}
+                            ></div>
+                            {selectedDuration.toFixed(2).split('.')[0]} hour(s) {parseFloat('.'+selectedDuration.toFixed(2).split('.')[1]) * 60} minute(s)
+                            <div className="reserve-modal-window-button-duration-add"
+                                onClick={() => {
+                                    handleDurationAdd();
+                                }}
+                            ></div>
+                        </div>
+                        <div className="reserve-modal-window-button-submit"
+                            onClick={() => {
+                                handleButtonSubmit();
+                            }}
+                        >
+                            Reserve
+                        </div>
+                        <div className="reserve-modal-window-error"></div>
+                    </div>
+                 </div>      
             </div>
         </>
     )
