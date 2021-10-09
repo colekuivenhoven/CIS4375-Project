@@ -27,7 +27,7 @@ function Login(props) {
             // (condition) ? (value) : (other_value)
     const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0);
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
-    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
+    const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
 
     const [guessUsername, setGuessUsername] = useState('');
     const [guessPassword, setGuessPassword] = useState('');
@@ -78,16 +78,6 @@ function Login(props) {
     });
 
     // Handling functions
-    function handleAddButtonLocal() {
-        localNumberRaw += 1;
-        setLocalNumber(localNumberRaw);
-    }
-
-    function handleAddButtonGlobal() {
-        setGlobalNumber(parseInt(globalNumber)+1);
-        window.sessionStorage.setItem("num_global", parseInt(globalNumber)+1);
-    }
-
     function handleLogin(username, password) {
         var data = {
             username: username,
@@ -114,7 +104,7 @@ function Login(props) {
             if(response.message == 'Login Successful!') {
                 setGuessUsername('');
                 setGuessPassword('');
-                window.sessionStorage.setItem('current_user', response.user);
+                window.sessionStorage.setItem('current_user', JSON.stringify(response.user));
                 window.location.href = "/";
             }
             else {

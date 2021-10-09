@@ -24,12 +24,25 @@ import {
 // Importing common files used in react
 import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 
+// var gotUserObject = false;
+
 // Root application function
 function App() {
   const [screenSize, setScreenSize] = useState([window.innerWidth, window.innerHeight]);
   const [isMobile, setIsMobile] = useState(screenSize[0] < screenSize[1] ? true : false);
-  const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
+  const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
   const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
+
+  // async function getUser(userid) {
+  //   if(!gotUserObject) {
+  //     gotUserObject = true;
+  //     let response = await fetch("http://3.218.225.62:3040/user/get/"+userid);
+  //     response = await response.json();
+
+  //     window.sessionStorage.setItem('current_user_object', JSON.stringify(response.user[0]));
+  //     return JSON.stringify(response.user[0]);
+  //   }
+  // }
 
   useLayoutEffect(() => {
     function updateSize() {
@@ -59,6 +72,7 @@ function App() {
               <div className="new-route-link-menu-2"
                 onClick={() => {
                   window.sessionStorage.removeItem('current_user');
+                  window.sessionStorage.removeItem('current_user_object');
                   window.location.reload();
                 }}
               >

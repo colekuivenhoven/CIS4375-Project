@@ -4,6 +4,7 @@ import '../assets/styles/Reserve.css';
 
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
+import ReactDOM from 'react-dom';
 
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
@@ -15,8 +16,10 @@ var gotReservationData = false;
 
 // Main function for the specific 'page'
 function Reserve(props) {
+    // 'Reactive' variables that will cause the page to update when their values change
+        // 'useState' at the end of each describes their initial value
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
-    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
+    const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
     const [currentCourt, setCurrentCourt] = useState(1);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
@@ -457,6 +460,22 @@ function Reserve(props) {
         })
     }
 
+    function deleteReservation(rid) {
+        fetch("http://3.218.225.62:3040/reservation/delete", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id: rid})
+        })
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .then(() => {
+            gotReservationData = false;
+            getReservationData();
+        })
+    }
+
     // Formatting functions
     function convertDate(day) {
         return (
@@ -521,6 +540,7 @@ function Reserve(props) {
                     }
                     else {
                         slot.status = 'open'
+                        slot.reservation = null;
                     }
                 })
             }
@@ -539,6 +559,7 @@ function Reserve(props) {
                     }
                     else {
                         slot.status = 'open'
+                        slot.reservation = null;
                     }
                 })
             }
@@ -551,8 +572,8 @@ function Reserve(props) {
                     var resTimeHour = resStartTimeRaw.split(':')[0];
                     var resTimeMinutes = resStartTimeRaw.split(':')[1];
 
-                    var startIndex = -1;
                     var resIdBuffer = -1;
+                    var startIndex = -1;
                     if(reservation.court_id == currentCourt) {
                         dayTimeslots.forEach((slot, index) => {
                             var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
@@ -593,6 +614,8 @@ function Reserve(props) {
         var dateRaw = convertToDateFromString(date);
         var dateRawDay = dateRaw.toLocaleString('en-us', {  weekday: 'short' });
 
+        var startIndex = -1;
+
         slots.forEach((slot, index) => {
             var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
             var amOrPM = (slot.time).substring((slot.time).length - 2);
@@ -631,6 +654,7 @@ function Reserve(props) {
                     >
                         {(timeMinutes != '00') && <div className="table-hours-item-container-sub">{timeHour}:{timeMinutes}{amOrPM}</div>}
                         <div className="table-hours-highlight-container"></div>
+                        {slot.reservation}
                     </div>
                 )
             }
@@ -651,8 +675,11 @@ function Reserve(props) {
                 )
             }
             else if(slot.status == 'reserved') {
+                if(slots[index-1].reservation != slots[index].reservation) {
+                    startIndex = index;
+                }
                 returnData.push(
-                    <div key={index} className="table-column-item-container-reserved-2"
+                    <div key={index} className="table-column-item-container-reserved-2" id={startIndex}
                         style={
                             (slots[index-1].reservation != slots[index].reservation) ? 
                                 {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius, 
@@ -666,16 +693,35 @@ function Reserve(props) {
                     >
                         {(slots[index-1].reservation != slots[index].reservation) 
                         ? 
-                        <span className="res-text">
-                            {reservations.find(el => el.id == slots[index].reservation).timeStart + " - "+reservations.find(el => el.id == slots[index].reservation).duration+" hour(s)"}
-                        </span>
+                        <>
+                            <span className="res-text" style={{marginRight: 'auto', marginLeft: '0.75vmin'}}>
+                                {reservations.find(el => el.id == slots[index].reservation).timeStart + " - "+reservations.find(el => el.id == slots[index].reservation).duration+" hour(s)"}
+                            </span>
+                            <span className="res-text" id="ref-res" style={{marginLeft: 'auto', marginRight: '0.75vmin', color: 'rgba(0,0,0,0.35)'}}>
+                                {reservations.find(el => el.id == slots[index].reservation).id}
+                            </span>
+                        </>
                         : ''}
 
                         {(slots[index+1].reservation != slots[index].reservation) 
                         ? 
-                        <span className="res-text" style={{top: '0', color: 'rgba(0,0,0,0.35)'}}>
-                            {"Customer ID: "+reservations.find(el => el.id == slots[index].reservation).customer_id}
-                        </span>
+                        <>
+                            <span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}>
+                                Edit
+                            </span>
+                            <span className="res-text-button" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.45)'}}
+                                onClick={(e) => {
+                                    var parentElement = returnData[e.currentTarget.parentNode.id];
+                                    var testRootId = parentElement.props.children[0].props.children[1].props.children;
+                                    var testRootDuration = reservations.find(el => el.id == testRootId).duration;
+                                    var adjustedDuration = (testRootDuration - 0.25) * 4;
+
+                                    handleButtonDelete(returnData[testRootId].key);
+                                }}
+                            >
+                                Delete
+                            </span>
+                        </>
                         : ''}
                     </div>
                 )
@@ -717,25 +763,16 @@ function Reserve(props) {
 
     function handleButtonSubmit() {
         var reservationData = {
-            // id: reservations[reservations.length - 1].id + 1,
-            // court: currentCourt,
-            // date: selectedDate,
-            // timeStart: selectedTime,
-            // duration: selectedDuration, 
-            // user_id: 4,
-            // type_id: 0,
-            // status_id: 0,
             type_id: 0,
             status_id: 0,
             date: selectedDate,
             timeStart: selectedTime,
             duration: selectedDuration,
             court_id: currentCourt,
-            customer_id: 4
+            customer_id: currentUser.User_id
         }
 
         if(checkValidReservation(reservationData)) {
-            // reservations.push(reservationData);
             addReservation(reservationData);
             resetSelectedInfo();
             handleToggleModal();
@@ -743,6 +780,10 @@ function Reserve(props) {
         else {
             document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
         }
+    }
+
+    function handleButtonDelete(rid) {
+        deleteReservation(rid);
     }
 
     function checkValidReservation(reservationData) {
@@ -936,7 +977,7 @@ function Reserve(props) {
                         {renderColumns()}
                     </div>
                 </div>
-                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
             <div className="reserve-modal-main-container">
                 <div className="reserve-modal-window-container">

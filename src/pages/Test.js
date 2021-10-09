@@ -22,7 +22,7 @@ function Test(props) {
     const[testEmail, setTestEmail] = useState('');
     const[selectedUser, setSelectedUser] = useState(null);
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
-    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
+    const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
 
     const[guessMatched, setGuessMatched] = useState('false');
 
@@ -274,7 +274,7 @@ function Test(props) {
                         </div>
                     }
                 </div>
-                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
             <div className="test-modal">
                 

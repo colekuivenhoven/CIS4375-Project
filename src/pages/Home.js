@@ -33,7 +33,7 @@ function Home(props) {
     const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0);
     const [imgIndex, setImgIndex] = useState(0);
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
-    const [currentUser, setCurrentUser] = useState(window.sessionStorage.getItem('current_user'));
+    const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
 
     // Regular varaible declaration
     const pageTitle = "Home"
@@ -195,7 +195,7 @@ function Home(props) {
                         </div>
                     </div>
                 </div>
-                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser}</b>!</div>}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </>
         )
     }
