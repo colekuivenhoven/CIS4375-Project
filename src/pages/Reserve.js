@@ -13,6 +13,7 @@ const dateToday = new Date();
 var resArray = [];
 var resBuffer = [];
 var gotReservationData = false;
+var editing = false;
 
 // Main function for the specific 'page'
 function Reserve(props) {
@@ -643,6 +644,7 @@ function Reserve(props) {
                         }
                         onClick={() => {
                             if(loggedIn) {
+                                editing = false;
                                 handleToggleModal();
                                 setSelectedDate(date);
                                 setSelectedTime(slot.time);
@@ -706,7 +708,27 @@ function Reserve(props) {
                         {(slots[index+1].reservation != slots[index].reservation) 
                         ? 
                         <>
-                            <span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}>
+                            <span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}
+                                onClick={(e) => {
+                                    editing = true;
+                                    var parentElement = returnData[e.currentTarget.parentNode.id];
+                                    var testRootId = parentElement.props.children[0].props.children[1].props.children;
+
+                                    var testRootTimeStart = reservations.find(el => el.id == testRootId).timeStart;
+                                    var testRootDate = reservations.find(el => el.id == testRootId).date;
+                                    var testRootDuration = reservations.find(el => el.id == testRootId).duration;
+
+                                    if(loggedIn) {
+                                        handleToggleModal();
+                                        setSelectedDate(date);
+                                        setSelectedTime(testRootTimeStart);
+                                        setSelectedDuration(testRootDuration);
+                                    }
+                                    else {
+                                        window.location.pathname = "/login"
+                                    }
+                                }}
+                            >
                                 Edit
                             </span>
                             <span className="res-text-button" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.45)'}}
@@ -781,6 +803,28 @@ function Reserve(props) {
             document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
         }
     }
+
+    function handleButtonEdit() {
+        var reservationData = {
+            type_id: 0,
+            status_id: 0,
+            date: selectedDate,
+            timeStart: selectedTime,
+            duration: selectedDuration,
+            court_id: currentCourt,
+            customer_id: currentUser.User_id
+        }
+
+        if(checkValidReservation(reservationData)) {
+            addReservation(reservationData);
+            resetSelectedInfo();
+            handleToggleModal();
+        }
+        else {
+            document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
+        }
+    }
+
 
     function handleButtonDelete(rid) {
         deleteReservation(rid);
@@ -982,7 +1026,7 @@ function Reserve(props) {
             <div className="reserve-modal-main-container">
                 <div className="reserve-modal-window-container">
                     <div className="reserve-modal-window-title-container">
-                        <div className="reserve-modal-window-title-text">Create Reservation</div>
+                        <div className="reserve-modal-window-title-text">{editing ? "Edit" : "Create"} Reservation</div>
                         <div className="reserve-modal-window-button-close"
                             onClick={() => {
                                 handleToggleModal();
@@ -1012,7 +1056,7 @@ function Reserve(props) {
                                 handleButtonSubmit();
                             }}
                         >
-                            Reserve
+                            {editing ? "Change" : "Reserve"}
                         </div>
                         <div className="reserve-modal-window-error"></div>
                     </div>

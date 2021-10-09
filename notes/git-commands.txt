@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Connected reservations with database"
+git commit -m "Added Reservation Edit/Delete Initial functions"
 
 // Push to remote repo
 git push -u origin master

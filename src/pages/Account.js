@@ -81,7 +81,7 @@ function Account(props) {
                 <div class="main-text-panel">
                     <span>
                 <div class="main-text-body">
-                        <img src="https://www.seekpng.com/png/detail/414-4140251_you-profile-picture-question-mark.png" height="200px" width="180px"></img>
+                        <img src="https://www.seekpng.com/png/detail/414-4140251_you-profile-picture-question-mark.png" height="100vmin" width="80vmin"></img>
                         
                     </div>
                     <div class="main-text-body">

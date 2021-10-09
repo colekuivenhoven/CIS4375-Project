@@ -80,16 +80,6 @@ function Home(props) {
     });
 
     // Handling functions
-    function handleAddButtonLocal() {
-        localNumberRaw += 1;
-        setLocalNumber(localNumberRaw);
-    }
-
-    function handleAddButtonGlobal() {
-        setGlobalNumber(parseInt(globalNumber)+1);
-        window.sessionStorage.setItem("num_global", parseInt(globalNumber)+1);
-    }
-
     function handleImageNext() {
         var el_next = document.querySelector(".image-content-next-button");
         var el_back = document.querySelector(".image-content-back-button");
