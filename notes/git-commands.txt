@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Added Reservation Edit/Delete Initial functions"
+git commit -m "Updated reservation style to hide reservation id"
 
 // Push to remote repo
 git push -u origin master

@@ -25,6 +25,7 @@ function Reserve(props) {
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedDuration, setSelectedDuration] = useState(0.75);
+    const [selectedID, setSelectedID] = useState(-1);
     const [reservations, setReservations] = useState([]);
     
     // Regular varaible declaration
@@ -461,6 +462,22 @@ function Reserve(props) {
         })
     }
 
+    function editReservation(data) {
+        fetch("http://3.218.225.62:3040/reservation/edit", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(response => console.log(response))
+        .then(() => {
+            gotReservationData = false;
+            getReservationData();
+        })
+    }
+
     function deleteReservation(rid) {
         fetch("http://3.218.225.62:3040/reservation/delete", {
             method: "POST",
@@ -696,10 +713,10 @@ function Reserve(props) {
                         {(slots[index-1].reservation != slots[index].reservation) 
                         ? 
                         <>
-                            <span className="res-text" style={{marginRight: 'auto', marginLeft: '0.75vmin'}}>
+                            <span className="res-text" style={{marginLeft: '1.5vmin'}}>
                                 {reservations.find(el => el.id == slots[index].reservation).timeStart + " - "+reservations.find(el => el.id == slots[index].reservation).duration+" hour(s)"}
                             </span>
-                            <span className="res-text" id="ref-res" style={{marginLeft: 'auto', marginRight: '0.75vmin', color: 'rgba(0,0,0,0.35)'}}>
+                            <span className="res-text" id="ref-res" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.35)', opacity: 0, pointerEvents: 'none'}}>
                                 {reservations.find(el => el.id == slots[index].reservation).id}
                             </span>
                         </>
@@ -717,12 +734,14 @@ function Reserve(props) {
                                     var testRootTimeStart = reservations.find(el => el.id == testRootId).timeStart;
                                     var testRootDate = reservations.find(el => el.id == testRootId).date;
                                     var testRootDuration = reservations.find(el => el.id == testRootId).duration;
+                                    var testRootID = reservations.find(el => el.id == testRootId).id;
 
                                     if(loggedIn) {
                                         handleToggleModal();
-                                        setSelectedDate(date);
+                                        setSelectedDate(testRootDate);
                                         setSelectedTime(testRootTimeStart);
                                         setSelectedDuration(testRootDuration);
+                                        setSelectedID(testRootID);
                                     }
                                     else {
                                         window.location.pathname = "/login"
@@ -804,8 +823,9 @@ function Reserve(props) {
         }
     }
 
-    function handleButtonEdit() {
+    function handleButtonEdit(rid) {
         var reservationData = {
+            id: rid,
             type_id: 0,
             status_id: 0,
             date: selectedDate,
@@ -815,8 +835,8 @@ function Reserve(props) {
             customer_id: currentUser.User_id
         }
 
-        if(checkValidReservation(reservationData)) {
-            addReservation(reservationData);
+        if(checkValidReservationEdit(reservationData)) {
+            editReservation(reservationData);
             resetSelectedInfo();
             handleToggleModal();
         }
@@ -939,6 +959,117 @@ function Reserve(props) {
         return valid;
     }
 
+    function checkValidReservationEdit(reservationData) {
+        var valid = true;
+
+        var startTimeRaw = (reservationData.timeStart).substring(0,(reservationData.timeStart).length - 2);
+        var startTimeAmOrPM = (reservationData.timeStart).substring((reservationData.timeStart).length - 2);
+        var startTimeHour = startTimeRaw.split(':')[0];
+        var startTimeMinutes = startTimeRaw.split(':')[1];
+        var durationHours = parseInt(reservationData.duration.toString().split('.')[0]);
+        var durationMinutes = parseInt(parseFloat("."+reservationData.duration.toString().split('.')[1]) * 60);
+
+        var endTimeAmOrPM = startTimeAmOrPM;
+        var endTimeHour = parseInt(startTimeHour) + parseInt(durationHours);
+        var endTimeMinutes = parseInt(startTimeMinutes) + parseInt(durationMinutes);
+
+        if(endTimeMinutes >= 60) {
+            endTimeHour += parseInt(endTimeMinutes / 60);
+            endTimeMinutes = parseInt(parseFloat("."+parseFloat(endTimeMinutes / 60).toString().split('.')[1]) * 60);
+
+            if(isNaN(endTimeMinutes)) {
+                endTimeMinutes = '00';
+            }
+        }
+
+        if(endTimeHour > 12) {
+            endTimeHour -= 12;
+            endTimeAmOrPM = 'pm'
+        }
+
+        reservations.forEach((res) => {
+            var resStartTimeRaw = (res.timeStart).substring(0,(res.timeStart).length - 2);
+            var resAmOrPM = (res.timeStart).substring((res.timeStart).length - 2);
+            var resTimeHour = resStartTimeRaw.split(':')[0];
+            var resTimeMinutes = resStartTimeRaw.split(':')[1];
+            var resDurationHours = parseInt(res.duration.toString().split('.')[0]);
+            var resDurationMinutes = parseInt(parseFloat("."+res.duration.toString().split('.')[1]) * 60);
+
+            var resEndTimeAmOrPM = resAmOrPM;
+            var resEndTimeHour = parseInt(resTimeHour) + parseInt(resDurationHours);
+            var resEndTimeMinutes = parseInt(resTimeMinutes) + parseInt(resDurationMinutes);
+
+            if(resEndTimeMinutes >= 60) {
+                resEndTimeHour += parseInt(resEndTimeMinutes / 60);
+                resEndTimeMinutes = parseInt(parseFloat("."+parseFloat(resEndTimeMinutes / 60).toString().split('.')[1]) * 60);
+
+                if(isNaN(resEndTimeMinutes)) {
+                    resEndTimeMinutes = '00';
+                }
+            }
+
+            if(resEndTimeHour > 12) {
+                resEndTimeHour -= 12;
+                resEndTimeAmOrPM = 'pm'
+            }
+
+            if(res.id != reservationData.id) {
+                if(res.date == reservationData.date) {
+                    if(res.court_id == reservationData.court_id) {
+                        var resBufferStart = convertTo24Hour(res.timeStart);
+                        var resBufferStartHours = parseInt(resBufferStart.split(':')[0]);
+                        var resBufferStartMinutes = parseInt(resBufferStart.split(':')[1]);
+    
+                        var resBufferEnd = convertTo24Hour(resEndTimeHour+":"+resEndTimeMinutes+resEndTimeAmOrPM);
+                        var resBufferEndHours = parseInt(resBufferEnd.split(':')[0]);
+                        var resBufferEndMinutes = parseInt(resBufferEnd.split(':')[1]);
+    
+                        var reqBufferStart = convertTo24Hour(reservationData.timeStart);
+                        var reqBufferStartHours = parseInt(reqBufferStart.split(':')[0]);
+                        var reqBufferStartMinutes = parseInt(reqBufferStart.split(':')[1]);
+    
+                        var reqBufferEnd = convertTo24Hour(endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
+                        var reqBufferEndHours = parseInt(reqBufferEnd.split(':')[0]);
+                        var reqBufferEndMinutes = parseInt(reqBufferEnd.split(':')[1]);
+    
+                        var existingStart = parseFloat(resBufferStartHours+parseFloat(resBufferStartMinutes/60));
+                        var existingEnd = existingStart + res.duration;
+    
+                        var requestStart = parseFloat(reqBufferStartHours+parseFloat(reqBufferStartMinutes/60));
+                        var requestEnd = requestStart + reservationData.duration;
+    
+                        if(existingStart < requestEnd && existingEnd > requestStart) {
+                            valid = false;
+                        }
+                    }
+                }
+            }
+        });
+
+        if(isWeekday(reservationData.date)) {
+            if(endTimeHour >= 9 && endTimeAmOrPM == "pm") {
+                if(endTimeMinutes == "00" && endTimeHour == 9) {
+                    valid = true;
+                }
+                else {
+                    valid = false;
+                }
+            }
+        }
+        else {
+            if(endTimeHour >= 6 && endTimeAmOrPM == "pm") {
+                if(endTimeMinutes == "00" && endTimeHour == 6) {
+                    valid = true;
+                }
+                else {
+                    valid = false;
+                }
+            }
+        }
+
+        return valid;
+    }
+
     // Borrowed from https://stackoverflow.com/a/17555888
     function convertTo24Hour(time) {
         var hours = parseInt(time.substr(0, 2));
@@ -967,6 +1098,7 @@ function Reserve(props) {
         setSelectedDate(null);
         setSelectedTime(null);
         setSelectedDuration(0.75);
+        setSelectedID(-1);
         document.querySelector(".reserve-modal-window-error").textContent = '';
     }
 
@@ -1053,7 +1185,12 @@ function Reserve(props) {
                         </div>
                         <div className="reserve-modal-window-button-submit"
                             onClick={() => {
-                                handleButtonSubmit();
+                                if(editing) {
+                                    handleButtonEdit(selectedID);
+                                }
+                                else {
+                                    handleButtonSubmit();
+                                }
                             }}
                         >
                             {editing ? "Change" : "Reserve"}
