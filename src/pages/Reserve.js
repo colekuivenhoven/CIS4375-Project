@@ -5,6 +5,7 @@ import '../assets/styles/Reserve.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
+import reactDom from 'react-dom';
 
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
@@ -24,6 +25,7 @@ function Reserve(props) {
     const [currentCourt, setCurrentCourt] = useState(1);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
+    const [selectedType, setSelectedType] = useState(0);
     const [selectedDuration, setSelectedDuration] = useState(0.75);
     const [selectedID, setSelectedID] = useState(-1);
     const [reservations, setReservations] = useState([]);
@@ -687,8 +689,14 @@ function Reserve(props) {
                                 slots[index+1] != null && slots[index+1].status != 'closed' ? 
                                     {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius,
                                         borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor, borderBottom: borderWidth+' solid '+borderColor} :
-                                    {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin', 
-                                        borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor}
+                                    (index == 0) ?
+                                        {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius,
+                                            borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor} : 
+                                        (slots[index+1] == null) ?
+                                            {borderBottomRightRadius: blockRadius, borderBottomLeftRadius: blockRadius,
+                                                borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor} :
+                                            {borderBottomRightRadius: '0.0vmin', borderBottomLeftRadius: '0.0vmin', 
+                                                borderLeft: borderWidth+' solid '+borderColor, borderRight: borderWidth+' solid '+borderColor}
                         }
                     ></div>
                 )
@@ -698,7 +706,17 @@ function Reserve(props) {
                     startIndex = index;
                 }
                 returnData.push(
-                    <div key={index} className="table-column-item-container-reserved-2" id={startIndex}
+                    <div 
+                        key={index} 
+                        className={(currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) 
+                            ? (reservations.find(el => el.id == slots[startIndex].reservation).type_id == 1)
+                                ? "table-column-item-container-reserved-2_userevent"
+                                : "table-column-item-container-reserved-2_user"
+                            : (reservations.find(el => el.id == slots[startIndex].reservation).type_id == 1)
+                                ? "table-column-item-container-reserved-2_event"
+                                : "table-column-item-container-reserved-2"
+                        } 
+                        id={startIndex}
                         style={
                             (slots[index-1].reservation != slots[index].reservation) ? 
                                 {borderTopRightRadius: blockRadius, borderTopLeftRadius: blockRadius, 
@@ -716,7 +734,7 @@ function Reserve(props) {
                             <span className="res-text" style={{marginLeft: '1.5vmin'}}>
                                 {reservations.find(el => el.id == slots[index].reservation).timeStart + " - "+reservations.find(el => el.id == slots[index].reservation).duration+" hour(s)"}
                             </span>
-                            <span className="res-text" id="ref-res" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.35)', opacity: 0, pointerEvents: 'none'}}>
+                            <span className="res-text" id="ref-res" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.35)', opacity: '0%', pointerEvents: 'none'}}>
                                 {reservations.find(el => el.id == slots[index].reservation).id}
                             </span>
                         </>
@@ -725,7 +743,7 @@ function Reserve(props) {
                         {(slots[index+1].reservation != slots[index].reservation) 
                         ? 
                         <>
-                            <span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}
+                            {(currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) && <span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}
                                 onClick={(e) => {
                                     editing = true;
                                     var parentElement = returnData[e.currentTarget.parentNode.id];
@@ -735,6 +753,7 @@ function Reserve(props) {
                                     var testRootDate = reservations.find(el => el.id == testRootId).date;
                                     var testRootDuration = reservations.find(el => el.id == testRootId).duration;
                                     var testRootID = reservations.find(el => el.id == testRootId).id;
+                                    var testRootType = reservations.find(el => el.id == testRootId).type_id;
 
                                     if(loggedIn) {
                                         handleToggleModal();
@@ -742,6 +761,7 @@ function Reserve(props) {
                                         setSelectedTime(testRootTimeStart);
                                         setSelectedDuration(testRootDuration);
                                         setSelectedID(testRootID);
+                                        setSelectedType(testRootType);
                                     }
                                     else {
                                         window.location.pathname = "/login"
@@ -749,19 +769,19 @@ function Reserve(props) {
                                 }}
                             >
                                 Edit
-                            </span>
-                            <span className="res-text-button" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.45)'}}
+                            </span>}
+                            {(currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) && <span className="res-text-button" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.45)'}}
                                 onClick={(e) => {
                                     var parentElement = returnData[e.currentTarget.parentNode.id];
                                     var testRootId = parentElement.props.children[0].props.children[1].props.children;
                                     var testRootDuration = reservations.find(el => el.id == testRootId).duration;
                                     var adjustedDuration = (testRootDuration - 0.25) * 4;
 
-                                    handleButtonDelete(returnData[testRootId].key);
+                                    handleButtonDelete(testRootId);
                                 }}
                             >
                                 Delete
-                            </span>
+                            </span>}
                         </>
                         : ''}
                     </div>
@@ -804,7 +824,7 @@ function Reserve(props) {
 
     function handleButtonSubmit() {
         var reservationData = {
-            type_id: 0,
+            type_id: selectedType,
             status_id: 0,
             date: selectedDate,
             timeStart: selectedTime,
@@ -826,7 +846,7 @@ function Reserve(props) {
     function handleButtonEdit(rid) {
         var reservationData = {
             id: rid,
-            type_id: 0,
+            type_id: selectedType,
             status_id: 0,
             date: selectedDate,
             timeStart: selectedTime,
@@ -1099,6 +1119,7 @@ function Reserve(props) {
         setSelectedTime(null);
         setSelectedDuration(0.75);
         setSelectedID(-1);
+        setSelectedType(0);
         document.querySelector(".reserve-modal-window-error").textContent = '';
     }
 
@@ -1107,7 +1128,6 @@ function Reserve(props) {
         <>
             <div className="container-reserve">
                 {/* Variables can be inserted inside of brackets as shown below */}
-                {/* <div className="page-title"><span className="font-round-large">{pageTitle}</span></div> */}
                 <div className="reservation-content-title">
                     <div className="court-back-button"
                         onClick={() => {
@@ -1152,6 +1172,14 @@ function Reserve(props) {
 
                         {renderColumns()}
                     </div>
+                    <div className="reservation-legend">
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(165, 216, 161)'}}></div>Open</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(217, 217, 217)'}}></div>Closed</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(179, 194, 255)'}}></div>Reserved</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(138, 162, 255)'}}></div>My Reservation</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 219, 128)'}}></div>Reserved - Event</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 200, 60)'}}></div>My Event Reservation</span>
+                    </div>
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
@@ -1182,6 +1210,23 @@ function Reserve(props) {
                                     handleDurationAdd();
                                 }}
                             ></div>
+                        </div>
+                        <div className="reserve-modal-window-body-text">
+                            Type: 
+                            <span className={selectedType == 0 ? "reserve-modal-window-button-type active" : "reserve-modal-window-button-type"}
+                                onClick={() => {
+                                    setSelectedType(0);
+                                }}
+                            >
+                                Standard
+                            </span>
+                            <span className={selectedType == 1 ? "reserve-modal-window-button-type active" : "reserve-modal-window-button-type"}
+                                onClick={() => {
+                                    setSelectedType(1);
+                                }}
+                            >
+                                Event
+                            </span>
                         </div>
                         <div className="reserve-modal-window-button-submit"
                             onClick={() => {

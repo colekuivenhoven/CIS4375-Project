@@ -105,7 +105,7 @@
     font-size: 1.25vmin;
     font-weight: bold;
     color: white;
-    border-radius: 0.25vmin;
+    border-radius: 0.5vmin;
 }
 
 .table-content-container {
@@ -341,7 +341,49 @@
 }
 
 .table-column-item-container-reserved-2 {
-    background-color: rgb(153, 173, 255);
+    background-color: rgba(138, 162, 255, 0.65);
+    width: 100%;
+    height: 1.75%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 0.79vmin;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.table-column-item-container-reserved-2_user {
+    background-color: rgb(138, 162, 255);
+    width: 100%;
+    height: 1.75%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 0.79vmin;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.table-column-item-container-reserved-2_userevent {
+    background-color: rgb(255, 200, 60);
+    width: 100%;
+    height: 1.75%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Round;
+    font-size: 0.79vmin;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+.table-column-item-container-reserved-2_event {
+    background-color: rgba(255, 200, 60, 0.65);
     width: 100%;
     height: 1.75%;
     display: flex;
@@ -418,7 +460,7 @@
 
 .reserve-modal-window-container.active {
     width: 45vmin;
-    height: 15vmin;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -433,7 +475,7 @@
 
 .reserve-modal-window-container {
     width: 45vmin;
-    height: 15vmin;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -448,12 +490,16 @@
 
 .reserve-modal-window-error {
     position: absolute;
-    width: 35vmin;
-    bottom: 1vmin;
-    color: rgba(2255,0,0,0.75);
+    width: 43vmin;
+    bottom: -6vmin;
+    color: rgba(255,0,0,1);
     font-family: Round;
-    font-size: 1.15vmin;
+    font-size: 1.25vmin;
     font-weight: bold;
+    text-shadow: 0 2px 3px rgba(0,0,0,0.1);
+    /* background-color: rgba(255,255,255,1); */
+    padding: 1vmin;
+    border-radius: 1vmin;
 }
 
 .reserve-modal-window-title-container {
@@ -515,6 +561,7 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    margin-bottom: 0.75vmin;
 }
 
 .reserve-modal-window-button-duration-add {
@@ -563,7 +610,7 @@
 
 .reserve-modal-window-button-submit {
     font-family: Round;
-    font-size: 1.5vmin;
+    font-size: 1.75vmin;
     font-weight: bold;
     color: rgba(0,0,0,0.3);
     cursor: pointer;
@@ -571,12 +618,92 @@
     border-radius: 1vmin;
     transition: all 0.15s ease-in-out;
     padding: 1vmin;
-    margin-top: auto;
+    margin-top: 2vmin;
     margin-left: auto;
+    width: calc(100% - 2vmin);
+    height: 1vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .reserve-modal-window-button-submit:hover {
     background-color: rgba(61, 214, 87, 0.7);
+}
+
+.reserve-modal-window-button-type {
+    background-color: rgba(0,0,0,0.1);
+    height: 2vmin;
+    width: auto;
+    border-radius: 0.5vmin;
+    margin-top: 1px;
+    margin-right: 0.5vmin;
+    margin-left: 0.5vmin;
+    padding-left: 1vmin;
+    padding-right: 1vmin;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    opacity: 50%;
+    transition: all 0.15s linear;
+}
+
+.reserve-modal-window-button-type.active {
+    background-color: rgba(0,0,0,0.1);
+    height: 2vmin;
+    width: auto;
+    border-radius: 0.5vmin;
+    margin-top: 1px;
+    margin-right: 0.5vmin;
+    margin-left: 0.5vmin;
+    padding-left: 1vmin;
+    padding-right: 1vmin;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    opacity: 100%;
+    transition: all 0.15s linear;
+}
+
+.reserve-modal-window-button-type:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.reservation-legend {
+    width: 95vmin;
+    height: 3vmin;
+    background-color: rgba(0,0,255,0.0);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.legend-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-right: 4vmin;
+    padding-right: 0.5vmin;
+    background-color: rgba(0,0,0,0.0);
+    border-radius: 0.5vmin;
+    font-family: Round;
+    font-size: 1.2vmin;
+    overflow: hidden;
+}
+
+.legend-item-color {
+    height: 2vmin;
+    aspect-ratio: 1;
+    background-color: rgba(0,0,0,0.2);
+    margin-right: 0.5vmin;
+    border-radius: 0.5vmin;
 }
 
 /* Animations */
