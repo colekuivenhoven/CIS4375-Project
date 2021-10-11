@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Updated reservation page to include new reservation types, and a cooresponding legend"
+git commit -m "Updated reservation page to include new reservation types, and a cooresponding legend. Minor Style Changes."
 
 // Push to remote repo
 git push -u origin master

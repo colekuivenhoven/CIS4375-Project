@@ -352,6 +352,7 @@
     font-size: 0.79vmin;
     box-sizing: border-box;
     z-index: 100;
+    transition: all 0.15s ease-in-out;
 }
 
 .table-column-item-container-reserved-2_user {
@@ -366,6 +367,7 @@
     font-size: 0.79vmin;
     box-sizing: border-box;
     z-index: 100;
+    transition: all 0.15s ease-in-out;
 }
 
 .table-column-item-container-reserved-2_userevent {
@@ -380,6 +382,7 @@
     font-size: 0.79vmin;
     box-sizing: border-box;
     z-index: 100;
+    transition: all 0.15s ease-in-out;
 }
 
 .table-column-item-container-reserved-2_event {
@@ -394,6 +397,7 @@
     font-size: 0.79vmin;
     box-sizing: border-box;
     z-index: 100;
+    transition: all 0.15s ease-in-out;
 }
 
 .table-column-item-container-closed {
