@@ -1,0 +1,199 @@
+@font-face {
+    font-family: 'Round';
+    src: local('Round'), url('../fonts/VarelaRound-Regular.ttf');
+}
+
+.container-admin2 {
+    width: 100vw;
+    top: 7vmin;
+    bottom: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 2vmin;
+    background-color: rgb(250, 250, 250);
+}
+
+.container-admin2-content {
+    background-color: rgba(255,0,0,0.0);
+    position: absolute;
+    top: 5vmin;
+    bottom: 5vmin;
+    left: 5vmin;
+    right: 5vmin;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    flex-flow: wrap row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    padding: 1vmin;
+}
+
+.container-admin2-content-item-reservations {
+    width: calc(60% - 2vmin);
+    height: 50%;
+    max-height: 100vmin;
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1);
+    border-radius: 1vmin;
+    margin: 1vmin;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1vmin;
+}
+
+.container-admin2-content-item-users {
+    width: calc(30% - 2vmin);
+    height: 50%;
+    max-height: 100vmin;
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1);
+    border-radius: 1vmin;
+    margin: 1vmin;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1vmin;
+}
+
+.container-admin2-content-item-reports {
+    width: calc(60% - 2vmin);
+    height: 50%;
+    max-height: 100vmin;
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1);
+    border-radius: 1vmin;
+    margin: 1vmin;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1vmin;
+}
+
+.container-admin2-content-item-logs {
+    width: calc(30% - 2vmin);
+    height: 50%;
+    max-height: 100vmin;
+    background-color: rgba(255,255,255,1);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1);
+    border-radius: 1vmin;
+    margin: 1vmin;
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 1vmin;
+}
+
+.container-admin2-content-item-reservations:hover > .container-admin2-content-item-body {
+    border: 0.25vmin solid rgba(0, 102, 255, 0.4);
+}
+
+.container-admin2-content-item-users:hover > .container-admin2-content-item-body {
+    border: 0.25vmin solid rgba(0, 102, 255, 0.4);
+}
+
+.container-admin2-content-item-reports:hover > .container-admin2-content-item-body {
+    border: 0.25vmin solid rgba(0, 102, 255, 0.4);
+}
+
+/* .container-admin2-content-item-logs:hover > .container-admin2-content-item-body-log {
+    border: 0.25vmin solid rgba(0, 102, 255, 0.4);
+} */
+
+.container-admin2-content-item-title {
+    background-color: rgba(255,0,0,0);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    font-family: Round;
+    font-weight: bold;
+    font-size: 1.5vmin;
+    color: rgba(0,0,0,0.6);
+}
+
+.container-admin2-content-item-body {
+    background-color: rgba(0,0,0,0.0);
+    width: 100%;
+    height: 100%;
+    margin-top: 0.5vmin;
+    border-radius: 0.75vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0.25vmin solid rgba(255, 255, 255, 0.0);
+    /* background-image: url('../images/svgs/icons/solid/book-open.svg'); */
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 10vmin 10vmin;
+    transition: 0.15s all ease-in-out;
+    
+}
+
+.container-admin2-content-item-body-log {
+    background-color: rgba(0,0,0,0.0);
+    width: 100%;
+    height: 100%;
+    border-radius: 0.75vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border: 0.25vmin solid rgba(255, 255, 255, 0.0);
+    transition: 0.15s all ease-in-out;
+    overflow-y: scroll;
+}
+
+.container-admin2-content-item-body-log::-webkit-scrollbar {
+    width: 1vmin;
+    background-color: transparent;
+    transition: all 0.25s linear;
+}
+
+.container-admin2-content-item-body-log::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    width: 1vmin;
+    background-color: rgba(124, 124, 124, 0.75);
+    transition: all 0.25s linear;
+}
+
+.container-log-item {
+    background-color: rgba(255,0,0,0);
+    font-family: Round;
+    font-weight: bold;
+    color: rgba(0,0,0,0.5);
+    border-radius: 0.5vmin;
+    padding: 0.5vmin;
+    cursor: pointer;
+}
+
+.container-log-item:hover {
+    background-color: rgba(0, 102, 255, 0.2);
+}
+
+.container-log-item-line {
+    background-color: rgba(255,0,0,0);
+    font-family: Round;
+    font-weight: bold;
+    font-size: 0.95vmin;
+    color: rgba(0,0,0,0.5);
+    white-space: pre-wrap;
+    margin-right: auto;
+}
+
+/* Animations */

@@ -20,6 +20,7 @@ function Test(props) {
     const[testPassword, setTestPassword] = useState('');
     const[testPhone, setTestPhone] = useState('');
     const[testEmail, setTestEmail] = useState('');
+    const[testType, setTestType] = useState('');
     const[selectedUser, setSelectedUser] = useState(null);
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
     const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
@@ -152,7 +153,8 @@ function Test(props) {
             username: testUsername,
             password: testPassword,
             phone: testPhone,
-            email: testEmail
+            email: testEmail,
+            type: testType
         }
 
         if(data.username == '' || data.password == '' || data.phone == '' || data.email == '') {
@@ -166,6 +168,7 @@ function Test(props) {
         setTestPassword('');
         setTestPhone('');
         setTestEmail('');
+        setTestType('');
     }
 
     function handleDelete(userid) {
@@ -227,6 +230,7 @@ function Test(props) {
                         <span className="test-add-text">Password: <input className="test-add-input" value={testPassword} onChange={(e) => {setTestPassword(e.target.value)}}/></span>
                         <span className="test-add-text">Phone: <input className="test-add-input" value={testPhone} onChange={(e) => {setTestPhone(e.target.value)}}/></span>
                         <span className="test-add-text">Email: <input className="test-add-input" value={testEmail} onChange={(e) => {setTestEmail(e.target.value)}}/></span>
+                        <span className="test-add-text">Type: <input className="test-add-input" value={testType} onChange={(e) => {setTestType(e.target.value)}}/></span>
                         <button className="test-add-button" onClick={() => {handleSubmit()}}>+ Add</button>
                     </div>
                 </div>

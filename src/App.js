@@ -5,6 +5,7 @@ import './assets/styles/App.css';
   // Importing 'pages' that will be used
 import Home from './pages/Home.js';
 import AdminHome from './pages/AdminHome.js';
+import Admin from './pages/Admin.js';
 import Account from './pages/Account.js';
 import About from './pages/About.js';
 import Contact from './pages/Contact.js';
@@ -12,6 +13,7 @@ import Reserve from './pages/Reserve.js';
 import Login from './pages/Login.js';
 import Register from './pages/Register.js';
 import Test from './pages/Test.js';
+import Practice from './pages/Practice.js';
 
   // Importing the router files
 import {
@@ -24,25 +26,12 @@ import {
 // Importing common files used in react
 import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
 
-// var gotUserObject = false;
-
 // Root application function
 function App() {
   const [screenSize, setScreenSize] = useState([window.innerWidth, window.innerHeight]);
   const [isMobile, setIsMobile] = useState(screenSize[0] < screenSize[1] ? true : false);
   const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
   const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
-
-  // async function getUser(userid) {
-  //   if(!gotUserObject) {
-  //     gotUserObject = true;
-  //     let response = await fetch("http://3.218.225.62:3040/user/get/"+userid);
-  //     response = await response.json();
-
-  //     window.sessionStorage.setItem('current_user_object', JSON.stringify(response.user[0]));
-  //     return JSON.stringify(response.user[0]);
-  //   }
-  // }
 
   useLayoutEffect(() => {
     function updateSize() {
@@ -65,15 +54,15 @@ function App() {
             <Link className="new-route-link-menu" to="/">Home</Link>
             <Link className="new-route-link-menu" to="/about">About</Link>
             <Link className="new-route-link-menu" to="/contact">Contact</Link>
-            <Link className="new-route-link-menu" to="/account">Account</Link>
+            {loggedIn && <Link className="new-route-link-menu" to="/account">Account</Link>}
             <Link className="new-route-link-menu" to="/reserve">Reserve</Link>
-            <Link className="new-route-link-menu" to="/test">Debug</Link>
+            {(currentUser && currentUser.User_type == 2) && <Link className="new-route-link-menu" to="/admin">Admin</Link>}
             {loggedIn && 
               <div className="new-route-link-menu-2"
                 onClick={() => {
                   window.sessionStorage.removeItem('current_user');
                   window.sessionStorage.removeItem('current_user_object');
-                  window.location.reload();
+                  window.location.href = '/';
                 }}
               >
                 Logout
@@ -89,8 +78,11 @@ function App() {
 
         {/* Route path definitions */}
         <Switch>
-          <Route path="/admin">
+          <Route path="/admin-test">
             <AdminHome isMobile={isMobile} />
+          </Route>
+          <Route path="/admin">
+            <Admin isMobile={isMobile} />
           </Route>
           <Route path="/account">
             <Account isMobile={isMobile} />
@@ -112,6 +104,9 @@ function App() {
           </Route>
           <Route path="/test">
             <Test isMobile={isMobile} currentUser={currentUser} />
+          </Route>
+          <Route path="/practice">
+            <Practice isMobile={isMobile} currentUser={currentUser} />
           </Route>
           <Route path="/">
             <Home isMobile={isMobile} currentUser={currentUser} />

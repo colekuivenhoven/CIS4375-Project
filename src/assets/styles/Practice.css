@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'Round';
+    src: local('Round'), url('../fonts/VarelaRound-Regular.ttf');
+}
+
+.container-practice {
+    width: 100vw;
+    top: 7vmin;
+    bottom: 0;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: 2vmin;
+    background-color: rgb(250, 250, 250);
+}
+
+/* Animations */
