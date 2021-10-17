@@ -15,5 +15,13 @@
     padding-top: 2vmin;
     background-color: rgb(250, 250, 250);
 }
+.map {
+    background-image: url('../images/team-images/drone-map1-labelDemo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center bottom;
+    width: 100%;
+    height: 100%;
+}
 
 /* Animations */
