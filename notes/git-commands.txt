@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Updated reservation page to include new reservation types, and a cooresponding legend. Minor Style Changes."
+git commit -m "Added simplified reservation template for customers, while migrating advanced reservation system over to /reserveadmin"
 
 // Push to remote repo
 git push -u origin master

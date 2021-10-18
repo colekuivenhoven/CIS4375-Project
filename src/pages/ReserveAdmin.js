@@ -5,7 +5,6 @@ import '../assets/styles/Reserve.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
-import reactDom from 'react-dom';
 
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
@@ -17,7 +16,7 @@ var gotReservationData = false;
 var editing = false;
 
 // Main function for the specific 'page'
-function Reserve(props) {
+function ReserveAdmin(props) {
     // 'Reactive' variables that will cause the page to update when their values change
         // 'useState' at the end of each describes their initial value
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
@@ -369,7 +368,7 @@ function Reserve(props) {
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
-        var mainContainer = document.querySelector(".container-reserve-lite");
+        var mainContainer = document.querySelector(".container-reserve");
         var fontLarge = document.querySelectorAll(".font-round-large");
         var fontMed = document.querySelectorAll(".font-round-medium");
         var addButton = document.querySelectorAll(".container-add");
@@ -1126,53 +1125,60 @@ function Reserve(props) {
     return (
         // Empty root element. The return can have only one root element
         <>
-            <div className="container-reserve-lite">
-                <div className="container-option-lite"
-                    // onClick={() => {
-                    //     if(loggedIn) {
-                    //         let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                    //         editing = false;
-                    //         handleToggleModal();
-                    //         setSelectedDate(convertDate(dateToday.getDate()));
-                    //         setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                    //     }
-                    //     else {
-                    //         window.location.pathname = "/login"
-                    //     }
-                    // }}
-                >
-                    <span style={{marginBottom: "2vmin", marginTop: "2vmin", color: "rgb(0,0,0,0.5)"}}>Create a New Reservation</span>
-                    <div className="lite-day-label">
-                        Today
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label">
-                        {convertDate(dateToday.getDate()+1)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label">
-                        {convertDate(dateToday.getDate()+2)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label">
-                        {convertDate(dateToday.getDate()+3)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label">
-                        {convertDate(dateToday.getDate()+4)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label">
-                        {convertDate(dateToday.getDate()+5)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label">
-                        {convertDate(dateToday.getDate()+6)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
+            <div className="container-reserve">
+                {/* Variables can be inserted inside of brackets as shown below */}
+                <div className="reservation-content-title">
+                    <div className="court-back-button"
+                        onClick={() => {
+                            handleCourtBack();
+                        }}
+                    ></div>
+                    Court {currentCourt}
+                    <div className="court-next-button"
+                        onClick={() => {
+                            handleCourtNext();
+                        }}
+                    ></div>
                 </div>
-                <div className="container-option-lite">
-                    Edit an Existing Reservation
+                <div className="reserve-form-container">
+                    <div className="table-labels-container">
+                        <div className="table-label">
+                            Today
+                        </div>
+                        <div className="table-label">
+                            {convertDate(dateToday.getDate()+1)}
+                        </div>
+                        <div className="table-label">
+                            {convertDate(dateToday.getDate()+2)}
+                        </div>
+                        <div className="table-label">
+                            {convertDate(dateToday.getDate()+3)}
+                        </div>
+                        <div className="table-label">
+                            {convertDate(dateToday.getDate()+4)}
+                        </div>
+                        <div className="table-label">
+                            {convertDate(dateToday.getDate()+5)}
+                        </div>
+                        <div className="table-label">
+                            {convertDate(dateToday.getDate()+6)}
+                        </div>
+                    </div>
+                    <div className="table-content-container">
+                        <div className="table-hours-container">
+                            {renderTimeColumn()}
+                        </div>
+
+                        {renderColumns()}
+                    </div>
+                    <div className="reservation-legend">
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(165, 216, 161)'}}></div>Open</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(217, 217, 217)'}}></div>Closed</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(179, 194, 255)'}}></div>Reserved</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(138, 162, 255)'}}></div>My Reservation</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 219, 128)'}}></div>Reserved - Event</span>
+                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 200, 60)'}}></div>My Event Reservation</span>
+                    </div>
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
@@ -1242,4 +1248,4 @@ function Reserve(props) {
 }
 
 // Function must be 'exposed' to rest of the application at the end of the file as shown below.
-export default Reserve;
+export default ReserveAdmin;
