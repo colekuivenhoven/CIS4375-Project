@@ -1142,31 +1142,122 @@ function Reserve(props) {
                     // }}
                 >
                     <span style={{marginBottom: "2vmin", marginTop: "2vmin", color: "rgb(0,0,0,0.5)"}}>Create a New Reservation</span>
-                    <div className="lite-day-label">
+                    <div className="lite-day-label"
+                        onClick={() => {
+                            if(loggedIn) {
+                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                                editing = false;
+                                handleToggleModal();
+                                setSelectedDate(convertDate(dateToday.getDate()));
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
                         Today
                         <div className="lite-day-button">Reserve</div>
                     </div>
-                    <div className="lite-day-label">
+                    <div className="lite-day-label"
+                        onClick={() => {
+                            if(loggedIn) {
+                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                                editing = false;
+                                handleToggleModal();
+                                setSelectedDate(convertDate(dateToday.getDate()+1));
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
                         {convertDate(dateToday.getDate()+1)}
                         <div className="lite-day-button">Reserve</div>
                     </div>
-                    <div className="lite-day-label">
+                    <div className="lite-day-label"
+                        onClick={() => {
+                            if(loggedIn) {
+                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                                editing = false;
+                                handleToggleModal();
+                                setSelectedDate(convertDate(dateToday.getDate()+2));
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
                         {convertDate(dateToday.getDate()+2)}
                         <div className="lite-day-button">Reserve</div>
                     </div>
-                    <div className="lite-day-label">
+                    <div className="lite-day-label"
+                        onClick={() => {
+                            if(loggedIn) {
+                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                                editing = false;
+                                handleToggleModal();
+                                setSelectedDate(convertDate(dateToday.getDate()+3));
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
                         {convertDate(dateToday.getDate()+3)}
                         <div className="lite-day-button">Reserve</div>
                     </div>
-                    <div className="lite-day-label">
+                    <div className="lite-day-label"
+                        onClick={() => {
+                            if(loggedIn) {
+                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                                editing = false;
+                                handleToggleModal();
+                                setSelectedDate(convertDate(dateToday.getDate()+4));
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
                         {convertDate(dateToday.getDate()+4)}
                         <div className="lite-day-button">Reserve</div>
                     </div>
-                    <div className="lite-day-label">
+                    <div className="lite-day-label"
+                        onClick={() => {
+                            if(loggedIn) {
+                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                                editing = false;
+                                handleToggleModal();
+                                setSelectedDate(convertDate(dateToday.getDate()+5));
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
                         {convertDate(dateToday.getDate()+5)}
                         <div className="lite-day-button">Reserve</div>
                     </div>
-                    <div className="lite-day-label">
+                    <div className="lite-day-label"
+                        onClick={() => {
+                            if(loggedIn) {
+                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                                editing = false;
+                                handleToggleModal();
+                                setSelectedDate(convertDate(dateToday.getDate()+6));
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
                         {convertDate(dateToday.getDate()+6)}
                         <div className="lite-day-button">Reserve</div>
                     </div>
