@@ -417,7 +417,7 @@ function Reserve(props) {
 
     // Server functions
     async function getReservationData() {
-        let response = await fetch("http://3.218.225.62:3040/reservations/getall");
+        let response = await fetch("http://3.218.225.62:3040/reservation/getall");
         response = await response.json();
         resArray = response.reservations;
         resBuffer = [];
@@ -1149,7 +1149,7 @@ function Reserve(props) {
                                 editing = false;
                                 handleToggleModal();
                                 setSelectedDate(convertDate(dateToday.getDate()));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
                             }
                             else {
                                 window.location.pathname = "/login"
@@ -1166,7 +1166,7 @@ function Reserve(props) {
                                 editing = false;
                                 handleToggleModal();
                                 setSelectedDate(convertDate(dateToday.getDate()+1));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
                             }
                             else {
                                 window.location.pathname = "/login"
@@ -1183,7 +1183,7 @@ function Reserve(props) {
                                 editing = false;
                                 handleToggleModal();
                                 setSelectedDate(convertDate(dateToday.getDate()+2));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
                             }
                             else {
                                 window.location.pathname = "/login"
@@ -1200,7 +1200,7 @@ function Reserve(props) {
                                 editing = false;
                                 handleToggleModal();
                                 setSelectedDate(convertDate(dateToday.getDate()+3));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
                             }
                             else {
                                 window.location.pathname = "/login"
@@ -1217,7 +1217,7 @@ function Reserve(props) {
                                 editing = false;
                                 handleToggleModal();
                                 setSelectedDate(convertDate(dateToday.getDate()+4));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
                             }
                             else {
                                 window.location.pathname = "/login"
@@ -1234,7 +1234,7 @@ function Reserve(props) {
                                 editing = false;
                                 handleToggleModal();
                                 setSelectedDate(convertDate(dateToday.getDate()+5));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
                             }
                             else {
                                 window.location.pathname = "/login"
@@ -1251,7 +1251,7 @@ function Reserve(props) {
                                 editing = false;
                                 handleToggleModal();
                                 setSelectedDate(convertDate(dateToday.getDate()+6));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
+                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
                             }
                             else {
                                 window.location.pathname = "/login"

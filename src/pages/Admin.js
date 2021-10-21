@@ -5,10 +5,15 @@ import '../assets/styles/Admin2.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 
-// Variables declared that will persist even if page is changed
+// Log variables
 var gotLogs = false;
 var logArray = [];
 var selectedLog = [];
+
+// User variables
+var userListRaw = [];
+var userListConverted = [];
+var gotUsers = false;
 
 // Main function for the specific 'page'
 function Admin(props) {
@@ -16,6 +21,7 @@ function Admin(props) {
     const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
     const [selectedFilename, setSelectedFilename] = useState('');
     const [loglistFinal, setLoglistFinal] = useState([]);
+    const [userListFinal, setUserListFinal] = useState([]);
 
     // Regular varaible declaration
     const pageTitle = "Admin 2"
@@ -26,6 +32,7 @@ function Admin(props) {
         if(!gotLogs) {
             getLogs();
         }
+        getUsers();
 
         var mainContainer = document.querySelector(".container-admin2");
         var fontLarge = document.querySelectorAll(".font-round-large");
@@ -78,6 +85,12 @@ function Admin(props) {
 
         gotLogs = true;
         renderLogs();
+    }
+
+    async function getUsers() {
+        let response = await fetch("http://3.218.225.62:3040/customer/getall");
+        response = await response.json();
+        setUserListFinal(response.customers);
     }
 
     async function getLogfile(name) {
@@ -134,7 +147,20 @@ function Admin(props) {
     function scrollToBottom(id) {
         var element = document.getElementById(id);
         element.scrollTop = element.scrollHeight - element.clientHeight;
-     }
+    }
+
+    // Sorting functions
+    function sortObjectList(list, keyID, AscOrDesc) {
+        if(AscOrDesc == "asc") {
+            return [...list].sort((a,b) => a[Object.keys(a)[keyID]] - b[Object.keys(b)[keyID]]);
+        }
+        else if(AscOrDesc == "desc") {
+            return [...list].sort((a,b) => b[Object.keys(b)[keyID]] - a[Object.keys(a)[keyID]]);
+        }
+        else {
+            console.log("Invalid Sorting Method!");
+        }
+    }
 
     return (
         // Empty root element. The return can have only one root element
@@ -149,8 +175,14 @@ function Admin(props) {
                     </div>
                     <div className="container-admin2-content-item-users">
                         <div className="container-admin2-content-item-title">Users</div>
-                        <div className="container-admin2-content-item-body">
-                            
+                        <div className="container-admin2-content-item-body-user">
+                            {sortObjectList(userListFinal, 0, "desc").map((user,index) => {
+                                return (
+                                    <div key={index} className="container-user-item">
+                                        ({user[Object.keys(user)[0]]}) {user[Object.keys(user)[4]]}, {user[Object.keys(user)[2]]}, {user[Object.keys(user)[3]]}
+                                    </div>
+                                )
+                            })}
                         </div>
                     </div>
                     <div className="container-admin2-content-item-logs">

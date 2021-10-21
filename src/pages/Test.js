@@ -81,9 +81,9 @@ function Test(props) {
 
     // Get data functions
     async function getTestData() {
-        let response = await fetch("http://3.218.225.62:3040/users/getall");
+        let response = await fetch("http://3.218.225.62:3040/customer/getall");
         response = await response.json();
-        testDataRaw = response.users.reverse();
+        testDataRaw = response[Object.keys(response)[1]].reverse();
         testDataConverted = [];
 
         if (!gotTestData) {
@@ -101,12 +101,12 @@ function Test(props) {
                         setSelectedUser(user)
                     }}
                 >
-                    <div className="test-user-item">{user.User_id}</div>
-                    <div className="test-user-item">{user.User_type == 0 ? 'Customer' : 'Employee'}</div>
-                    <div className="test-user-item">{user.User_name}</div>
-                    <div className="test-user-item">{user.User_phone}</div>
-                    <div className="test-user-item">{user.User_email}</div>
-                    <div className="test-user-item">{user.User_getAnnouncements == 0 ? 'False' : 'True'}</div>
+                    <div className="test-user-item">{user[Object.keys(user)[0]]}</div>
+                    <div className="test-user-item">{user[Object.keys(user)[1]] == 0 ? 'Customer' : user[Object.keys(user)[1]] == 1 ? 'Employee' : 'Manager'}</div>
+                    <div className="test-user-item">{user[Object.keys(user)[4]]}</div>
+                    <div className="test-user-item">{user[Object.keys(user)[3]]}</div>
+                    <div className="test-user-item">{user[Object.keys(user)[2]]}</div>
+                    <div className="test-user-item">{user[Object.keys(user)[6]] == 0 ? 'False' : 'True'}</div>
                 </div>
             )
         });
@@ -116,7 +116,7 @@ function Test(props) {
     }
 
     function addUser(data) {
-        fetch("http://3.218.225.62:3040/user/add", {
+        fetch("http://3.218.225.62:3040/customer/add", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ function Test(props) {
     }
 
     function deleteUser(data) {
-        fetch("http://3.218.225.62:3040/user/delete", {
+        fetch("http://3.218.225.62:3040/customer/delete", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -171,6 +171,10 @@ function Test(props) {
         setTestType('');
     }
 
+    function handleEdit() {
+
+    }
+
     function handleDelete(userid) {
         var data = {
             id: userid
@@ -178,10 +182,6 @@ function Test(props) {
 
         deleteUser(data);
         setSelectedUser(null);
-    }
-
-    function handleEdit() {
-        
     }
 
     function passwordGuess(guess, hashedAnswer) {
@@ -238,17 +238,17 @@ function Test(props) {
                     {selectedUser != null && 
                         <>
                             <div>
-                                <div>ID: {selectedUser.User_id}</div>
-                                <div>Type: {selectedUser.User_type}</div>
-                                <div>Username: {selectedUser.User_name}</div>
-                                <div>Password: {selectedUser.User_password}</div>
-                                <div>Phone #: {selectedUser.User_phone}</div>
-                                <div>Email: {selectedUser.User_email}</div>
-                                <div>Announceable: {selectedUser.User_getAnnouncements}</div>
+                                <div>ID: {selectedUser[Object.keys(selectedUser)[0]]}</div>
+                                <div>Type: {selectedUser[Object.keys(selectedUser)[1]]}</div>
+                                <div>Username: {selectedUser[Object.keys(selectedUser)[4]]}</div>
+                                <div>Password: {selectedUser[Object.keys(selectedUser)[5]]}</div>
+                                <div>Phone #: {selectedUser[Object.keys(selectedUser)[3]]}</div>
+                                <div>Email: {selectedUser[Object.keys(selectedUser)[2]]}</div>
+                                <div>Announceable: {selectedUser[Object.keys(selectedUser)[6]]}</div>
                                 <div className="test-password-compare-container">Password Guess: 
                                     <input className="test-password-guess-input"
                                         onChange={e => {
-                                            passwordGuess(e.target.value, selectedUser.User_password);
+                                            passwordGuess(e.target.value, selectedUser[Object.keys(selectedUser)[5]]);
                                         }}
                                     />
                                     <span> Match? {guessMatched}</span>
@@ -265,7 +265,7 @@ function Test(props) {
                             <div 
                                 className="info-delete"
                                 onClick={() => {
-                                    handleDelete(selectedUser.User_id);
+                                    handleDelete(selectedUser[Object.keys(selectedUser)[0]]);
                                 }}
                             >
                                 🗑️

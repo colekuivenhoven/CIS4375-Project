@@ -416,7 +416,7 @@ function ReserveAdmin(props) {
 
     // Server functions
     async function getReservationData() {
-        let response = await fetch("http://3.218.225.62:3040/reservations/getall");
+        let response = await fetch("http://3.218.225.62:3040/reservation/getall");
         response = await response.json();
         resArray = response.reservations;
         resBuffer = [];

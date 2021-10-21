@@ -89,7 +89,7 @@ function Login(props) {
             return;
         }
 
-        fetch("http://3.218.225.62:3040/user/login", {
+        fetch("http://3.218.225.62:3040/customer/login", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -102,9 +102,18 @@ function Login(props) {
             setLoginResponse(response.message);
 
             if(response.message == 'Login Successful!') {
+                let responseObj = response[Object.keys(response)[1]];
                 setGuessUsername('');
                 setGuessPassword('');
-                window.sessionStorage.setItem('current_user', JSON.stringify(response.user));
+                let convertedResponse = {
+                    User_id: responseObj[Object.keys(responseObj)[0]],
+                    User_type: responseObj[Object.keys(responseObj)[1]],
+                    User_email: responseObj[Object.keys(responseObj)[2]],
+                    User_phone: responseObj[Object.keys(responseObj)[3]],
+                    User_name: responseObj[Object.keys(responseObj)[4]],
+                    User_getAnnouncements: responseObj[Object.keys(responseObj)[5]],
+                }
+                window.sessionStorage.setItem('current_user', JSON.stringify(convertedResponse));
                 window.location.href = "/";
             }
             else {
