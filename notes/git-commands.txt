@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Refectored login/reservation/API code to account for customers and employees. Added initial users list to admin page."
+git commit -m "Refectored admin page to be more efficent. Styling updates."
 
 // Push to remote repo
 git push -u origin master

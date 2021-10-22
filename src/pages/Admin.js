@@ -4,16 +4,12 @@ import '../assets/styles/Admin2.css';
 
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
+import { useSpring, animated, useTrail, config } from 'react-spring';
 
 // Log variables
 var gotLogs = false;
 var logArray = [];
 var selectedLog = [];
-
-// User variables
-var userListRaw = [];
-var userListConverted = [];
-var gotUsers = false;
 
 // Main function for the specific 'page'
 function Admin(props) {
@@ -22,6 +18,10 @@ function Admin(props) {
     const [selectedFilename, setSelectedFilename] = useState('');
     const [loglistFinal, setLoglistFinal] = useState([]);
     const [userListFinal, setUserListFinal] = useState([]);
+    const [userListSort, setUserListSort] = useState('asc');
+    const [userListSortType, setUserListSortType] = useState(0);
+
+    const [userItemStyle, setUserItemStyle] = useSpring(() => ({ x: 2 }))
 
     // Regular varaible declaration
     const pageTitle = "Admin 2"
@@ -33,6 +33,11 @@ function Admin(props) {
             getLogs();
         }
         getUsers();
+        setUserItemStyle({ 
+            to: {x: 0},
+            from: {x: 2},
+            config: config.stiff
+        })
 
         var mainContainer = document.querySelector(".container-admin2");
         var fontLarge = document.querySelectorAll(".font-round-large");
@@ -70,21 +75,13 @@ function Admin(props) {
                 el.style.marginLeft = "1vmin"
             });
         }
-
-        return () => {
-            gotLogs = false;
-            resetSelected();
-        }
-    }, []);
+    }, [userListSortType, userListSort]);
 
     // Server functions
     async function getLogs() {
         let response = await fetch("http://3.218.225.62:3040/logs/getall");
         response = await response.json();
-        logArray = response.files;
-
-        gotLogs = true;
-        renderLogs();
+        setLoglistFinal(response.files);
     }
 
     async function getUsers() {
@@ -94,6 +91,7 @@ function Admin(props) {
     }
 
     async function getLogfile(name) {
+        setLoglistFinal("Loading...");
         let response = await fetch("http://3.218.225.62:3040/logs/get/"+name);
         // response = await response.json(); 
         selectedLog = await response.text();
@@ -101,30 +99,9 @@ function Admin(props) {
         renderOneLog();
     }
 
-    // Render functions
-    function renderLogs() {
-        var logBuffer = [];
-
-        logArray.forEach((log, index) => {
-            logBuffer.push(
-                <div className="container-log-item" key={index}
-                    onClick={() => {
-                        setSelectedFilename(log);
-                        getLogfile(log);
-                    }}
-                >
-                    {log}
-                </div>
-            )
-        })
-
-        setLoglistFinal(logBuffer);
-    }
-
     function renderOneLog() {
         var fileBuffer = selectedLog.split("\n");
         var finalBuffer = [];
-        // console.log(selectedLog)
 
         fileBuffer.forEach((line,index) => {
             finalBuffer.push(
@@ -143,56 +120,145 @@ function Admin(props) {
         setSelectedFilename('');
         setLoglistFinal([]);
     }
+
     // Borrowed from: https://stackoverflow.com/a/33193668/17127255
     function scrollToBottom(id) {
         var element = document.getElementById(id);
         element.scrollTop = element.scrollHeight - element.clientHeight;
     }
+    
+    function handleButtonSort() {
+        if(userListSort == "desc") {
+            setUserListSort("asc");
+        }
+        else {
+            setUserListSort("desc");
+        }
+        document.querySelector(".admin2-btn-sort").classList.toggle("desc");
+    }
 
     // Sorting functions
     function sortObjectList(list, keyID, AscOrDesc) {
-        if(AscOrDesc == "asc") {
-            return [...list].sort((a,b) => a[Object.keys(a)[keyID]] - b[Object.keys(b)[keyID]]);
-        }
-        else if(AscOrDesc == "desc") {
-            return [...list].sort((a,b) => b[Object.keys(b)[keyID]] - a[Object.keys(a)[keyID]]);
+        /* Current supports ASC or DESC sort with numbers or strings */
+        let keyValue = list[Object.keys(list)[0]];
+        let keyValueType = typeof keyValue;
+
+        if(keyValueType !== 'undefined') {
+            keyValue = keyValue[Object.keys(keyValue)[keyID]]
+            keyValueType = typeof keyValue;
+
+            if(keyValueType === 'string') {
+                if(AscOrDesc == "asc") {
+                    return [...list].sort((a,b) => (a[Object.keys(a)[keyID]]).localeCompare(b[Object.keys(b)[keyID]]));
+                }
+                else if(AscOrDesc == "desc") {
+                    return [...list].sort((a,b) => (b[Object.keys(b)[keyID]]).localeCompare(a[Object.keys(a)[keyID]]));
+                }
+                else {
+                    return ["Error"];
+                }
+            }
+            else {
+                if(AscOrDesc == "asc") {
+                    return [...list].sort((a,b) => a[Object.keys(a)[keyID]] - b[Object.keys(b)[keyID]]);
+                }
+                else if(AscOrDesc == "desc") {
+                    return [...list].sort((a,b) => b[Object.keys(b)[keyID]] - a[Object.keys(a)[keyID]]);
+                }
+                else {
+                    return ["Error"];
+                }
+            }
         }
         else {
-            console.log("Invalid Sorting Method!");
+            return["Loading"]
         }
     }
 
     return (
-        // Empty root element. The return can have only one root element
         <>
             <div className="container-admin2">
                 <div className="container-admin2-content">
                     <div className="container-admin2-content-item-reservations">
-                        <div className="container-admin2-content-item-title">Reservations</div>
+                        <div className="container-admin2-content-item-title">Data Reports</div>
                         <div className="container-admin2-content-item-body">
 
                         </div>
                     </div>
                     <div className="container-admin2-content-item-users">
-                        <div className="container-admin2-content-item-title">Users</div>
+                        <div className="container-admin2-content-item-title">
+                            Users
+                            <select className="admin2-btn-sort-type"
+                                style={{marginLeft: 'auto'}}
+                                onChange={(e) => {
+                                    setUserListSortType(e.target.value);
+                                }}
+                            >
+                                <option value={0}>ID</option>
+                                <option value={4}>Name</option>
+                                <option value={1}>Type</option>
+                            </select>
+                            <div className="admin2-btn-sort"
+                                onClick={() => {
+                                    handleButtonSort();
+                                }}
+                            >{userListSort}</div>
+                        </div>
                         <div className="container-admin2-content-item-body-user">
-                            {sortObjectList(userListFinal, 0, "desc").map((user,index) => {
+                            {sortObjectList(userListFinal, userListSortType, userListSort).map((user,index) => {
                                 return (
-                                    <div key={index} className="container-user-item">
-                                        ({user[Object.keys(user)[0]]}) {user[Object.keys(user)[4]]}, {user[Object.keys(user)[2]]}, {user[Object.keys(user)[3]]}
-                                    </div>
+                                    <animated.div key={index} className="container-user-item"
+                                        style={{
+                                            transform: userItemStyle.x
+                                                .to({
+                                                    range: [0,2],
+                                                    output: [0, 4*(index+1)]
+                                                })
+                                                .to((x) => `translateX(${x}vmin)`),
+                                            opacity: userItemStyle.x
+                                                .to({
+                                                    range: [0,2],
+                                                    output: [1, 0]
+                                                })
+                                        }}
+                                    >
+                                        {user[Object.keys(user)[0]]} - {user[Object.keys(user)[4]]} ({user[Object.keys(user)[2]]})
+                                    </animated.div>
                                 )
                             })}
                         </div>
                     </div>
                     <div className="container-admin2-content-item-logs">
-                        <span className="container-admin2-content-item-title">{selectedFilename != "" ? selectedFilename : "Logs"}</span>
+                        <span className="container-admin2-content-item-title">
+                            {selectedFilename != "" 
+                            ? <>
+                                <div className="admin2-btn-back"
+                                    onClick={() => {
+                                        resetSelected();
+                                        getLogs();
+                                    }}
+                                ></div>
+                                <div>{selectedFilename}</div>
+                            </> 
+                            : "Logs"}
+                        </span>
                         <div className="container-admin2-content-item-body-log" id="log-scroller">
-                            {loglistFinal}
+                            {loglistFinal.map((log, index) => {
+                                return (
+                                    <div className="container-log-item" key={index}
+                                        onClick={() => {
+                                            // setSelectedFilename(log);
+                                            // getLogfile(log);
+                                        }}
+                                    >
+                                        {log}
+                                    </div>
+                                )
+                            })}
                         </div>
                     </div>
                     <div className="container-admin2-content-item-reports">
-                        <div className="container-admin2-content-item-title">Reports</div>
+                        <div className="container-admin2-content-item-title">Reservation Calendar</div>
                         <div className="container-admin2-content-item-body">
                             
                         </div>
