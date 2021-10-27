@@ -8,24 +8,12 @@ import React, { useEffect, useRef, useState, PureComponent } from "react";
 // Importing 3rd party libraries
 import * as V from 'victory';
 
-// Variables declared that will persist even if page is changed
-var localNumberRaw = 0;
-
 // Main function for the specific 'page'
 function AdminHome(props) {
-    // 'Reactive' variables that will cause the page to update when their values change
-        // 'useState' at the end of each describes their initial value
-    const [localNumber, setLocalNumber] = useState(localNumberRaw)
-        // The initial value below uses a conditional operator which means: 
-            // if (condition) then (value) else (other_value)
-            // Turns into...
-            // (condition) ? (value) : (other_value)
-    const [globalNumber, setGlobalNumber] = useState(window.sessionStorage.getItem("num_global") ? window.sessionStorage.getItem("num_global") : 0);
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
     const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
 
     // Regular varaible declaration
-    const pageTitle = "Admin"
     var isMobile = props.isMobile;
 
     // 'useEffect' runs once for every render of the page
@@ -123,17 +111,6 @@ function AdminHome(props) {
             warm: "#ffb921",
             hot: "#F4511E"
         };
-
-    // Handling functions
-    function handleAddButtonLocal() {
-        localNumberRaw += 1;
-        setLocalNumber(localNumberRaw);
-    }
-
-    function handleAddButtonGlobal() {
-        setGlobalNumber(parseInt(globalNumber)+1);
-        window.sessionStorage.setItem("num_global", parseInt(globalNumber)+1);
-    }
 
     // Chart Functions
     function exampleBarChart() {

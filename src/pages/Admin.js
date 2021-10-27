@@ -5,6 +5,7 @@ import '../assets/styles/Admin2.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 import { useSpring, animated, useTrail, config } from 'react-spring';
+import Charts from '../components/Charts';
 
 // Log variables
 var gotLogs = false;
@@ -23,8 +24,55 @@ function Admin(props) {
 
     const [userItemStyle, setUserItemStyle] = useSpring(() => ({ x: 2 }))
 
+    // Test data
+        // bar chart
+        const barData = [
+            {user: 1, duration: 510},
+            {user: 2, duration: 458},
+            {user: 3, duration: 427},
+            {user: 4, duration: 315},
+            {user: 5, duration: 260},
+            {user: 6, duration: 231},
+            {user: 7, duration: 96},
+        ];
+
+        // line chart
+        const lineData = [
+            {month: 1, revenue: 13000},
+            {month: 2, revenue: 16500},
+            {month: 3, revenue: 14250},
+            {month: 4, revenue: 15100},
+            {month: 5, revenue: 15950},
+            {month: 6, revenue: 15375},
+            {month: 7, revenue: 17690},
+            {month: 8, revenue: 16250},
+            {month: 9, revenue: 13125},
+            {month: 10, revenue: 12250},
+            {month: 11, revenue: 14900},
+            {month: 12, revenue: 15400},
+        ];
+
+        // pie chart
+        const pieData = [
+            {x: "#1", y: 105},
+            {x: "#2", y: 89},
+            {x: "#3", y: 67},
+            {x: "#4", y: 44},
+            {x: "#5", y: 49},
+            {x: "#6", y: 27},
+            {x: "#7", y: 21},
+            {x: "#8", y: 111},
+            {x: "#9", y: 61},
+            {x: "#10", y: 59},
+            {x: "#11", y: 22},
+            {x: "#12", y: 31},
+            {x: "#13", y: 32},
+            {x: "#14", y: 24},
+            {x: "#15", y: 31},
+            {x: "#16", y: 20},
+        ];
+
     // Regular varaible declaration
-    const pageTitle = "Admin 2"
     var isMobile = props.isMobile;
 
     // 'useEffect' runs once for every render of the page
@@ -181,8 +229,25 @@ function Admin(props) {
                 <div className="container-admin2-content">
                     <div className="container-admin2-content-item-reservations">
                         <div className="container-admin2-content-item-title">Data Reports</div>
-                        <div className="container-admin2-content-item-body">
-
+                        <div className="container-admin2-content-item-body-report">
+                            <div className="container-report-item">
+                                {/* Pie Chart - Number of Reservations for each Court over the Past Month */}
+                                <span className="admin2-chart-title">Total Reservations by Court <br/> (1 month)</span>
+                                <Charts chartData={pieData} chartType={"pie"}/>
+                            </div>
+                            <div className="container-report-item">
+                                {/* Line Graph - Total number of reservations each month over the last year */}
+                                <span className="admin2-chart-title">Total Revenue by Month <br/> (1 year)</span>
+                                <Charts chartData={lineData} chartType={"line"}/>
+                            </div>
+                            <div className="container-report-item">
+                                {/* Bar Chart - Top 10 users by cumulative reservation duration over the last month */}
+                                <span className="admin2-chart-title">Cumulative Reservation Duration by User (1 month)</span>
+                                <Charts chartData={barData} chartType={"bar"}/>
+                            </div>
+                            <div className="container-report-item-more">
+                                See all data reports
+                            </div>
                         </div>
                     </div>
                     <div className="container-admin2-content-item-users">
@@ -208,18 +273,26 @@ function Admin(props) {
                             {sortObjectList(userListFinal, userListSortType, userListSort).map((user,index) => {
                                 return (
                                     <animated.div key={index} className="container-user-item"
+                                        // style={{
+                                        //     transform: userItemStyle.x
+                                        //         .to({
+                                        //             range: [0,2],
+                                        //             output: [0, (Math.pow(index, 1.1)+1)]
+                                        //         })
+                                        //         .to((x) => `translateX(${x}vmin)`),
+                                        //     opacity: userItemStyle.x
+                                        //         .to({
+                                        //             range: [0,2],
+                                        //             output: [1, 0]
+                                        //         })
+                                        // }}
+                                        //rgba(0,0,0,0.5);
                                         style={{
-                                            transform: userItemStyle.x
-                                                .to({
-                                                    range: [0,2],
-                                                    output: [0, 4*(index+1)]
-                                                })
-                                                .to((x) => `translateX(${x}vmin)`),
-                                            opacity: userItemStyle.x
-                                                .to({
-                                                    range: [0,2],
-                                                    output: [1, 0]
-                                                })
+                                            color: (user[Object.keys(user)[1]] == 2) 
+                                            ? "rgba(50, 168, 82,0.9)" 
+                                            : (user[Object.keys(user)[1]] == 1) 
+                                                ? "rgba(36, 101, 181,0.7)" 
+                                                : "rgba(0,0,0,0.5)",
                                         }}
                                     >
                                         {user[Object.keys(user)[0]]} - {user[Object.keys(user)[4]]} ({user[Object.keys(user)[2]]})
@@ -240,7 +313,7 @@ function Admin(props) {
                                 ></div>
                                 <div>{selectedFilename}</div>
                             </> 
-                            : "Logs"}
+                            : "Server Logs"}
                         </span>
                         <div className="container-admin2-content-item-body-log" id="log-scroller">
                             {loglistFinal.map((log, index) => {
@@ -258,9 +331,17 @@ function Admin(props) {
                         </div>
                     </div>
                     <div className="container-admin2-content-item-reports">
-                        <div className="container-admin2-content-item-title">Reservation Calendar</div>
-                        <div className="container-admin2-content-item-body">
-                            
+                        <div className="container-admin2-content-item-title">Reservation System Manager</div>
+                        <div className="container-admin2-content-item-body-reservation">
+                            <div className="container-admin2-reservation-item"
+                                onClick={() => {
+                                    window.location.href = "/reserveadmin";
+                                }}
+                            >
+                                <div className="container-admin2-reservation-button">
+                                    <div className="container-admin2-reservation-button-img"></div>Launch App
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

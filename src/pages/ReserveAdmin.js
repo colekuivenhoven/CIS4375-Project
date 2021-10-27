@@ -1227,6 +1227,13 @@ function ReserveAdmin(props) {
                                 Event
                             </span>
                         </div>
+                        <div className="reserve-modal-window-body-text">Note: </div>
+                        <div className="reserve-modal-window-body-text" style={{width: "100%"}}>
+                            <textarea 
+                                className="reserve-modal-window-textarea"
+                                placeholder="Enter any special requests or additional information here"
+                            ></textarea>
+                        </div>
                         <div className="reserve-modal-window-button-submit"
                             onClick={() => {
                                 if(editing) {

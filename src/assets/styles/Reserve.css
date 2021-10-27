@@ -789,6 +789,35 @@
     text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
 }
 
+.lite-edit-label {
+    font-family: Round;
+    font-size: 2vmin;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.3);
+    margin-top: 1vmin;
+}
+
+.reserve-modal-window-textarea {
+    width: calc(100% - 1vmin);
+    min-width: calc(100% - 1vmin);
+    height: 5vmin;
+    min-height: 5vmin;
+    max-height: 25vmin;
+    border: 0;
+    border-radius: 0.5vmin;
+    font-family: Round;
+    font-size: 1.25vmin;
+    font-weight: bold;
+    padding: 0.5vmin;
+    color: rgba(0, 0, 0, 0.5);
+    user-select: none;
+    outline: none;
+}
+
+.reserve-modal-window-textarea::placeholder {
+    color: rgba(0, 0, 0, 0.2);
+}
+
 /* Animations */
 @keyframes column-item-open-animation {
     0% {

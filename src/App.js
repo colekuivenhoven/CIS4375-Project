@@ -4,7 +4,7 @@ import './assets/styles/App.css';
 
   // Importing 'pages' that will be used
 import Home from './pages/Home.js';
-import AdminHome from './pages/AdminHome.js';
+// import AdminHome from './pages/AdminHome.js';
 import Admin from './pages/Admin.js';
 import Account from './pages/Account.js';
 import About from './pages/About.js';
@@ -79,9 +79,9 @@ function App() {
 
         {/* Route path definitions */}
         <Switch>
-          <Route path="/admin-test">
+          {/* <Route path="/admin-test">
             <AdminHome isMobile={isMobile} />
-          </Route>
+          </Route> */}
           <Route path="/admin">
             <Admin isMobile={isMobile} />
           </Route>

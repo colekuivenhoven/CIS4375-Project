@@ -1264,6 +1264,9 @@ function Reserve(props) {
                 </div>
                 <div className="container-option-lite">
                     Edit an Existing Reservation
+                    <div className="lite-edit-label">
+                        {loggedIn ? "Select your reservation" : "Please login to edit a reservation"}
+                    </div>
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
@@ -1281,7 +1284,7 @@ function Reserve(props) {
                     <div className="reserve-modal-window-body-container">
                         <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
                         <div className="reserve-modal-window-body-text">Time: {selectedTime}</div>
-                        <div className="reserve-modal-window-body-text">Court: {currentCourt}</div>
+                        {/* <div className="reserve-modal-window-body-text">Court: {currentCourt}</div> */}
                         <div className="reserve-modal-window-body-text">Duration: 
                             <div className="reserve-modal-window-button-duration-sub"
                                 onClick={() => {
@@ -1311,6 +1314,13 @@ function Reserve(props) {
                             >
                                 Event
                             </span>
+                        </div>
+                        <div className="reserve-modal-window-body-text">Note: </div>
+                        <div className="reserve-modal-window-body-text" style={{width: "100%"}}>
+                            <textarea 
+                                className="reserve-modal-window-textarea"
+                                placeholder="Enter any special requests or additional information here"
+                            ></textarea>
                         </div>
                         <div className="reserve-modal-window-button-submit"
                             onClick={() => {
