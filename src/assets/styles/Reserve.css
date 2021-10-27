@@ -818,6 +818,22 @@
     color: rgba(0, 0, 0, 0.2);
 }
 
+.lite-warning-label {
+    position: absolute;
+    bottom: 2vmin;
+    /* left: 2vmin; */
+    width: 70vh;
+    max-width: 90vw;
+    font-family: Round;
+    font-size: 1.5vh;
+    font-weight: bold;
+    color: rgba(120, 120, 120, 0.7);
+    background-color: white;
+    border-radius: 1vmin;
+    padding: 1vmin;
+    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.15);
+}
+
 /* Animations */
 @keyframes column-item-open-animation {
     0% {

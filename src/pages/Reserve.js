@@ -1268,6 +1268,11 @@ function Reserve(props) {
                         {loggedIn ? "Select your reservation" : "Please login to edit a reservation"}
                     </div>
                 </div>
+                <div className="lite-warning-label">
+                    ⚠️ If you are trying to schedule a tournament, or any event where you'll need 
+                    multiple courts simultaneously, you'll need to contact us directly so that
+                    a manager can properly schedule your event.
+                </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
             <div className="reserve-modal-main-container">

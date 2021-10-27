@@ -1,6 +1,37 @@
 Equipment:
-Ball machine can only be assigned to Courts 1,4,5,11,12,13,16
+    Ball machine can only be assigned to Courts 1,4,5,11,12,13,16.
 
 Reservations:
-Multiple courts need to be able to be added at once. 
-    ->(Array of courts, max 14 courts, only manager can make this type of reservation)
+    Multiple courts need to be able to be added at once. 
+        ->(Array of courts, max 14 courts, only manager can make this type of reservation)
+    Fix customer reservation 'auto-timing' feature.
+    Enable customers to use the 'note' feature & update database tables to reflect.
+    Add customer ability to edit existing reservations.
+    Add customer ability to add equipment to reservations, if the equipment is available.
+        ->(Equipment: Ball machine, hopper, racket)
+    Allow admin to edit/delete all reservations.
+    ***Customers can only make X number of reservations per day.***
+    Allow employee accounts to access the extended reservation page to a somewhat limited extent.
+
+Alerts:
+    Send SMS alert when a reservation is made.
+
+Login:
+    Allow customers to reset their password via email.
+    Confirm account create via email.
+    Redirect appropriately if user is not logged in.
+    Only admin/manager can create other employee accounts.
+    Fully merge customer & employee databases into a USER database.
+    Change to email for username.
+
+Admin:
+    Re-enable viewing of logs.
+    Create 3 important reports that fit a pie chart, bar chart, and line chart, respectively.
+
+Reports:
+    Develop reports that allow admin to see & edit as much data as possible.
+        ->(simple listing system that supports all data, and includes edit/delete options)
+
+
+Questions for Professor:
+    Cascade delete/update
