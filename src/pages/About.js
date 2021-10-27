@@ -1,7 +1,6 @@
 // All imports must be done before the main function
     // Importing this page's CSS file
 import '../assets/styles/About.css';
-
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 
@@ -71,23 +70,27 @@ function About(props) {
         setGlobalNumber(parseInt(globalNumber)+1);
         window.sessionStorage.setItem("num_global", parseInt(globalNumber)+1);
     }
-
+    
     return (
         // Empty root element. The return can have only one root element
         <>
             <div className="container-about">
                 {/* Variables can be inserted inside of brackets as shown below */}
                 <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
+                <div className="map"></div>
                 <div className="test-container">
                     <p></p>
                     <div class="main-text-panel">
                     <div class="main-text-body">Homer Ford Tennis Center provides a comfortable tennis experience. Our services include equipment rental, 
                         easy to navigate court reservation, and a text message alert system to notify you when your court is available.
                         Choose us for your next play session or tournament, and you won't be disappointed. 
+                        
                     </div>
+                    
                     </div>
                     
                 </div>
+                
                 <div className="test-container">
                     
                     

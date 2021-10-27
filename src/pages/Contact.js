@@ -83,25 +83,14 @@ function Contact(props) {
                 {/* Variables can be inserted inside of brackets as shown below */}
                 <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
                 <div className="test-container">
-                    <span className="font-round-medium unselectable">Local Number: {localNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonLocal();
-                        }}
-                    ></div>
+                    <div className=".main-text-body">
+                        <h2>Contact Methods</h2>
+                        <p>Phone: 713-842-3460</p>
+                        <p>Address: 5225 Calhoun, 77021 Houston TX
+                        </p>
+                    </div>
                 </div>
-                <div className="test-container">
-                    <span className="font-round-medium unselectable">Global Number: {globalNumber}</span>
-                    <div 
-                        className="container-add unselectable" 
-                        onClick={() => {
-                            // Calling the appropriate handle function when the element has been clicked.
-                            handleAddButtonGlobal();
-                        }}
-                    ></div>
-                </div>
+                
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
         </>
