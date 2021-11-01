@@ -7,6 +7,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSpring, animated, useTrail, config } from 'react-spring';
 import Charts from '../components/Charts';
 
+// Importing the components used in this page
+import Loading from '../components/Loading';
+
 // Log variables
 var gotLogs = false;
 var logArray = [];
@@ -245,7 +248,11 @@ function Admin(props) {
                                 <span className="admin2-chart-title">Cumulative Reservation Duration by User (1 month)</span>
                                 <Charts chartData={barData} chartType={"bar"}/>
                             </div>
-                            <div className="container-report-item-more">
+                            <div className="container-report-item-more"
+                                onClick={() => {
+                                    window.location.href = "/reports";
+                                }}
+                            >
                                 See all data reports
                             </div>
                         </div>
@@ -347,6 +354,7 @@ function Admin(props) {
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
+            <Loading timeRange={[1000, 2000]} />
         </>
     )
 }

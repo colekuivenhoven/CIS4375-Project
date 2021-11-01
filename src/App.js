@@ -15,6 +15,7 @@ import Login from './pages/Login.js';
 import Register from './pages/Register.js';
 import Test from './pages/Test.js';
 import Practice from './pages/Practice.js';
+import Reports from './pages/Reports.js';
 
   // Importing the router files
 import {
@@ -84,6 +85,9 @@ function App() {
           </Route> */}
           <Route path="/admin">
             <Admin isMobile={isMobile} />
+          </Route>
+          <Route path="/reports">
+            <Reports isMobile={isMobile} />
           </Route>
           <Route path="/account">
             <Account isMobile={isMobile} />

@@ -10,6 +10,7 @@ import reactDom from 'react-dom';
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
 const dateToday = new Date();
+const totalCourts = 16;
 
 var resArray = [];
 var resBuffer = [];
@@ -27,6 +28,8 @@ function Reserve(props) {
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedType, setSelectedType] = useState(0);
     const [selectedDuration, setSelectedDuration] = useState(0.75);
+    const [note, setNote] = useState('');
+    const [numCourts, setNumCourts] = useState(1);
     const [selectedID, setSelectedID] = useState(-1);
     const [reservations, setReservations] = useState([]);
     
@@ -503,6 +506,18 @@ function Reserve(props) {
         )
     }
 
+    function formatDate(date) {
+        return (
+            date.getMonth()+1+"/"+date.getDate()+"/"+date.getFullYear()
+        )
+    }
+
+    function getFormattedDate(dayOffset) {
+        var newDate = new Date();
+        newDate.setDate(newDate.getDate()+dayOffset);
+        return formatDate(newDate);
+    }
+
     function convertToDateFromString(str) {
         var dateParts = str.split('/');
         var dateRaw = new Date(dateParts[2],dateParts[0]-1,dateParts[1]);
@@ -792,6 +807,36 @@ function Reserve(props) {
         return (returnData);
     }
 
+    function renderCustomerReservationDays() {
+        var returnData = [];
+
+        for(var i = 0; i < 7; i++) {
+            const key = i;
+            returnData.push(
+                <div key={key} className="lite-day-label"
+                    onClick={() => {
+                        if(loggedIn) {
+                            let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                            editing = false;
+                            handleToggleModal();
+
+                            setSelectedDate(getFormattedDate(key));
+                            setSelectedTime("7:30am");
+                        }
+                        else {
+                            window.location.pathname = "/login"
+                        }
+                    }}
+                >
+                    {getFormattedDate(key)}
+                    <div className="lite-day-button">Reserve</div>
+                </div>
+            );
+        }
+
+        return returnData;
+    }
+
     // Handling functions
     function handleCourtNext() {
         if(currentCourt < 16) {
@@ -822,25 +867,78 @@ function Reserve(props) {
         }
     }
 
+    function handleCourtsAdd() {
+        if(numCourts < 2) {
+            setNumCourts(numCourts + 1);
+        }
+    }
+
+    function handleCourtsSubtract() {
+        if(numCourts > 1) {
+            setNumCourts(numCourts - 1);
+        }
+    }
+
+    function handleStartTimeAdd() {
+        
+    }
+
+    function handleStartTimeSubtract(){
+        
+    }
+
     function handleButtonSubmit() {
-        var reservationData = {
-            type_id: selectedType,
-            status_id: 0,
-            date: selectedDate,
-            timeStart: selectedTime,
-            duration: selectedDuration,
-            court_id: currentCourt,
-            customer_id: currentUser.User_id
+        var courtArray = [];
+        var earliestCourt = 1;
+
+        for(var j = 0; j <= numCourts-1; j++) {
+            for(var i = earliestCourt; i <= totalCourts; i++) {
+                if(courtArray.length < numCourts) {
+                    var reservationData = {
+                        type_id: selectedType,
+                        status_id: 0,
+                        date: selectedDate,
+                        timeStart: selectedTime,
+                        duration: selectedDuration,
+                        note: note,
+                        court_id: i,
+                        customer_id: currentUser.User_id
+                    }
+    
+                    if(checkValidReservation(reservationData)) {
+                        courtArray.push(i);
+                        if(j == 0) {
+                            earliestCourt = i;
+                        }
+                    }
+                    else {
+                        console.log("Invalid Reservation on Court "+i);
+                    }
+                }
+            }
         }
 
-        if(checkValidReservation(reservationData)) {
-            addReservation(reservationData);
-            resetSelectedInfo();
-            handleToggleModal();
-        }
-        else {
-            document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
-        }
+        console.log("Selected Courts: "+courtArray);
+
+        // var reservationData = {
+        //     type_id: selectedType,
+        //     status_id: 0,
+        //     date: selectedDate,
+        //     timeStart: selectedTime,
+        //     duration: selectedDuration,
+        //     note: note,
+        //     court_id: currentCourt,
+        //     customer_id: currentUser.User_id
+        // }
+
+        // if(checkValidReservation(reservationData)) {
+        //     addReservation(reservationData);
+        //     resetSelectedInfo();
+        //     handleToggleModal();
+        // }
+        // else {
+        //     document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
+        // }
     }
 
     function handleButtonEdit(rid) {
@@ -864,7 +962,6 @@ function Reserve(props) {
             document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
         }
     }
-
 
     function handleButtonDelete(rid) {
         deleteReservation(rid);
@@ -1120,6 +1217,8 @@ function Reserve(props) {
         setSelectedDuration(0.75);
         setSelectedID(-1);
         setSelectedType(0);
+        setNumCourts(1);
+        setNote('');
         document.querySelector(".reserve-modal-window-error").textContent = '';
     }
 
@@ -1127,140 +1226,9 @@ function Reserve(props) {
         // Empty root element. The return can have only one root element
         <>
             <div className="container-reserve-lite">
-                <div className="container-option-lite"
-                    // onClick={() => {
-                    //     if(loggedIn) {
-                    //         let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                    //         editing = false;
-                    //         handleToggleModal();
-                    //         setSelectedDate(convertDate(dateToday.getDate()));
-                    //         setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours)+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                    //     }
-                    //     else {
-                    //         window.location.pathname = "/login"
-                    //     }
-                    // }}
-                >
+                <div className="container-option-lite">
                     <span style={{marginBottom: "2vmin", marginTop: "2vmin", color: "rgb(0,0,0,0.5)"}}>Create a New Reservation</span>
-                    <div className="lite-day-label"
-                        onClick={() => {
-                            if(loggedIn) {
-                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                                editing = false;
-                                handleToggleModal();
-                                setSelectedDate(convertDate(dateToday.getDate()));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                            }
-                            else {
-                                window.location.pathname = "/login"
-                            }
-                        }}
-                    >
-                        Today
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label"
-                        onClick={() => {
-                            if(loggedIn) {
-                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                                editing = false;
-                                handleToggleModal();
-                                setSelectedDate(convertDate(dateToday.getDate()+1));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                            }
-                            else {
-                                window.location.pathname = "/login"
-                            }
-                        }}
-                    >
-                        {convertDate(dateToday.getDate()+1)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label"
-                        onClick={() => {
-                            if(loggedIn) {
-                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                                editing = false;
-                                handleToggleModal();
-                                setSelectedDate(convertDate(dateToday.getDate()+2));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                            }
-                            else {
-                                window.location.pathname = "/login"
-                            }
-                        }}
-                    >
-                        {convertDate(dateToday.getDate()+2)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label"
-                        onClick={() => {
-                            if(loggedIn) {
-                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                                editing = false;
-                                handleToggleModal();
-                                setSelectedDate(convertDate(dateToday.getDate()+3));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                            }
-                            else {
-                                window.location.pathname = "/login"
-                            }
-                        }}
-                    >
-                        {convertDate(dateToday.getDate()+3)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label"
-                        onClick={() => {
-                            if(loggedIn) {
-                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                                editing = false;
-                                handleToggleModal();
-                                setSelectedDate(convertDate(dateToday.getDate()+4));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                            }
-                            else {
-                                window.location.pathname = "/login"
-                            }
-                        }}
-                    >
-                        {convertDate(dateToday.getDate()+4)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label"
-                        onClick={() => {
-                            if(loggedIn) {
-                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                                editing = false;
-                                handleToggleModal();
-                                setSelectedDate(convertDate(dateToday.getDate()+5));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                            }
-                            else {
-                                window.location.pathname = "/login"
-                            }
-                        }}
-                    >
-                        {convertDate(dateToday.getDate()+5)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
-                    <div className="lite-day-label"
-                        onClick={() => {
-                            if(loggedIn) {
-                                let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
-                                editing = false;
-                                handleToggleModal();
-                                setSelectedDate(convertDate(dateToday.getDate()+6));
-                                setSelectedTime((amOrPM == "pm" ? dateToday.getHours() - 12 : dateToday.getHours())+":"+(Math.ceil(dateToday.getMinutes() / 15) * 15)+amOrPM);
-                            }
-                            else {
-                                window.location.pathname = "/login"
-                            }
-                        }}
-                    >
-                        {convertDate(dateToday.getDate()+6)}
-                        <div className="lite-day-button">Reserve</div>
-                    </div>
+                    {renderCustomerReservationDays()}
                 </div>
                 <div className="container-option-lite">
                     Edit an Existing Reservation
@@ -1288,8 +1256,32 @@ function Reserve(props) {
                     </div>
                     <div className="reserve-modal-window-body-container">
                         <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
-                        <div className="reserve-modal-window-body-text">Time: {selectedTime}</div>
-                        {/* <div className="reserve-modal-window-body-text">Court: {currentCourt}</div> */}
+                        <div className="reserve-modal-window-body-text">Time: 
+                            <div className="reserve-modal-window-button-duration-sub"
+                                onClick={() => {
+                                    // handleCourtsSubtract();
+                                }}
+                            ></div>
+                            {selectedTime}
+                            <div className="reserve-modal-window-button-duration-add"
+                                onClick={() => {
+                                    // handleCourtsAdd();
+                                }}
+                            ></div>
+                        </div>
+                        <div className="reserve-modal-window-body-text">Courts: 
+                            <div className="reserve-modal-window-button-duration-sub"
+                                onClick={() => {
+                                    handleCourtsSubtract();
+                                }}
+                            ></div>
+                            {numCourts}
+                            <div className="reserve-modal-window-button-duration-add"
+                                onClick={() => {
+                                    handleCourtsAdd();
+                                }}
+                            ></div>
+                        </div>
                         <div className="reserve-modal-window-body-text">Duration: 
                             <div className="reserve-modal-window-button-duration-sub"
                                 onClick={() => {
@@ -1325,6 +1317,10 @@ function Reserve(props) {
                             <textarea 
                                 className="reserve-modal-window-textarea"
                                 placeholder="Enter any special requests or additional information here"
+                                value={note}
+                                onChange={(e) => {
+                                    setNote(e.target.value);
+                                }}
                             ></textarea>
                         </div>
                         <div className="reserve-modal-window-button-submit"

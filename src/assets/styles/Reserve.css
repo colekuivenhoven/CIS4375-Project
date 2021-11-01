@@ -834,6 +834,47 @@
     box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.15);
 }
 
+.adminreserve-loading {
+    position: absolute;
+    top: 7vmin;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(250,250,250,1);
+    z-index: 5000;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 3vmin;
+    font-family: Round;
+    color: rgba(0,0,0,0.3);
+    opacity: 0%;
+    pointer-events: none;
+    transition: all 0.15s ease-in-out;
+}
+
+.adminreserve-loading.active {
+    opacity: 100%;
+    pointer-events: auto;
+}
+
+.loading-ball {
+    width: 2.5vmin;
+    aspect-ratio: 1;
+    background-image: url('../images/team-images/LoadingTennis.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
+    background-color: rgba(0,0,0,0.0);
+    margin-right: 2vmin;
+    animation: ball-loading-animation 0.4s cubic-bezier(.8,-0.01,1,.85);
+    animation-fill-mode: both;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
 /* Animations */
 @keyframes column-item-open-animation {
     0% {
@@ -844,5 +885,17 @@
     }
     100% {
         background-color: rgba(31, 158, 19, 0.1);
+    }
+}
+
+@keyframes ball-loading-animation {
+    0% {
+        transform: translateY(-5vmin) scaleY(1) scaleX(1);
+    }
+    90% {
+        transform: translateY(0vmin) scaleY(1) scaleY(1) scaleX(1);
+    }
+    100% {
+        transform: translateY(1.25vmin) scaleY(0.5) scaleX(1.3);
     }
 }

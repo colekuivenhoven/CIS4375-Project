@@ -6,9 +6,13 @@ import '../assets/styles/Reserve.css';
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
 
+// Importing the components used in this page
+import Loading from '../components/Loading';
+
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
 const dateToday = new Date();
+const totalCourts = 16;
 
 var resArray = [];
 var resBuffer = [];
@@ -22,9 +26,12 @@ function ReserveAdmin(props) {
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
     const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
     const [currentCourt, setCurrentCourt] = useState(1);
+    const [currentArrayCourt, setCurrentArrayCourt] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedType, setSelectedType] = useState(0);
+    const [note, setNote] = useState('');
+    const [numCourts, setNumCourts] = useState(1);
     const [selectedDuration, setSelectedDuration] = useState(0.75);
     const [selectedID, setSelectedID] = useState(-1);
     const [reservations, setReservations] = useState([]);
@@ -368,45 +375,8 @@ function ReserveAdmin(props) {
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
-        var mainContainer = document.querySelector(".container-reserve");
-        var fontLarge = document.querySelectorAll(".font-round-large");
-        var fontMed = document.querySelectorAll(".font-round-medium");
-        var addButton = document.querySelectorAll(".container-add");
-
         if(!gotReservationData) {
             getReservationData();
-        }
-
-        if(isMobile) {
-            mainContainer.style.top = "15vmin"
-
-            fontLarge.forEach(el => {
-                el.style.fontSize = "8vmin"
-            });
-
-            fontMed.forEach(el => {
-                el.style.fontSize = "5.5vmin"
-            });
-
-            addButton.forEach(el => {
-                el.style.width = "5.5vmin"
-                el.style.marginLeft = "3vmin"
-            });
-        }
-        else {
-            mainContainer.style.top = "7vmin"
-            fontLarge.forEach(el => {
-                el.style.fontSize = "4vmin"
-            });
-
-            fontMed.forEach(el => {
-                el.style.fontSize = "2.25vmin"
-            });
-
-            addButton.forEach(el => {
-                el.style.width = "2.5vmin"
-                el.style.marginLeft = "1vmin"
-            });
         }
 
         return () => {
@@ -436,12 +406,12 @@ function ReserveAdmin(props) {
                     date: res.Reservation_date,
                     timeStart: res.Reservation_time,
                     duration: parseFloat(res.Reservation_duration),
+                    note: res.Reservation_note,
                     court_id: res.Court_id,
                     customer_id: res.Customer_id
                 }
             )
         });
-
         setReservations(resBuffer);
 
         gotReservationData = true;
@@ -593,7 +563,7 @@ function ReserveAdmin(props) {
 
                     var resIdBuffer = -1;
                     var startIndex = -1;
-                    if(reservation.court_id == currentCourt) {
+                    if(reservation.court_id.includes(currentCourt)) {
                         dayTimeslots.forEach((slot, index) => {
                             var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
                             var amOrPM = (slot.time).substring((slot.time).length - 2);
@@ -753,6 +723,8 @@ function ReserveAdmin(props) {
                                     var testRootDuration = reservations.find(el => el.id == testRootId).duration;
                                     var testRootID = reservations.find(el => el.id == testRootId).id;
                                     var testRootType = reservations.find(el => el.id == testRootId).type_id;
+                                    var testRootNote = reservations.find(el => el.id == testRootId).note;
+                                    var testRootNumCourts = reservations.find(el => el.id == testRootId).court_id;
 
                                     if(loggedIn) {
                                         handleToggleModal();
@@ -761,6 +733,9 @@ function ReserveAdmin(props) {
                                         setSelectedDuration(testRootDuration);
                                         setSelectedID(testRootID);
                                         setSelectedType(testRootType);
+                                        setNumCourts(testRootNumCourts.length);
+                                        setCurrentArrayCourt(testRootNumCourts);
+                                        setNote(testRootNote);
                                     }
                                     else {
                                         window.location.pathname = "/login"
@@ -804,6 +779,18 @@ function ReserveAdmin(props) {
         }
     }
 
+    function handleCourtsAdd() {
+        if(numCourts < 16) {
+            setNumCourts(numCourts + 1);
+        }
+    }
+
+    function handleCourtsSubtract() {
+        if(numCourts > 1) {
+            setNumCourts(numCourts - 1);
+        }
+    }
+
     function handleToggleModal() {
         document.querySelector(".reserve-modal-main-container").classList.toggle("active");
         document.querySelector(".reserve-modal-window-container").classList.toggle("active");
@@ -822,27 +809,94 @@ function ReserveAdmin(props) {
     }
 
     function handleButtonSubmit() {
+        var courtArray = [];
+        var earliestCourt = 1;
+
+        for(var j = 0; j <= numCourts-1; j++) {
+            for(var i = earliestCourt; i <= totalCourts; i++) {
+                if(courtArray.length < numCourts) {
+                    var reservationData = {
+                        type_id: selectedType,
+                        status_id: 0,
+                        date: selectedDate,
+                        timeStart: selectedTime,
+                        duration: selectedDuration,
+                        note: note,
+                        court_id: i,
+                        customer_id: currentUser.User_id
+                    }
+    
+                    if(checkValidReservation(reservationData)) {
+                        courtArray.push(i);
+                        if(j == 0) {
+                            earliestCourt = i;
+                        }
+                    }
+                    else {
+                        console.log("Invalid Reservation on Court "+i);
+                    }
+                }
+            }
+        }
+
+        // console.log("Selected Courts: "+courtArray);
         var reservationData = {
             type_id: selectedType,
             status_id: 0,
             date: selectedDate,
             timeStart: selectedTime,
             duration: selectedDuration,
-            court_id: currentCourt,
+            note: note,
+            court_id: "["+courtArray.toString()+"]",
             customer_id: currentUser.User_id
         }
 
-        if(checkValidReservation(reservationData)) {
-            addReservation(reservationData);
-            resetSelectedInfo();
-            handleToggleModal();
-        }
-        else {
-            document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
-        }
+        addReservation(reservationData);
+        resetSelectedInfo();
+        handleToggleModal();
+
+        // if(checkValidReservation(reservationData)) {
+        //     addReservation(reservationData);
+        //     resetSelectedInfo();
+        //     handleToggleModal();
+        // }
+        // else {
+        //     document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
+        // }
     }
 
     function handleButtonEdit(rid) {
+        var courtArray = [];
+        var earliestCourt = currentArrayCourt[0];
+
+        for(var j = 0; j <= numCourts-1; j++) {
+            for(var i = earliestCourt; i <= totalCourts; i++) {
+                if(courtArray.length < numCourts) {
+                    var reservationData = {
+                        id: rid,
+                        type_id: selectedType,
+                        status_id: 0,
+                        date: selectedDate,
+                        timeStart: selectedTime,
+                        duration: selectedDuration,
+                        note: note,
+                        court_id: i,
+                        customer_id: currentUser.User_id
+                    }
+    
+                    if(checkValidReservationEdit(reservationData)) {
+                        courtArray.push(i);
+                        if(j == 0) {
+                            earliestCourt = i;
+                        }
+                    }
+                    else {
+                        console.log("Invalid Reservation on Court "+i);
+                    }
+                }
+            }
+        }
+
         var reservationData = {
             id: rid,
             type_id: selectedType,
@@ -850,20 +904,36 @@ function ReserveAdmin(props) {
             date: selectedDate,
             timeStart: selectedTime,
             duration: selectedDuration,
-            court_id: currentCourt,
+            note: note,
+            court_id: "["+courtArray.toString()+"]",
             customer_id: currentUser.User_id
         }
 
-        if(checkValidReservationEdit(reservationData)) {
-            editReservation(reservationData);
-            resetSelectedInfo();
-            handleToggleModal();
-        }
-        else {
-            document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
-        }
-    }
+        editReservation(reservationData);
+        resetSelectedInfo();
+        handleToggleModal();
 
+        // var reservationData = {
+        //     id: rid,
+        //     type_id: selectedType,
+        //     status_id: 0,
+        //     date: selectedDate,
+        //     timeStart: selectedTime,
+        //     duration: selectedDuration,
+        //     note: note,
+        //     court_id: numCourts.length,
+        //     customer_id: currentUser.User_id
+        // }
+
+        // if(checkValidReservationEdit(reservationData)) {
+        //     editReservation(reservationData);
+        //     resetSelectedInfo();
+        //     handleToggleModal();
+        // }
+        // else {
+        //     document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
+        // }
+    }
 
     function handleButtonDelete(rid) {
         deleteReservation(rid);
@@ -924,7 +994,7 @@ function ReserveAdmin(props) {
             }
 
             if(res.date == reservationData.date) {
-                if(res.court_id == reservationData.court_id) {
+                if(res.court_id.includes(reservationData.court_id)) {
                     var resBufferStart = convertTo24Hour(res.timeStart);
                     var resBufferStartHours = parseInt(resBufferStart.split(':')[0]);
                     var resBufferStartMinutes = parseInt(resBufferStart.split(':')[1]);
@@ -1034,7 +1104,7 @@ function ReserveAdmin(props) {
 
             if(res.id != reservationData.id) {
                 if(res.date == reservationData.date) {
-                    if(res.court_id == reservationData.court_id) {
+                    if(res.court_id.includes(reservationData.court_id)) {
                         var resBufferStart = convertTo24Hour(res.timeStart);
                         var resBufferStartHours = parseInt(resBufferStart.split(':')[0]);
                         var resBufferStartMinutes = parseInt(resBufferStart.split(':')[1]);
@@ -1119,6 +1189,9 @@ function ReserveAdmin(props) {
         setSelectedDuration(0.75);
         setSelectedID(-1);
         setSelectedType(0);
+        setNote('');
+        setCurrentArrayCourt([]);
+        setNumCourts(1);
         document.querySelector(".reserve-modal-window-error").textContent = '';
     }
 
@@ -1196,7 +1269,21 @@ function ReserveAdmin(props) {
                     <div className="reserve-modal-window-body-container">
                         <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
                         <div className="reserve-modal-window-body-text">Time: {selectedTime}</div>
-                        <div className="reserve-modal-window-body-text">Court: {currentCourt}</div>
+                        <div className="reserve-modal-window-body-text">Court (Selected): {currentCourt}</div>
+                        <div className="reserve-modal-window-body-text">Courts: 
+                            <div className="reserve-modal-window-button-duration-sub"
+                                onClick={() => {
+                                    handleCourtsSubtract();
+                                }}
+                            ></div>
+                            {numCourts}
+                            <div className="reserve-modal-window-button-duration-add"
+                                onClick={() => {
+                                    handleCourtsAdd();
+                                }}
+                            ></div>
+                        </div>
+                        
                         <div className="reserve-modal-window-body-text">Duration: 
                             <div className="reserve-modal-window-button-duration-sub"
                                 onClick={() => {
@@ -1232,6 +1319,10 @@ function ReserveAdmin(props) {
                             <textarea 
                                 className="reserve-modal-window-textarea"
                                 placeholder="Enter any special requests or additional information here"
+                                value={note}
+                                onChange={(e) => {
+                                    setNote(e.target.value);
+                                }}
                             ></textarea>
                         </div>
                         <div className="reserve-modal-window-button-submit"
@@ -1250,6 +1341,7 @@ function ReserveAdmin(props) {
                     </div>
                  </div>      
             </div>
+            <Loading timeRange={[1000,2000]}/>
         </>
     )
 }
