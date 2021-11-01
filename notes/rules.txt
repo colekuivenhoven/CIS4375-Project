@@ -2,10 +2,10 @@ Equipment:
     Ball machine can only be assigned to Courts 1,4,5,11,12,13,16.
 
 Reservations:
-    Multiple courts need to be able to be added at once. 
+    DONE Multiple courts need to be able to be added at once. 
         ->(Array of courts, max 14 courts, only manager can make this type of reservation)
     Fix customer reservation 'auto-timing' feature.
-    DONE! Enable customers to use the 'note' feature & update database tables to reflect.
+    DONE Enable customers to use the 'note' feature & update database tables to reflect.
     Add customer ability to edit existing reservations.
     Add customer ability to add equipment to reservations, if the equipment is available.
         ->(Equipment: Ball machine, hopper, racket)

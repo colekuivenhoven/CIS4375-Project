@@ -13,6 +13,7 @@ import Loading from '../components/Loading';
 var localNumberRaw = 0;
 const dateToday = new Date();
 const totalCourts = 16;
+const maxCourtReservations = 14;
 
 var resArray = [];
 var resBuffer = [];
@@ -780,7 +781,7 @@ function ReserveAdmin(props) {
     }
 
     function handleCourtsAdd() {
-        if(numCourts < 16) {
+        if(numCourts < maxCourtReservations) {
             setNumCourts(numCourts + 1);
         }
     }
@@ -810,7 +811,8 @@ function ReserveAdmin(props) {
 
     function handleButtonSubmit() {
         var courtArray = [];
-        var earliestCourt = 1;
+        var earliestCourt = currentCourt;
+        var errorBox = document.querySelector(".reserve-modal-window-error");
 
         for(var j = 0; j <= numCourts-1; j++) {
             for(var i = earliestCourt; i <= totalCourts; i++) {
@@ -832,29 +834,29 @@ function ReserveAdmin(props) {
                             earliestCourt = i;
                         }
                     }
-                    else {
-                        console.log("Invalid Reservation on Court "+i);
-                    }
                 }
             }
         }
 
-        // console.log("Selected Courts: "+courtArray);
-        var reservationData = {
-            type_id: selectedType,
-            status_id: 0,
-            date: selectedDate,
-            timeStart: selectedTime,
-            duration: selectedDuration,
-            note: note,
-            court_id: "["+courtArray.toString()+"]",
-            customer_id: currentUser.User_id
+        if(courtArray.length == 0 || courtArray.length != numCourts || hasDuplicates(courtArray)) {
+            errorBox.textContent = 'Invalid Reservation: There are no available reservations for the requested date and time!';
         }
-
-        addReservation(reservationData);
-        resetSelectedInfo();
-        handleToggleModal();
-
+        else {
+            var reservationData = {
+                type_id: selectedType,
+                status_id: 0,
+                date: selectedDate,
+                timeStart: selectedTime,
+                duration: selectedDuration,
+                note: note,
+                court_id: "["+courtArray.toString()+"]",
+                customer_id: currentUser.User_id
+            }
+    
+            addReservation(reservationData);
+            resetSelectedInfo();
+            handleToggleModal();
+        }
         // if(checkValidReservation(reservationData)) {
         //     addReservation(reservationData);
         //     resetSelectedInfo();
@@ -868,6 +870,7 @@ function ReserveAdmin(props) {
     function handleButtonEdit(rid) {
         var courtArray = [];
         var earliestCourt = currentArrayCourt[0];
+        var errorBox = document.querySelector(".reserve-modal-window-error");
 
         for(var j = 0; j <= numCourts-1; j++) {
             for(var i = earliestCourt; i <= totalCourts; i++) {
@@ -890,28 +893,30 @@ function ReserveAdmin(props) {
                             earliestCourt = i;
                         }
                     }
-                    else {
-                        console.log("Invalid Reservation on Court "+i);
-                    }
                 }
             }
         }
 
-        var reservationData = {
-            id: rid,
-            type_id: selectedType,
-            status_id: 0,
-            date: selectedDate,
-            timeStart: selectedTime,
-            duration: selectedDuration,
-            note: note,
-            court_id: "["+courtArray.toString()+"]",
-            customer_id: currentUser.User_id
+        if(courtArray.length == 0 || courtArray.length != numCourts || hasDuplicates(courtArray)) {
+            errorBox.textContent = 'Invalid Reservation: There are no available reservations for the requested date and time!';
         }
-
-        editReservation(reservationData);
-        resetSelectedInfo();
-        handleToggleModal();
+        else {
+            var reservationData = {
+                id: rid,
+                type_id: selectedType,
+                status_id: 0,
+                date: selectedDate,
+                timeStart: selectedTime,
+                duration: selectedDuration,
+                note: note,
+                court_id: "["+courtArray.toString()+"]",
+                customer_id: currentUser.User_id
+            }
+    
+            editReservation(reservationData);
+            resetSelectedInfo();
+            handleToggleModal();
+        }
 
         // var reservationData = {
         //     id: rid,
@@ -1181,6 +1186,11 @@ function ReserveAdmin(props) {
         }
 
         return returnValue;
+    }
+
+    // Borrowed from https://stackoverflow.com/a/7376645/17127255
+    function hasDuplicates(array) {
+        return (new Set(array)).size !== array.length;
     }
 
     function resetSelectedInfo() {
