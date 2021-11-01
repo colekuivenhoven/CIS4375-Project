@@ -6,6 +6,9 @@ import '../assets/styles/Home.css';
 import React, { useEffect, useRef, useState } from "react";
 import ReactPlayer from 'react-player/lazy';
 
+// Importing the components used in this page
+import Loading from '../components/Loading';
+
 // Importing the router files
 import {
     BrowserRouter as Router,
@@ -197,6 +200,7 @@ function Home(props) {
                 {/* Variables can be inserted inside of brackets as shown below */}
                 {newHome()}
             </div>
+            <Loading timeRange={[400, 800]} />
         </>
     )
 }

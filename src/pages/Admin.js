@@ -130,6 +130,7 @@ function Admin(props) {
 
     // Server functions
     async function getLogs() {
+        setLoglistFinal(["Loading..."]);
         let response = await fetch("http://3.218.225.62:3040/logs/getall");
         response = await response.json();
         setLoglistFinal(response.files);
@@ -142,12 +143,14 @@ function Admin(props) {
     }
 
     async function getLogfile(name) {
-        setLoglistFinal("Loading...");
+        setLoglistFinal(["Loading..."]);
         let response = await fetch("http://3.218.225.62:3040/logs/get/"+name);
         // response = await response.json(); 
         selectedLog = await response.text();
 
-        renderOneLog();
+        setLoglistFinal(selectedLog.split("\n"));
+        scrollToBottom('log-scroller');
+        //renderOneLog();
     }
 
     function renderOneLog() {
@@ -325,10 +328,15 @@ function Admin(props) {
                         <div className="container-admin2-content-item-body-log" id="log-scroller">
                             {loglistFinal.map((log, index) => {
                                 return (
-                                    <div className="container-log-item" key={index}
+                                    <div 
+                                        className="container-log-item" 
+                                        key={index} 
+                                        style={selectedFilename != "" ? {} : {fontSize: "1.25vmin", color: "rgba(0,0,0,0.3)"}}
                                         onClick={() => {
-                                            // setSelectedFilename(log);
-                                            // getLogfile(log);
+                                            if(selectedFilename == "") {
+                                                setSelectedFilename(log);
+                                                getLogfile(log);
+                                            }
                                         }}
                                     >
                                         {log}

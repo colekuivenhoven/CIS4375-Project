@@ -7,6 +7,9 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
 import reactDom from 'react-dom';
 
+// Importing the components used in this page
+import Loading from '../components/Loading';
+
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
 const dateToday = new Date();
@@ -1339,6 +1342,7 @@ function Reserve(props) {
                     </div>
                  </div>      
             </div>
+            <Loading timeRange={[400, 800]} />
         </>
     )
 }

@@ -25,7 +25,7 @@ Login:
     Change to email for username.
 
 Admin:
-    Re-enable viewing of logs.
+    DONE Re-enable viewing of logs.
     Create 3 important reports that fit a pie chart, bar chart, and line chart, respectively.
 
 Reports:

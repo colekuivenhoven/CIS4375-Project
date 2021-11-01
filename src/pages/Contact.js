@@ -5,6 +5,9 @@ import '../assets/styles/Contact.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 
+// Importing the components used in this page
+import Loading from '../components/Loading';
+
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
 
@@ -81,7 +84,7 @@ function Contact(props) {
         <>
             <div className="container-contact">
                 {/* Variables can be inserted inside of brackets as shown below */}
-                <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
+                {/* <div className="page-title"><span className="font-round-large">{pageTitle}</span></div> */}
                 <div className="test-container">
                     <div className=".main-text-body">
                         <h2>Contact Methods</h2>
@@ -93,6 +96,7 @@ function Contact(props) {
                 
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
+            <Loading timeRange={[250, 500]} />
         </>
     )
 }

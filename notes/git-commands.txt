@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Fixed Administrator Reservations."
+git commit -m "Added loading pages to make page transitions smoother."
 
 // Push to remote repo
 git push -u origin master

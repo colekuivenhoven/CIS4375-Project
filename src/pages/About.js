@@ -4,6 +4,9 @@ import '../assets/styles/About.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 
+// Importing the components used in this page
+import Loading from '../components/Loading';
+
 // Variables declared that will persist even if page is changed
 var localNumberRaw = 0;
 
@@ -76,7 +79,7 @@ function About(props) {
         <>
             <div className="container-about">
                 {/* Variables can be inserted inside of brackets as shown below */}
-                <div className="page-title"><span className="font-round-large">{pageTitle}</span></div>
+                {/* <div className="page-title"><span className="font-round-large">{pageTitle}</span></div> */}
                 <div className="map"></div>
                 <div className="test-container">
                     <p></p>
@@ -97,6 +100,7 @@ function About(props) {
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
             </div>
+            <Loading timeRange={[250, 500]} />
         </>
     )
 }
