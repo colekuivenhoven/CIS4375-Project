@@ -91,9 +91,36 @@ function Contact(props) {
                         <p>Phone: 713-842-3460</p>
                         <p>Address: 5225 Calhoun, 77021 Houston TX
                         </p>
+                         <p>
+                        Hours of operation:
+                        Weekdays: 7:30 AM – 9:00 PM 
+
+                        Weekends: 7:30 AM – 6:00 PM 
+
+                        Closed: December 25th, Thanksgiving, January 1st 
+                        </p>
+                        <p>Manager Contact: 
+                        Roger White:
+                        832-373-8798
+                        </p>
                     </div>
+                    
                 </div>
-                
+                <div>
+
+                    <div className="row-container">
+
+                            <div className="map"></div>
+            
+
+                            <div className="map2"></div>
+
+                        
+ 
+                </div>
+                </div>
+                <div className="map"></div>
+                <div className="map2"></div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
             </div>
             <Loading timeRange={[250, 500]} />

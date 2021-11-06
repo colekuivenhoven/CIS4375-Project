@@ -23,4 +23,24 @@
     color: rgba(0, 0, 0, 0.25);
     margin-top: 2vmin;
 }
+
+.map {
+    background-image: url('../images/team-images/drone-map1-labelDemo.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center bottom;
+    width: 45%;
+    height: 40%;
+    float:right;
+}
+.map2{
+    background-image: url('../images/team-images/map2.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center bottom;
+    width: 45%;
+    height: 40%;
+    float:left;
+   
+}
 /* Animations */
