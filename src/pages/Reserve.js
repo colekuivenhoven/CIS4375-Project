@@ -35,9 +35,9 @@ function Reserve(props) {
     const [numCourts, setNumCourts] = useState(1);
     const [selectedID, setSelectedID] = useState(-1);
     const [reservations, setReservations] = useState([]);
+    const [customerReservations, setCustomerReservations] = useState([]);
     
     // Regular varaible declaration
-    const pageTitle = "Reserve Your Court"
     var isMobile = props.isMobile;
 
     var timeslotsJSON = [
@@ -375,45 +375,9 @@ function Reserve(props) {
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
-        var mainContainer = document.querySelector(".container-reserve-lite");
-        var fontLarge = document.querySelectorAll(".font-round-large");
-        var fontMed = document.querySelectorAll(".font-round-medium");
-        var addButton = document.querySelectorAll(".container-add");
-
         if(!gotReservationData) {
             getReservationData();
-        }
-
-        if(isMobile) {
-            mainContainer.style.top = "15vmin"
-
-            fontLarge.forEach(el => {
-                el.style.fontSize = "8vmin"
-            });
-
-            fontMed.forEach(el => {
-                el.style.fontSize = "5.5vmin"
-            });
-
-            addButton.forEach(el => {
-                el.style.width = "5.5vmin"
-                el.style.marginLeft = "3vmin"
-            });
-        }
-        else {
-            mainContainer.style.top = "7vmin"
-            fontLarge.forEach(el => {
-                el.style.fontSize = "4vmin"
-            });
-
-            fontMed.forEach(el => {
-                el.style.fontSize = "2.25vmin"
-            });
-
-            addButton.forEach(el => {
-                el.style.width = "2.5vmin"
-                el.style.marginLeft = "1vmin"
-            });
+            getCustomerReservationData();
         }
 
         return () => {
@@ -431,6 +395,12 @@ function Reserve(props) {
         if(!gotReservationData) {
             convertReservations();
         }
+    }
+
+    async function getCustomerReservationData() {
+        let response = await fetch("http://3.218.225.62:3040/reservation/get-user/"+currentUser.User_id);
+        response = await response.json();
+        setCustomerReservations(response.reservations);
     }
 
     function convertReservations() {
@@ -840,6 +810,22 @@ function Reserve(props) {
         return returnData;
     }
 
+    function renderCustomerReservations() {
+        var returnData = [<br/>];
+
+        customerReservations.map((reservation, index) => {
+            returnData.push(
+                <div key={index} className="lite-day-label" style={{height: "5vmin", fontSize: "1.5vmin"}}>
+                    {reservation.Reservation_date}, Starting at {reservation.Reservation_time} - {reservation.Reservation_duration} hour(s)
+                    <span className="customer-reservation-button" style={{marginLeft: "auto"}}>Edit</span>
+                    <span className="customer-reservation-button">Delete</span>
+                </div>
+            );
+        });
+
+        return returnData;
+    }
+
     // Handling functions
     function handleCourtNext() {
         if(currentCourt < 16) {
@@ -1233,11 +1219,12 @@ function Reserve(props) {
                     <span style={{marginBottom: "2vmin", marginTop: "2vmin", color: "rgb(0,0,0,0.5)"}}>Create a New Reservation</span>
                     {renderCustomerReservationDays()}
                 </div>
-                <div className="container-option-lite">
+                <div className="container-option-lite" style={{marginTop: "2vmin"}}>
                     Edit an Existing Reservation
                     <div className="lite-edit-label">
                         {loggedIn ? "Select your reservation" : "Please login to edit a reservation"}
                     </div>
+                    {renderCustomerReservations()}
                 </div>
                 <div className="lite-warning-label">
                     ⚠️ If you are trying to schedule a tournament, or any event where you'll need 
