@@ -1,5 +1,5 @@
 Equipment:
-    Ball machine can only be assigned to Courts 1,4,5,11,12,13,16.
+    DONE Ball machine can only be assigned to Courts 1,4,5,11,12,13,16.
 
 Reservations:
     DONE Multiple courts need to be able to be added at once. 
@@ -19,11 +19,11 @@ Alerts:
 
 Login:
     Allow customers to reset their password via email.
-    Confirm account create via email.
+    DONE Confirm account create via email.
     Redirect appropriately if user is not logged in.
     Only admin/manager can create other employee accounts.
-    Fully merge customer & employee databases into a USER database.
-    Change to email for username.
+    DONE Fully merge customer & employee databases into a USER database.
+    DONE Change to email for username.
 
 Admin:
     DONE Re-enable viewing of logs.

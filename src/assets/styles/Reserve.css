@@ -678,6 +678,50 @@
     background-color: rgba(0, 0, 0, 0.2);
 }
 
+.reserve-modal-window-button-equipment {
+    background-color: rgba(0,0,0,0.1);
+    height: 2vmin;
+    width: auto;
+    border-radius: 0.5vmin;
+    margin-top: 1px;
+    margin-right: 0.5vmin;
+    margin-left: 0.5vmin;
+    padding-left: 1vmin;
+    padding-right: 1vmin;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    opacity: 50%;
+    color:rgba(0, 0, 0, 0.2);
+    transition: all 0.15s linear;
+}
+
+.reserve-modal-window-button-equipment.active {
+    background-color: rgba(0, 102, 255, 0.1);
+    height: 2vmin;
+    width: auto;
+    border-radius: 0.5vmin;
+    margin-top: 1px;
+    margin-right: 0.5vmin;
+    margin-left: 0.5vmin;
+    padding-left: 1vmin;
+    padding-right: 1vmin;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    color: rgba(0, 102, 255, 0.5);
+    opacity: 100%;
+    transition: all 0.15s linear;
+}
+
+.reserve-modal-window-button-equipment:hover {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
 .reservation-legend {
     width: 95vmin;
     height: 3vmin;
@@ -737,7 +781,7 @@
     font-weight: bold;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     color: rgba(0,0,0,0.5);
 }
@@ -873,6 +917,24 @@
     animation-fill-mode: both;
     animation-iteration-count: infinite;
     animation-direction: alternate;
+}
+
+.customer-reservation-button {
+    border-radius: 0.5vmin;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 0.5vmin solid rgba(0,0,0,0.0);
+    color: rgba(0,0,0,0.5);
+    font-family: Round;
+    font-size: 1.5vmin;
+    font-weight: bold;
+    cursor: pointer;
+    margin-right: 1vmin;
+    transition: all 0.15s ease-in-out;
+}
+
+.customer-reservation-button:hover {
+    background-color: rgba(0, 132, 255, 0.1);
+    color: rgba(0, 132, 255, 0.75);
 }
 
 /* Animations */

@@ -14,6 +14,7 @@ var localNumberRaw = 0;
 const dateToday = new Date();
 const totalCourts = 16;
 const maxCourtReservations = 14;
+const ballMachineCourts = [1,4,5,11,12,13,16];
 
 var resArray = [];
 var resBuffer = [];
@@ -36,6 +37,11 @@ function ReserveAdmin(props) {
     const [selectedDuration, setSelectedDuration] = useState(0.75);
     const [selectedID, setSelectedID] = useState(-1);
     const [reservations, setReservations] = useState([]);
+    const [selectedEquipment, setSelectedEquipment] = useState({
+        racket: false,
+        hopper: false,
+        ballmachine: false
+    });
     
     // Regular varaible declaration
     const pageTitle = "Reserve Your Court"
@@ -409,6 +415,7 @@ function ReserveAdmin(props) {
                     duration: parseFloat(res.Reservation_duration),
                     note: res.Reservation_note,
                     court_id: res.Court_id,
+                    equipment_id: res.Equipment_id,
                     customer_id: res.Customer_id
                 }
             )
@@ -726,6 +733,7 @@ function ReserveAdmin(props) {
                                     var testRootType = reservations.find(el => el.id == testRootId).type_id;
                                     var testRootNote = reservations.find(el => el.id == testRootId).note;
                                     var testRootNumCourts = reservations.find(el => el.id == testRootId).court_id;
+                                    var testRootEquipment = reservations.find(el => el.id == testRootId).equipment_id;
 
                                     if(loggedIn) {
                                         handleToggleModal();
@@ -736,6 +744,11 @@ function ReserveAdmin(props) {
                                         setSelectedType(testRootType);
                                         setNumCourts(testRootNumCourts.length);
                                         setCurrentArrayCourt(testRootNumCourts);
+                                        setSelectedEquipment({
+                                            racket: testRootEquipment.includes(0),
+                                            hopper: testRootEquipment.includes(1),
+                                            ballmachine: testRootEquipment.includes(2),
+                                        });
                                         setNote(testRootNote);
                                     }
                                     else {
@@ -811,8 +824,15 @@ function ReserveAdmin(props) {
 
     function handleButtonSubmit() {
         var courtArray = [];
+        var equipmentArray = [];
         var earliestCourt = currentCourt;
         var errorBox = document.querySelector(".reserve-modal-window-error");
+
+        Object.values(selectedEquipment).forEach((val, idx) => {
+            if(val) {
+                equipmentArray.push(idx);
+            }
+        });
 
         for(var j = 0; j <= numCourts-1; j++) {
             for(var i = earliestCourt; i <= totalCourts; i++) {
@@ -825,7 +845,7 @@ function ReserveAdmin(props) {
                         duration: selectedDuration,
                         note: note,
                         court_id: i,
-                        equipment_id: "[]",
+                        equipment_id: "["+equipmentArray.toString()+"]",
                         customer_id: currentUser.User_id
                     }
     
@@ -851,7 +871,7 @@ function ReserveAdmin(props) {
                 duration: selectedDuration,
                 note: note,
                 court_id: "["+courtArray.toString()+"]",
-                equipment_id: "[]",
+                equipment_id: "["+equipmentArray.toString()+"]",
                 customer_id: currentUser.User_id
             }
     
@@ -871,8 +891,15 @@ function ReserveAdmin(props) {
 
     function handleButtonEdit(rid) {
         var courtArray = [];
+        var equipmentArray = [];
         var earliestCourt = currentArrayCourt[0];
         var errorBox = document.querySelector(".reserve-modal-window-error");
+
+        Object.values(selectedEquipment).forEach((val, idx) => {
+            if(val) {
+                equipmentArray.push(idx);
+            }
+        });
 
         for(var j = 0; j <= numCourts-1; j++) {
             for(var i = earliestCourt; i <= totalCourts; i++) {
@@ -886,7 +913,7 @@ function ReserveAdmin(props) {
                         duration: selectedDuration,
                         note: note,
                         court_id: i,
-                        equipment_id: "[]",
+                        equipment_id: "["+equipmentArray.toString()+"]",
                         customer_id: currentUser.User_id
                     }
     
@@ -913,7 +940,7 @@ function ReserveAdmin(props) {
                 duration: selectedDuration,
                 note: note,
                 court_id: "["+courtArray.toString()+"]",
-                equipment_id: "[]",
+                equipment_id: "["+equipmentArray.toString()+"]",
                 customer_id: currentUser.User_id
             }
     
@@ -1207,6 +1234,11 @@ function ReserveAdmin(props) {
         setCurrentArrayCourt([]);
         setNumCourts(1);
         document.querySelector(".reserve-modal-window-error").textContent = '';
+        setSelectedEquipment({
+            racket: false,
+            hopper: false,
+            ballmachine: false
+        });
     }
 
     return (
@@ -1283,7 +1315,7 @@ function ReserveAdmin(props) {
                     <div className="reserve-modal-window-body-container">
                         <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
                         <div className="reserve-modal-window-body-text">Time: {selectedTime}</div>
-                        <div className="reserve-modal-window-body-text">Court (Selected): {currentCourt}</div>
+                        <div className="reserve-modal-window-body-text">Starting Court: {currentCourt}</div>
                         <div className="reserve-modal-window-body-text">Courts: 
                             <div className="reserve-modal-window-button-duration-sub"
                                 onClick={() => {
@@ -1327,6 +1359,45 @@ function ReserveAdmin(props) {
                             >
                                 Event
                             </span>
+                        </div>
+                        <div className="reserve-modal-window-body-text">
+                            Equipment: 
+                            <span className={`reserve-modal-window-button-equipment ${selectedEquipment.racket == true ? "active" : ""}`}
+                                onClick={() => {
+                                    if(selectedEquipment.racket ==  false) {
+                                        setSelectedEquipment({...selectedEquipment, racket: true});
+                                    }
+                                    else {
+                                        setSelectedEquipment({...selectedEquipment, racket: false});
+                                    }
+                                }}
+                            >
+                                Racket
+                            </span>
+                            <span className={`reserve-modal-window-button-equipment ${selectedEquipment.hopper == true ? "active" : ""}`}
+                                onClick={() => {
+                                    if(selectedEquipment.hopper ==  false) {
+                                        setSelectedEquipment({...selectedEquipment, hopper: true});
+                                    }
+                                    else {
+                                        setSelectedEquipment({...selectedEquipment, hopper: false});
+                                    }
+                                }}
+                            >
+                                Hopper
+                            </span>
+                            {(ballMachineCourts.includes(currentCourt)) && <span className={`reserve-modal-window-button-equipment ${selectedEquipment.ballmachine == true ? "active" : ""}`}
+                                onClick={() => {
+                                    if(selectedEquipment.ballmachine ==  false) {
+                                        setSelectedEquipment({...selectedEquipment, ballmachine: true});
+                                    }
+                                    else {
+                                        setSelectedEquipment({...selectedEquipment, ballmachine: false});
+                                    }
+                                }}
+                            >
+                                Ball Machine
+                            </span>}
                         </div>
                         <div className="reserve-modal-window-body-text">Note: </div>
                         <div className="reserve-modal-window-body-text" style={{width: "100%"}}>
