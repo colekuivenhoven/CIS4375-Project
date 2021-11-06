@@ -74,6 +74,11 @@ function Account(props) {
         window.sessionStorage.setItem("num_global", parseInt(globalNumber)+1);
     }
 
+    let firstName = sessionStorage.getItem('firstName')
+    let lastName = sessionStorage.getItem('lastName')
+    let phone = sessionStorage.getItem('phone')
+    let email = sessionStorage.getItem('email')
+
     return (
         // Empty root element. The return can have only one root element
         <>
@@ -86,10 +91,10 @@ function Account(props) {
                 
                     <div class="main-text-body">
                        
-                        <p>First Name: John</p>
-                        <p>Last Name: Smith</p>
-                        <p>Phone Number: 000-000-0000</p>
-                        <p>Email: email@gmail.com</p>
+                        <p>First Name: {firstName}</p>
+                        <p>Last Name: {lastName}</p>
+                        <p>Phone Number: {phone}</p>
+                        <p>Email: {email}</p>
                     </div>
                     </span>
                     </div>
