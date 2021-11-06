@@ -98,7 +98,7 @@ function About(props) {
                     
                     
                 </div>
-                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
             </div>
             <Loading timeRange={[250, 500]} />
         </>

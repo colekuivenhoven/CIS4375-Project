@@ -63,7 +63,7 @@
 
 .test-add-container {
     position: absolute;
-    top: 6.85vmin;
+    top: 2vmin;
     left: calc(calc(50% + 40vmin) + 1vmin);
     display: flex; 
     flex-direction: column; 
@@ -97,6 +97,22 @@
     border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
+.test-add-select {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    outline: none;
+    width: calc(100% + 0.25vmin);
+    border-radius: 0.5vmin;
+    padding-left: 0.5vmin;
+    margin-top: 0.5vmin;
+    height: 3vmin;
+    transition: all 0.15s linear;
+    font-family: Round;
+}
+
+.test-add-select:focus {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
 .test-add-button {
     background-color: rgb(99, 213, 118);
     border: 0;
@@ -120,12 +136,12 @@
 .test-user-container {
     display: flex; 
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     width: auto;
     margin-bottom: 0.5vmin;
     background-color: rgb(255, 255,255); 
-    padding: 1vmin;
+    padding: 0.8vmin;
     border-radius: 0.5vmin; 
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.155);
     font-family: Round;
@@ -140,30 +156,30 @@
 }
 
 .test-user-item {
-    display: flex; 
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: 17%;
-    max-width: 17%;
-    min-width: 17%;
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
     height: 100%;
-    background-color: rgba(0,255,0,0);
+    background-color: rgba(0,255,0,0.0);
     color: rgba(0,0,0,0.5);
     font-size: 1vmin;
     border: 0px solid black;
+    word-break: break-all;
+    box-sizing: border-box;
 }
 
 .test-object-header {
     display: flex; 
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    width: calc(100% - 4vmin);
-    margin-left: 0.5vmin; 
+    width: calc(100% - 6vmin);
+    margin-left: 1.5vmin; 
     margin-right: auto;
     margin-top: 1vmin;
-    background-color: rgba(255,0,0,0); 
+    background-color: rgba(255,0,0,0.0); 
     border-radius: 0vmin; 
     font-family: Round;
     font-size: 1.45vmin;
@@ -176,11 +192,12 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    width: 17%;
+    width: 100%;
     height: 100%;
-    background-color: rgba(0,255,0,0);
+    background-color: rgba(0,255,0,0.0);
     color: rgba(0,0,0,0.6);
     font-weight: bold;
+    font-size: 1.25vmin;
     border: 0px solid black;
 }
 
@@ -205,6 +222,7 @@
     width: 3vmin;
     aspect-ratio: 1;
     margin-left: 1vmin;
+    margin-top: auto;
     border-radius: 0.5vmin;
     cursor: pointer;
     display: flex;
@@ -222,6 +240,7 @@
     width: 3vmin;
     aspect-ratio: 1;
     margin-left: auto;
+    margin-top: auto;
     border-radius: 0.5vmin;
     cursor: pointer;
     display: flex;
@@ -256,6 +275,30 @@
     backdrop-filter: blur(0px);
     pointer-events: none;
     transition: all 0.15s linear;
+}
+
+.user-detail-container {
+    background-color: rgba(255,0,0,0.0);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    word-break: break-all;
+    font-family: Round;
+}
+
+.user-detail-item {
+    background-color: rgba(0,0,255,0.0);
+    width: 33%;
+    height: 100%;
+    max-height: 33%;
+    box-sizing: border-box;
+    padding: 0.5vmin;
+    font-size: 1.35vmin;
 }
 
 /* Animations */

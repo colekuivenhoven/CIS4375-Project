@@ -1244,7 +1244,7 @@ function Reserve(props) {
                     multiple courts simultaneously, you'll need to contact us directly so that
                     a manager can properly schedule your event.
                 </div>
-                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
             </div>
             <div className="reserve-modal-main-container">
                 <div className="reserve-modal-window-container">

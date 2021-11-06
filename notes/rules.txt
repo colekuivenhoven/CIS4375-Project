@@ -12,6 +12,7 @@ Reservations:
     Allow admin to edit/delete all reservations.
     CONFIRM? Customers can only make 2 reservations per day.
     Allow employee accounts to access the extended reservation page to a somewhat limited extent.
+    Display notification to customers when a reservation is successfully made. Will include their reservation data.
 
 Alerts:
     Send SMS alert when a reservation is made.
@@ -27,6 +28,7 @@ Login:
 Admin:
     DONE Re-enable viewing of logs.
     Create 3 important reports that fit a pie chart, bar chart, and line chart, respectively.
+    Admin should be able to select a user from Users list and edit/update their account.
 
 Reports:
     DONE Develop reports that allow admin to see & edit as much data as possible.
@@ -35,6 +37,19 @@ Reports:
 Contact:
     Create a contact form that allows customers to send feedback.
 
+Documentation:
+    1. Combine System architecture diagram & Network architecture diagram
+    2. Infrastructure diagram (local -> github -> aws)
+    3. Table descriptions(short)
+    4. Post-project operation document(AWS Controls)
+    5. Simple User Manual(App Controls)
+
 Questions for Professor:
     DONE Do we need to account for cascade deletes/updates in data dictionary? No.
     
+Overall To-do:
+    1. DOMAIN NAME!!!
+    2. Combine System architecture diagram & Network architecture diagram
+    3. Infrastructure diagram (local -> github -> aws)
+
+Defaults Password: P@ssw0rd

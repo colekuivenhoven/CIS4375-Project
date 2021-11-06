@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Added loading pages to make page transitions smoother."
+git commit -m "Revised login system. Added full customer registration. Added email validation before login."
 
 // Push to remote repo
 git push -u origin master

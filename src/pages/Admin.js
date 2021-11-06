@@ -80,52 +80,16 @@ function Admin(props) {
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
-        if(!gotLogs) {
-            getLogs();
+        let isCancelled = false;
+
+        if(!isCancelled) {
+            if(!gotLogs) {
+                getLogs();
+            }
+            getUsers();
         }
-        getUsers();
-        setUserItemStyle({ 
-            to: {x: 0},
-            from: {x: 2},
-            config: config.stiff
-        })
 
-        var mainContainer = document.querySelector(".container-admin2");
-        var fontLarge = document.querySelectorAll(".font-round-large");
-        var fontMed = document.querySelectorAll(".font-round-medium");
-        var addButton = document.querySelectorAll(".container-add");
-
-        if(isMobile) {
-            mainContainer.style.top = "15vmin"
-
-            fontLarge.forEach(el => {
-                el.style.fontSize = "10vmin"
-            });
-
-            fontMed.forEach(el => {
-                el.style.fontSize = "5.5vmin"
-            });
-
-            addButton.forEach(el => {
-                el.style.width = "5.5vmin"
-                el.style.marginLeft = "3vmin"
-            });
-        }
-        else {
-            mainContainer.style.top = "7vmin"
-            fontLarge.forEach(el => {
-                el.style.fontSize = "4vmin"
-            });
-
-            fontMed.forEach(el => {
-                el.style.fontSize = "2.25vmin"
-            });
-
-            addButton.forEach(el => {
-                el.style.width = "2.5vmin"
-                el.style.marginLeft = "1vmin"
-            });
-        }
+        return () => { isCancelled = true };
     }, [userListSortType, userListSort]);
 
     // Server functions
@@ -137,9 +101,9 @@ function Admin(props) {
     }
 
     async function getUsers() {
-        let response = await fetch("http://3.218.225.62:3040/customer/getall");
+        let response = await fetch("http://3.218.225.62:3040/user/getall");
         response = await response.json();
-        setUserListFinal(response.customers);
+        setUserListFinal(response.users);
     }
 
     async function getLogfile(name) {
@@ -270,7 +234,7 @@ function Admin(props) {
                                 }}
                             >
                                 <option value={0}>ID</option>
-                                <option value={4}>Name</option>
+                                <option value={3}>Email</option>
                                 <option value={1}>Type</option>
                             </select>
                             <div className="admin2-btn-sort"
@@ -298,14 +262,14 @@ function Admin(props) {
                                         // }}
                                         //rgba(0,0,0,0.5);
                                         style={{
-                                            color: (user[Object.keys(user)[1]] == 2) 
+                                            color: (user.User_type == 2) 
                                             ? "rgba(50, 168, 82,0.9)" 
-                                            : (user[Object.keys(user)[1]] == 1) 
+                                            : (user.User_type == 1) 
                                                 ? "rgba(36, 101, 181,0.7)" 
                                                 : "rgba(0,0,0,0.5)",
                                         }}
                                     >
-                                        {user[Object.keys(user)[0]]} - {user[Object.keys(user)[4]]} ({user[Object.keys(user)[2]]})
+                                        {user.User_id} - {user.User_email}
                                     </animated.div>
                                 )
                             })}
@@ -360,7 +324,7 @@ function Admin(props) {
                         </div>
                     </div>
                 </div>
-                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
             </div>
             <Loading timeRange={[1000, 2000]} />
         </>

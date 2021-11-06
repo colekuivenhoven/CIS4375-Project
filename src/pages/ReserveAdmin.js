@@ -825,6 +825,7 @@ function ReserveAdmin(props) {
                         duration: selectedDuration,
                         note: note,
                         court_id: i,
+                        equipment_id: "[]",
                         customer_id: currentUser.User_id
                     }
     
@@ -850,6 +851,7 @@ function ReserveAdmin(props) {
                 duration: selectedDuration,
                 note: note,
                 court_id: "["+courtArray.toString()+"]",
+                equipment_id: "[]",
                 customer_id: currentUser.User_id
             }
     
@@ -884,6 +886,7 @@ function ReserveAdmin(props) {
                         duration: selectedDuration,
                         note: note,
                         court_id: i,
+                        equipment_id: "[]",
                         customer_id: currentUser.User_id
                     }
     
@@ -910,6 +913,7 @@ function ReserveAdmin(props) {
                 duration: selectedDuration,
                 note: note,
                 court_id: "["+courtArray.toString()+"]",
+                equipment_id: "[]",
                 customer_id: currentUser.User_id
             }
     
@@ -1258,12 +1262,12 @@ function ReserveAdmin(props) {
                         <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(165, 216, 161)'}}></div>Open</span>
                         <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(217, 217, 217)'}}></div>Closed</span>
                         <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(179, 194, 255)'}}></div>Reserved</span>
-                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(138, 162, 255)'}}></div>My Reservation</span>
+                        {/* <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(138, 162, 255)'}}></div>My Reservation</span> */}
                         <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 219, 128)'}}></div>Reserved - Event</span>
-                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 200, 60)'}}></div>My Event Reservation</span>
+                        {/* <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 200, 60)'}}></div>My Event Reservation</span> */}
                     </div>
                 </div>
-                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_name}</b>!</div>}
+                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
             </div>
             <div className="reserve-modal-main-container">
                 <div className="reserve-modal-window-container">

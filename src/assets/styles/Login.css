@@ -127,7 +127,7 @@
     width: 100%;
     margin-left: 1vmin;
     border-radius: 0.5vmin;
-    font-size: 2.5vmin;
+    font-size: 2vmin;
     border: 0;
     outline: none;
     color: rgba(86, 139, 255, 0.8);
@@ -307,9 +307,10 @@
 }
 
 .register-input-label {
-    font-size: 2vmin;
+    font-size: 1.5vmin;
     color: rgba(0,0,0,0.5);
     font-family: Round;
+    width: fit-content;
 }
 
 .register-input {
@@ -317,7 +318,7 @@
     width: 100%;
     margin-left: 1vmin;
     border-radius: 0.5vmin;
-    font-size: 2.5vmin;
+    font-size: 1.5vmin;
     border: 0;
     outline: none;
     color: rgba(86, 139, 255, 0.8);
@@ -345,6 +346,30 @@
     align-items: center;
     cursor: pointer;
     box-shadow: 0px 8px 18px 2px rgba(0,0,0,0.05);
+}
+
+.register-getannouncements-checkbox-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: auto;
+    height: 5vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 2vmin;
+}
+
+.register-getannouncements-checkbox {
+    width: 1.5vmin;
+    height: 1.5vmin;
+    background-image: url('../images/svgs/icons/regular/check-square.svg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center center;
+    margin-right: 1vmin;
+    opacity: 0.6;
 }
 
 .register-input-tip-container {
@@ -377,7 +402,7 @@
 
 .login-response-container {
     position: absolute;
-    bottom: 0;
+    bottom: 15vmin;
     width: 50vmin;
     height: 5vmin;
     background-color: rgba(255,0,0,0.0);

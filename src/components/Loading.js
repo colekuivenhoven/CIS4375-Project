@@ -10,6 +10,7 @@ function Loading(props) {
         if (loading) {
             setTimeout(() => setLoading(false), getRandomRange(loadingTimeRange[0], loadingTimeRange[1]));
         }
+        return () => { setLoading(false)};
     }, [loading]);
 
     // Borrowed from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
