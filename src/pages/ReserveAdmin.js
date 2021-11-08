@@ -38,7 +38,7 @@ function ReserveAdmin(props) {
     const [numCourts, setNumCourts] = useState(1);
     const [selectedDuration, setSelectedDuration] = useState(0.75);
     const [selectedID, setSelectedID] = useState();
-    const [selectedCustomerID, setSelectedCustomerID] = useState(0);
+    const [selectedCustomerID, setSelectedCustomerID] = useState(1);
     const [reservations, setReservations] = useState([]);
     const [selectedEquipment, setSelectedEquipment] = useState({
         racket: false,
@@ -1309,7 +1309,7 @@ function ReserveAdmin(props) {
         setSelectedDuration(0.75);
         setSelectedID();
         setSelectedType(0);
-        setSelectedCustomerID(0);
+        setSelectedCustomerID(1);
         setNote('');
         setCurrentArrayCourt([]);
         setNumCourts(1);
@@ -1528,6 +1528,10 @@ function ReserveAdmin(props) {
                             ></textarea>
                         </div>
                         <div className="reserve-modal-window-button-submit"
+                            style={{
+                                height: "4vmin",
+                                width: "100%",
+                            }}
                             onClick={() => {
                                 if(editing) {
                                     handleButtonEdit(selectedID);
@@ -1548,7 +1552,7 @@ function ReserveAdmin(props) {
                     <div className="reserve-modal-delete-title">Are you sure you want to delete this reservation?</div>
                     <div className="reserve-modal-delete-row">
                         <div className="reserve-modal-delete-button"
-                            style={{backgroundColor: "rgba(255, 0,0, 0.55)", color: "rgba(255,255,255,1)"}}
+                            style={{backgroundColor: "rgba(255, 0,0, 0.55)", color: "rgba(255,255,255,1)", height: "4vmin"}}
                             onClick={() => {
                                 deleteReservation(selectedReseervationToDelete);
                                 handleToggleDeleteModal();
@@ -1557,7 +1561,7 @@ function ReserveAdmin(props) {
                             Delete
                         </div>
                         <div className="reserve-modal-delete-button"
-                            style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}
+                            style={{backgroundColor: "rgba(0, 0, 0, 0.1)", height: "4vmin"}}
                             onClick={() => {
                                 setSelectedReservationToDelete(null);
                                 handleToggleDeleteModal();

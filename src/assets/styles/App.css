@@ -112,7 +112,7 @@
     font-family: Round;
     color: rgba(255,255,255,0.8);
     width: auto;
-    height: 3vmin;
+    height: 4vmin;
     text-align: left;
     display: flex;
     justify-content: flex-start;
@@ -176,7 +176,7 @@
 .title-tint-text {
     color: rgb(178, 235, 46);
     margin-left: 1vmin;
-    margin-top: 0.5vmin;
+    margin-top: 0.0vmin;
 }
 
 /* Desktop Business Logo */
