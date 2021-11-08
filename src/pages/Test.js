@@ -31,8 +31,10 @@ function Test(props) {
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
     const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
     const [testGetAnnouncements, setTestGetAnnouncements] = useState('0');
+    const [editing, setEditing] = useState(false);
+    const [deleteConfirm, setDeleteConfirm] = useState(false);
 
-    const[guessMatched, setGuessMatched] = useState('false');
+    const [guessMatched, setGuessMatched] = useState('false');
 
     // Regular varaible declaration
     const pageTitle = ""
@@ -61,21 +63,43 @@ function Test(props) {
         }
     }
 
+    function selectItem(index) {
+        if(index) {
+            document.querySelectorAll(".test-user-container").forEach((val, idx) => {
+                if (val.id == `detailed-user-item-`+index) {
+                    val.setAttribute("style", "border: 0.2vmin solid rgba(66, 135, 245, 0.9);")
+                }
+                else {
+                    val.setAttribute("style", "border: ")
+                }
+            })
+        }
+        else {
+            document.querySelectorAll(".test-user-container").forEach((val, idx) => {
+                val.setAttribute("style", "border: ")
+            })
+        }
+    }
+
     function convertTestData() {
         testDataRaw.forEach((user,index) => {
             testDataConverted.push(
                 <div 
-                    key={index} 
-                    className="test-user-container"
+                    key={index}
+                    id={`detailed-user-item-`+index} 
+                    className={`test-user-container`}
                     onClick={() =>{
-                        setSelectedUser(user)
+                        setSelectedUser(user);
+                        resetSelected();
+                        selectItem(index);
+                        handleEdit(user);
                     }}
                 >
                     <div className="test-user-item" style={{width: "35%"}}>{user.User_id}</div>
                     <div className="test-user-item" style={{width: "50%"}}>{user.User_type == 0 ? 'Customer' : user.User_type == 1 ? 'Employee' : 'Manager'}</div>
-                    <div className="test-user-item" style={{width: "70%"}}>{user.User_firstname}</div>
-                    <div className="test-user-item" style={{width: "100%"}}>{user.User_lastname}</div>
-                    <div className="test-user-item" style={{width: "70%"}}>{user.User_phone}</div>
+                    <div className="test-user-item" style={{width: "50%"}}>{user.User_firstname}</div>
+                    <div className="test-user-item" style={{width: "50%"}}>{user.User_lastname}</div>
+                    <div className="test-user-item" style={{width: "50%"}}>{user.User_phone}</div>
                     <div className="test-user-item" >{user.User_email}</div>
                     <div className="test-user-item" style={{width: "70%"}}>{user.User_getAnnouncements == 0 ? 'False' : 'True'}</div>
                     <div className="test-user-item" style={{width: "30%"}}>{user.User_status == 0 ? 'Inactive' : user.User_status == 1 ? "Active" : "Other"}</div>
@@ -103,6 +127,28 @@ function Test(props) {
                 getTestData();
                 resetSelected();
                 sendAlertMessage("Successfully Added User!", "Good");
+            }
+            else {
+                sendAlertMessage(response.message, "Bad");
+            }
+        })
+    }
+
+    function editUser(data) {
+        fetch("http://3.218.225.62:3040/user/edit", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(response => {
+            if(response.message.includes("Success")) {
+                gotTestData = false;
+                getTestData();
+                handleCancel();
+                sendAlertMessage("Successfully Edited User!", "Good");
             }
             else {
                 sendAlertMessage(response.message, "Bad");
@@ -146,6 +192,63 @@ function Test(props) {
         }
     }
 
+    function handleEdit(user) {
+        setEditing(true);
+        setTestFirstname(user.User_firstname);
+        setTestLastname(user.User_lastname);
+        setTestPhone(user.User_phone);
+        setTestEmail(user.User_email);
+        setTestType(user.User_type);
+        setTestGetAnnouncements(user.User_getAnnouncements);
+        setTestStatus(user.User_status);
+    }
+
+    function handleUserUpdate(includesPassword) {
+        if (includesPassword) {
+            var data = {
+                firstname: testFirstname,
+                lastname: testLastname,
+                phone: testPhone,
+                email: testEmail,
+                type: testType,
+                status: testStatus,
+                password: testPassword,
+                id: selectedUser.User_id
+            }
+    
+            if(data.firstname == '' || data.lastname == '' || data.phone == '' || data.email == '' || data.password == '') {
+                sendAlertMessage("One of the required fields is blank!", "Bad");
+            }
+            else {
+                editUser(data)
+            }
+        }
+        else {
+            var data = {
+                firstname: testFirstname,
+                lastname: testLastname,
+                phone: testPhone,
+                email: testEmail,
+                type: testType,
+                status: testStatus,
+                id: selectedUser.User_id
+            }
+    
+            if(data.firstname == '' || data.lastname == '' || data.phone == '' || data.email == '') {
+                sendAlertMessage("One of the required fields is blank!", "Bad");
+            }
+            else {
+                editUser(data)
+            }
+        }
+    }
+
+    function handleCancel() {
+        resetSelected();
+        setSelectedUser(null);
+        setEditing(false);
+    }
+
     function sendAlertMessage(message, type) {
         setAlertMessage({
             msg: "",
@@ -166,6 +269,9 @@ function Test(props) {
         setTestType('0');
         setTestGetAnnouncements('0');
         setTestStatus('1');
+        setEditing(false);
+        selectItem(null);
+        setDeleteConfirm(false);
     }
 
     function handleDelete(userid) {
@@ -200,13 +306,13 @@ function Test(props) {
                         <div className="test-object-header-item" style={{width: "50%"}}>
                             Type
                         </div>
-                        <div className="test-object-header-item" style={{width: "70%"}}>
+                        <div className="test-object-header-item" style={{width: "50%"}}>
                             First Name
                         </div>
-                        <div className="test-object-header-item" style={{width: "100%"}}>
+                        <div className="test-object-header-item" style={{width: "50%"}}>
                             Last Name
                         </div>
-                        <div className="test-object-header-item" style={{width: "70%"}}>
+                        <div className="test-object-header-item" style={{width: "50%"}}>
                             Phone #
                         </div>
                         <div className="test-object-header-item">
@@ -224,25 +330,36 @@ function Test(props) {
                         <div style={{display: 'flex', flexDirection: 'column', width: '100%', transition: 'all 0.25s linear'}}>{testData}</div>
                     </div>
                     <div className="test-add-container">
-                        <b style={{color: 'rgb(255, 214, 110)', marginLeft: 'auto', fontSize: '2vmin', marginBottom: '1vmin'}}>Add User</b>
+                        <b style={{color: !editing ? 'rgb(255, 214, 110)' : 'rgba(66, 135, 245, 0.7)', marginLeft: 'auto', fontSize: '2vmin', marginBottom: '1vmin'}}>{editing ? "Update User" : "Add User"}</b>
                         <span className="test-add-text">
-                            Firstname: <input className="test-add-input" value={testFirstname} onChange={(e) => {setTestFirstname(e.target.value)}}/>
+                            Firstname: <input className="test-add-input" style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} value={testFirstname} onChange={(e) => {setTestFirstname(e.target.value)}}/>
                         </span>
                         <span className="test-add-text">
-                            Lastname: <input className="test-add-input" value={testLastname} onChange={(e) => {setTestLastname(e.target.value)}}/>
+                            Lastname: <input className="test-add-input" style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} value={testLastname} onChange={(e) => {setTestLastname(e.target.value)}}/>
                         </span>
                         <span className="test-add-text">
-                            Password: <input className="test-add-input" value={testPassword} onChange={(e) => {setTestPassword(e.target.value)}}/>
+                            Password: 
+                            {!editing && <input className="test-add-input" 
+                                style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} 
+                                value={testPassword} 
+                                onChange={(e) => {setTestPassword(e.target.value)}}
+                            />}
+                            {editing && <input className="test-add-input" 
+                                style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} 
+                                value={testPassword} 
+                                placeholder="Leave blank to keep current"
+                                onChange={(e) => {setTestPassword(e.target.value)}}
+                            />}
                         </span>
                         <span className="test-add-text">
-                            Phone: <input className="test-add-input" value={testPhone} onChange={(e) => {setTestPhone(e.target.value)}}/>
+                            Phone: <input className="test-add-input" style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} value={testPhone} onChange={(e) => {setTestPhone(e.target.value)}}/>
                         </span>
                         <span className="test-add-text">
-                            Email: <input className="test-add-input" value={testEmail} onChange={(e) => {setTestEmail(e.target.value)}}/>
+                            Email: <input className="test-add-input" style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} value={testEmail} onChange={(e) => {setTestEmail(e.target.value)}}/>
                         </span>
                         <span className="test-add-text">
                             Type: 
-                            <select className="test-add-select" value={testType} onChange={(e) => {setTestType(e.target.value)}}>
+                            <select className="test-add-select" style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} value={testType} onChange={(e) => {setTestType(e.target.value)}}>
                                 <option value="0">Customer</option>
                                 <option value="1">Employee</option>
                                 <option value="2">Administrator</option>
@@ -250,19 +367,45 @@ function Test(props) {
                         </span>
                         <span className="test-add-text">
                             Announceable: 
-                            <select className="test-add-select" value={testGetAnnouncements} onChange={(e) => {setTestGetAnnouncements(e.target.value)}}>
+                            <select className="test-add-select" style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} value={testGetAnnouncements} onChange={(e) => {setTestGetAnnouncements(e.target.value)}}>
                                 <option value="0">False</option>
                                 <option value="1">True</option>
                             </select>
                         </span>
                         <span className="test-add-text">
                             Status: 
-                            <select className="test-add-select" value={testStatus} onChange={(e) => {setTestStatus(e.target.value)}}>
+                            <select className="test-add-select" style={editing ? {color : 'rgba(66, 135, 245, 0.7)'} : {}} value={testStatus} onChange={(e) => {setTestStatus(e.target.value)}}>
                                 <option value="1">Active</option>
                                 <option value="0">Inactive</option>
+                                <option value="2">Unverified</option>
                             </select>
                         </span>
-                        <button className="test-add-button" onClick={() => {handleSubmit()}}>+ Add</button>
+                        <button 
+                            className="test-add-button" 
+                            style={editing ? {backgroundColor: 'rgba(66, 135, 245, 0.7)'} : {}}
+                            onClick={() => {
+                                if(!editing) {
+                                    handleSubmit() 
+                                }
+                                else {
+                                    if(testPassword.length == 0) {
+                                        handleUserUpdate(null)
+                                    }
+                                    else {
+                                        handleUserUpdate(testPassword)
+                                    }
+                                }
+                            }}
+                        >
+                            {editing ? "Update" : "+ Add"}
+                        </button>
+                        {editing && <div className="test-cancel-btn"
+                            onClick={() => {
+                                handleCancel();
+                            }}
+                        >
+                            Cancel
+                        </div>}
                     </div>
                 </div>
                 <div className="test-object-info-container">
@@ -289,9 +432,20 @@ function Test(props) {
                                     Last Name: <br/>
                                     <span style={{opacity: "60%"}}>{selectedUser.User_lastname}</span>
                                 </div>
-                                <div className="user-detail-item">
+                                <div className="user-detail-item"
+                                    style={{
+                                        overflow: 'hidden'
+                                    }}
+                                >
                                     Password: <br/>
-                                    <span style={{opacity: "60%", fontSize: "1vmin"}}>{selectedUser.User_password}</span>
+                                    <span 
+                                        style={{
+                                            opacity: "40%", 
+                                            whiteSpace: "nowrap"
+                                        }}
+                                    >
+                                        {(selectedUser.User_password).substring(0, 20)+"..."}
+                                    </span>
                                 </div>
                                 <div className="user-detail-item">
                                     Phone #: <br/>
@@ -314,21 +468,48 @@ function Test(props) {
                                     <span> Match? {guessMatched}</span>
                                 </div> */}
                             </div>
+                            
                             <div 
-                                className="info-edit"
+                                className={`info-delete ${deleteConfirm ? "selected" : ""}`}
                                 onClick={() => {
-                                    
+                                    // handleDelete(selectedUser.User_id);
+                                    setDeleteConfirm(true);
                                 }}
                             >
-                                📝
-                            </div>
-                            <div 
-                                className="info-delete"
-                                onClick={() => {
-                                    handleDelete(selectedUser.User_id);
-                                }}
-                            >
-                                🗑️
+                                {!deleteConfirm ? "Delete" : ""}
+                                {deleteConfirm && <>
+                                    <div
+                                        style={{
+                                            fontSize: ".9vmin",
+                                            marginBottom: "1vmin",
+                                            opacity: "75%"
+                                        }}
+                                    >
+                                        Are you sure you want to delete this user?
+                                    </div>
+                                    <div className="delete-confirm-btn"
+                                        style={{
+                                            marginRight: "0.5vmin"
+                                        }}
+                                        onClick={() => {
+                                            handleDelete(selectedUser.User_id);
+                                        }}
+                                    >
+                                        Delete
+                                    </div>
+                                    <div className="delete-confirm-btn"
+                                        style={{
+                                            marginLeft: "0.5vmin",
+                                            color: "rgba(0, 0, 0, 0.5)"
+                                        }}
+                                        onClick={() => {
+                                            setDeleteConfirm(false);
+                                            handleCancel();
+                                        }}
+                                    >
+                                        Cancel
+                                    </div>
+                                </>}
                             </div>
                         </>
                     }

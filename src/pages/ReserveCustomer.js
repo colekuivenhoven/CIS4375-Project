@@ -1030,7 +1030,7 @@ function ReserveCustomer(props) {
                         date: selectedDate,
                         timeStart: selectedTime,
                         duration: selectedDuration,
-                        note: note,
+                        note: note.replace(/"/g, '\''),
                         court_id: i,
                         equipment_id: "["+equipmentArray.toString()+"]",
                         customer_id: selectedCustomerID
@@ -1056,7 +1056,7 @@ function ReserveCustomer(props) {
                 date: selectedDate,
                 timeStart: selectedTime,
                 duration: selectedDuration,
-                note: note,
+                note: note.replace(/"/g, '\''),
                 court_id: "["+courtArray.toString()+"]",
                 equipment_id: "["+equipmentArray.toString()+"]",
                 customer_id: selectedCustomerID
@@ -1098,7 +1098,7 @@ function ReserveCustomer(props) {
                         date: selectedDate,
                         timeStart: selectedTime,
                         duration: selectedDuration,
-                        note: note,
+                        note: note.replace(/"/g, '\''),
                         court_id: i,
                         equipment_id: "["+equipmentArray.toString()+"]",
                         customer_id: selectedCustomerID
@@ -1126,7 +1126,7 @@ function ReserveCustomer(props) {
                 date: selectedDate,
                 timeStart: selectedTime,
                 duration: selectedDuration,
-                note: note,
+                note: note.replace(/"/g, '\''),
                 court_id: "["+courtArray.toString()+"]",
                 equipment_id: "["+equipmentArray.toString()+"]",
                 customer_id: selectedCustomerID
