@@ -14,6 +14,7 @@ var localNumberRaw = 0;
 const dateToday = new Date();
 const totalCourts = 16;
 const maxCourtReservations = 14;
+const daysArray = [0,1,2,3,4,5,6];
 const ballMachineCourts = [1,4,5,11,12,13,16];
 
 var resArray = [];
@@ -27,6 +28,7 @@ function ReserveAdmin(props) {
         // 'useState' at the end of each describes their initial value
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
     const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
+    const [userArray, setUserArray] = useState([]);
     const [currentCourt, setCurrentCourt] = useState(1);
     const [currentArrayCourt, setCurrentArrayCourt] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
@@ -35,16 +37,17 @@ function ReserveAdmin(props) {
     const [note, setNote] = useState('');
     const [numCourts, setNumCourts] = useState(1);
     const [selectedDuration, setSelectedDuration] = useState(0.75);
-    const [selectedID, setSelectedID] = useState(-1);
+    const [selectedID, setSelectedID] = useState();
+    const [selectedCustomerID, setSelectedCustomerID] = useState(0);
     const [reservations, setReservations] = useState([]);
     const [selectedEquipment, setSelectedEquipment] = useState({
         racket: false,
         hopper: false,
         ballmachine: false
     });
+    const [selectedReseervationToDelete, setSelectedReservationToDelete] = useState(null);
     
     // Regular varaible declaration
-    const pageTitle = "Reserve Your Court"
     var isMobile = props.isMobile;
 
     var timeslotsJSON = [
@@ -349,42 +352,53 @@ function ReserveAdmin(props) {
             }
     ]
 
-    const columnDays = [
+    const [columnDays, setColumnDays] = useState([
         {
             date: convertDate(dateToday.getDate()),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+1),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+2),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+3),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+4),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+5),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+6),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         }
-    ]
+    ])
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
         if(!gotReservationData) {
             getReservationData();
         }
+
+        getAllClosures();
+        getAllUsers();
+        
 
         return () => {
             gotReservationData = false;
@@ -401,6 +415,44 @@ function ReserveAdmin(props) {
         if(!gotReservationData) {
             convertReservations();
         }
+    }
+
+    async function getAllUsers() {
+        let response = await fetch("http://3.218.225.62:3040/user/getall");
+        response = await response.json();
+        setUserArray(response.users);
+    }
+
+    async function getAllClosures() {
+        let response = await fetch("http://3.218.225.62:3040/closure/getall");
+        response = await response.json();
+        // setClosures(response.closures);
+
+        let closureArray = response.closures.map(closure => closure.Closure_date);
+        let newColumnDays = columnDays;
+
+        Object.values(columnDays).map((day,idx) => {
+            if(closureArray.includes(day.date)) {
+                newColumnDays[idx].closed = true;
+            }
+        });
+
+        setColumnDays(newColumnDays);
+
+        gotReservationData = false;
+        getReservationData();
+    }
+
+    async function addClosure(date) {
+        let response = await fetch("http://3.218.225.62:3040/closure/add/"+date);
+        response = await response.json();
+        window.location.reload();
+    }
+
+    async function removeClosure(date) {
+        let response = await fetch("http://3.218.225.62:3040/closure/remove/"+date);
+        response = await response.json();
+        window.location.reload();
     }
 
     function convertReservations() {
@@ -470,6 +522,7 @@ function ReserveAdmin(props) {
         .then(() => {
             gotReservationData = false;
             getReservationData();
+            setSelectedReservationToDelete(null);
         })
     }
 
@@ -558,6 +611,12 @@ function ReserveAdmin(props) {
                         slot.status = 'open'
                         slot.reservation = null;
                     }
+                })
+            }
+
+            if(day.closed) {
+                dayTimeslots.forEach((slot) => {
+                    slot.status = 'closed'
                 })
             }
 
@@ -720,7 +779,7 @@ function ReserveAdmin(props) {
                         {(slots[index+1].reservation != slots[index].reservation) 
                         ? 
                         <>
-                            {(currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) && <span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}
+                            {<span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}
                                 onClick={(e) => {
                                     editing = true;
                                     var parentElement = returnData[e.currentTarget.parentNode.id];
@@ -734,6 +793,7 @@ function ReserveAdmin(props) {
                                     var testRootNote = reservations.find(el => el.id == testRootId).note;
                                     var testRootNumCourts = reservations.find(el => el.id == testRootId).court_id;
                                     var testRootEquipment = reservations.find(el => el.id == testRootId).equipment_id;
+                                    var testRootCustomer = reservations.find(el => el.id == testRootId).customer_id;
 
                                     if(loggedIn) {
                                         handleToggleModal();
@@ -750,6 +810,7 @@ function ReserveAdmin(props) {
                                             ballmachine: testRootEquipment.includes(2),
                                         });
                                         setNote(testRootNote);
+                                        setSelectedCustomerID(testRootCustomer);
                                     }
                                     else {
                                         window.location.pathname = "/login"
@@ -758,7 +819,8 @@ function ReserveAdmin(props) {
                             >
                                 Edit
                             </span>}
-                            {(currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) && <span className="res-text-button" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.45)'}}
+                            {/* (currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) &&  */}
+                            {<span className="res-text-button" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.45)'}}
                                 onClick={(e) => {
                                     var parentElement = returnData[e.currentTarget.parentNode.id];
                                     var testRootId = parentElement.props.children[0].props.children[1].props.children;
@@ -810,6 +872,11 @@ function ReserveAdmin(props) {
         document.querySelector(".reserve-modal-window-container").classList.toggle("active");
     }
 
+    function handleToggleDeleteModal() {
+        document.querySelector(".reserve-modal-delete").classList.toggle("active");
+        document.querySelector(".reserve-modal-delete-window").classList.toggle("active");
+    }
+
     function handleDurationAdd() {
         if(selectedDuration < 5) {
             setSelectedDuration(selectedDuration + 0.25);
@@ -846,7 +913,7 @@ function ReserveAdmin(props) {
                         note: note,
                         court_id: i,
                         equipment_id: "["+equipmentArray.toString()+"]",
-                        customer_id: currentUser.User_id
+                        customer_id: selectedCustomerID
                     }
     
                     if(checkValidReservation(reservationData)) {
@@ -872,7 +939,7 @@ function ReserveAdmin(props) {
                 note: note,
                 court_id: "["+courtArray.toString()+"]",
                 equipment_id: "["+equipmentArray.toString()+"]",
-                customer_id: currentUser.User_id
+                customer_id: selectedCustomerID
             }
     
             addReservation(reservationData);
@@ -914,7 +981,7 @@ function ReserveAdmin(props) {
                         note: note,
                         court_id: i,
                         equipment_id: "["+equipmentArray.toString()+"]",
-                        customer_id: currentUser.User_id
+                        customer_id: selectedCustomerID
                     }
     
                     if(checkValidReservationEdit(reservationData)) {
@@ -941,7 +1008,7 @@ function ReserveAdmin(props) {
                 note: note,
                 court_id: "["+courtArray.toString()+"]",
                 equipment_id: "["+equipmentArray.toString()+"]",
-                customer_id: currentUser.User_id
+                customer_id: selectedCustomerID
             }
     
             editReservation(reservationData);
@@ -972,7 +1039,19 @@ function ReserveAdmin(props) {
     }
 
     function handleButtonDelete(rid) {
-        deleteReservation(rid);
+        handleToggleDeleteModal();
+        setSelectedReservationToDelete(rid);
+    }
+
+    function handleDateCloseOpen(index) {
+        var dateString = columnDays[index].date;
+
+        if(columnDays[index].closed) {
+            removeClosure(dateString);
+        }
+        else {
+            addClosure(dateString);
+        }
     }
 
     function checkValidReservation(reservationData) {
@@ -1228,8 +1307,9 @@ function ReserveAdmin(props) {
         setSelectedDate(null);
         setSelectedTime(null);
         setSelectedDuration(0.75);
-        setSelectedID(-1);
+        setSelectedID();
         setSelectedType(0);
+        setSelectedCustomerID(0);
         setNote('');
         setCurrentArrayCourt([]);
         setNumCourts(1);
@@ -1261,27 +1341,22 @@ function ReserveAdmin(props) {
                 </div>
                 <div className="reserve-form-container">
                     <div className="table-labels-container">
-                        <div className="table-label">
-                            Today
-                        </div>
-                        <div className="table-label">
-                            {convertDate(dateToday.getDate()+1)}
-                        </div>
-                        <div className="table-label">
-                            {convertDate(dateToday.getDate()+2)}
-                        </div>
-                        <div className="table-label">
-                            {convertDate(dateToday.getDate()+3)}
-                        </div>
-                        <div className="table-label">
-                            {convertDate(dateToday.getDate()+4)}
-                        </div>
-                        <div className="table-label">
-                            {convertDate(dateToday.getDate()+5)}
-                        </div>
-                        <div className="table-label">
-                            {convertDate(dateToday.getDate()+6)}
-                        </div>
+                        {daysArray.map((day, index) => {
+                            return (
+                                <div className="table-label" key={index} style={columnDays[index].closed ? {backgroundColor: "#D9D9D9", color: "rgba(0,0,0,0.5)"} : {}}>
+                                    {day == 0 ? "Today" : convertDate(dateToday.getDate()+day)}
+                                    <div className="table-label-date-close"
+                                        onClick={() => {
+                                            handleDateCloseOpen(index);
+                                        }}
+                                    >
+                                        <div className="table-label-date-close-btn" style={columnDays[index].closed ? {backgroundColor: "#8AA2FF"} : {}}>
+                                            {columnDays[index].closed == false ? "Close" : "Open"}
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                     <div className="table-content-container">
                         <div className="table-hours-container">
@@ -1313,22 +1388,61 @@ function ReserveAdmin(props) {
                         ></div> 
                     </div>
                     <div className="reserve-modal-window-body-container">
-                        <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
-                        <div className="reserve-modal-window-body-text">Time: {selectedTime}</div>
-                        <div className="reserve-modal-window-body-text">Starting Court: {currentCourt}</div>
-                        <div className="reserve-modal-window-body-text">Courts: 
-                            <div className="reserve-modal-window-button-duration-sub"
-                                onClick={() => {
-                                    handleCourtsSubtract();
-                                }}
-                            ></div>
-                            {numCourts}
-                            <div className="reserve-modal-window-button-duration-add"
-                                onClick={() => {
-                                    handleCourtsAdd();
-                                }}
-                            ></div>
+                        <div className="reserve-modal-window-body-row">
+                            <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
+                            <div className="reserve-modal-window-body-text">Time: {selectedTime}</div>
                         </div>
+                        <div className="reserve-modal-window-body-row">
+                            {editing && <div className="reserve-modal-window-body-text">Court List: {currentArrayCourt.toString()}</div>}
+                            <div className="reserve-modal-window-body-text">Courts: 
+                                <div className="reserve-modal-window-button-duration-sub"
+                                    onClick={() => {
+                                        handleCourtsSubtract();
+                                    }}
+                                ></div>
+                                {numCourts}
+                                <div className="reserve-modal-window-button-duration-add"
+                                    onClick={() => {
+                                        handleCourtsAdd();
+                                    }}
+                                ></div>
+                            </div>
+                            {!editing && <div className="reserve-modal-window-body-text">
+                                Customer:
+                                <select className="reserve-customer-select" value={selectedCustomerID}
+                                    onChange={(e) => {
+                                        setSelectedCustomerID(e.target.value);
+                                    }}
+                                >
+                                    {userArray.map((user, idx) => {
+                                        return (
+                                            <option key={idx} value={user.User_id}>{user.User_email}</option>
+                                        )
+                                    })}
+                                </select>
+                            </div>}
+                        </div>
+                        {editing && <div className="reserve-modal-window-body-row">
+                            <div className="reserve-modal-window-body-text" style={{opacity: "50%"}}>
+                                Reservation ID: {selectedID}
+                            </div>
+                            <div className="reserve-modal-window-body-text">
+                                Customer: 
+                                <select className="reserve-customer-select" value={selectedCustomerID}
+                                    onChange={(e) => {
+                                        setSelectedCustomerID(e.target.value);
+                                    }}
+                                >
+                                    {userArray.map((user, idx) => {
+                                        return (
+                                            <option key={idx} value={user.User_id}>{user.User_email}</option>
+                                        )
+                                    })}
+                                </select>
+                            </div>
+                        </div>}
+
+                        <div className="reserve-modal-window-body-linebreak" />
                         
                         <div className="reserve-modal-window-body-text">Duration: 
                             <div className="reserve-modal-window-button-duration-sub"
@@ -1399,6 +1513,9 @@ function ReserveAdmin(props) {
                                 Ball Machine
                             </span>}
                         </div>
+
+                        <div className="reserve-modal-window-body-linebreak" />
+
                         <div className="reserve-modal-window-body-text">Note: </div>
                         <div className="reserve-modal-window-body-text" style={{width: "100%"}}>
                             <textarea 
@@ -1425,6 +1542,31 @@ function ReserveAdmin(props) {
                         <div className="reserve-modal-window-error"></div>
                     </div>
                  </div>      
+            </div>
+            <div className="reserve-modal-delete">
+                <div className="reserve-modal-delete-window">
+                    <div className="reserve-modal-delete-title">Are you sure you want to delete this reservation?</div>
+                    <div className="reserve-modal-delete-row">
+                        <div className="reserve-modal-delete-button"
+                            style={{backgroundColor: "rgba(255, 0,0, 0.55)", color: "rgba(255,255,255,1)"}}
+                            onClick={() => {
+                                deleteReservation(selectedReseervationToDelete);
+                                handleToggleDeleteModal();
+                            }}
+                        >
+                            Delete
+                        </div>
+                        <div className="reserve-modal-delete-button"
+                            style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}
+                            onClick={() => {
+                                setSelectedReservationToDelete(null);
+                                handleToggleDeleteModal();
+                            }}
+                        >
+                            Cancel
+                        </div>
+                    </div>
+                </div>
             </div>
             <Loading timeRange={[1000,2000]}/>
         </>

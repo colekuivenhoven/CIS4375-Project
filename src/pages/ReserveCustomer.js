@@ -5,7 +5,6 @@ import '../assets/styles/Reserve.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
-import reactDom from 'react-dom';
 
 // Importing the components used in this page
 import Loading from '../components/Loading';
@@ -14,6 +13,9 @@ import Loading from '../components/Loading';
 var localNumberRaw = 0;
 const dateToday = new Date();
 const totalCourts = 16;
+const maxCourtReservations = 14;
+const daysArray = [0,1,2,3,4,5,6];
+const ballMachineCourts = [1,4,5,11,12,13,16];
 
 var resArray = [];
 var resBuffer = [];
@@ -21,20 +23,29 @@ var gotReservationData = false;
 var editing = false;
 
 // Main function for the specific 'page'
-function Reserve(props) {
+function ReserveCustomer(props) {
     // 'Reactive' variables that will cause the page to update when their values change
         // 'useState' at the end of each describes their initial value
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
     const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
+    const [userArray, setUserArray] = useState([]);
     const [currentCourt, setCurrentCourt] = useState(1);
+    const [currentArrayCourt, setCurrentArrayCourt] = useState([]);
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedTime, setSelectedTime] = useState(null);
     const [selectedType, setSelectedType] = useState(0);
-    const [selectedDuration, setSelectedDuration] = useState(0.75);
     const [note, setNote] = useState('');
     const [numCourts, setNumCourts] = useState(1);
-    const [selectedID, setSelectedID] = useState(-1);
+    const [selectedDuration, setSelectedDuration] = useState(0.75);
+    const [selectedID, setSelectedID] = useState();
+    const [selectedCustomerID, setSelectedCustomerID] = useState(0);
     const [reservations, setReservations] = useState([]);
+    const [selectedEquipment, setSelectedEquipment] = useState({
+        racket: false,
+        hopper: false,
+        ballmachine: false
+    });
+    const [selectedReseervationToDelete, setSelectedReservationToDelete] = useState(null);
     const [customerReservations, setCustomerReservations] = useState([]);
     
     // Regular varaible declaration
@@ -342,36 +353,43 @@ function Reserve(props) {
             }
     ]
 
-    const columnDays = [
+    const [columnDays, setColumnDays] = useState([
         {
             date: convertDate(dateToday.getDate()),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+1),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+2),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+3),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+4),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+5),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         },
         {
             date: convertDate(dateToday.getDate()+6),
-            slots: timeslotsJSON
+            slots: timeslotsJSON,
+            closed: false
         }
-    ]
+    ])
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
@@ -379,6 +397,10 @@ function Reserve(props) {
             getReservationData();
             getCustomerReservationData();
         }
+
+        getAllClosures();
+        getAllUsers();
+        
 
         return () => {
             gotReservationData = false;
@@ -403,6 +425,44 @@ function Reserve(props) {
         setCustomerReservations(response.reservations);
     }
 
+    async function getAllUsers() {
+        let response = await fetch("http://3.218.225.62:3040/user/getall");
+        response = await response.json();
+        setUserArray(response.users);
+    }
+
+    async function getAllClosures() {
+        let response = await fetch("http://3.218.225.62:3040/closure/getall");
+        response = await response.json();
+        // setClosures(response.closures);
+
+        let closureArray = response.closures.map(closure => closure.Closure_date);
+        let newColumnDays = columnDays;
+
+        Object.values(columnDays).map((day,idx) => {
+            if(closureArray.includes(day.date)) {
+                newColumnDays[idx].closed = true;
+            }
+        });
+
+        setColumnDays(newColumnDays);
+
+        gotReservationData = false;
+        getReservationData();
+    }
+
+    async function addClosure(date) {
+        let response = await fetch("http://3.218.225.62:3040/closure/add/"+date);
+        response = await response.json();
+        window.location.reload();
+    }
+
+    async function removeClosure(date) {
+        let response = await fetch("http://3.218.225.62:3040/closure/remove/"+date);
+        response = await response.json();
+        window.location.reload();
+    }
+
     function convertReservations() {
         resArray.forEach(res => {
             resBuffer.push(
@@ -413,12 +473,13 @@ function Reserve(props) {
                     date: res.Reservation_date,
                     timeStart: res.Reservation_time,
                     duration: parseFloat(res.Reservation_duration),
+                    note: res.Reservation_note,
                     court_id: res.Court_id,
+                    equipment_id: res.Equipment_id,
                     customer_id: res.Customer_id
                 }
             )
         });
-
         setReservations(resBuffer);
 
         gotReservationData = true;
@@ -437,6 +498,7 @@ function Reserve(props) {
         .then(() => {
             gotReservationData = false;
             getReservationData();
+            getCustomerReservationData();
         })
     }
 
@@ -453,6 +515,7 @@ function Reserve(props) {
         .then(() => {
             gotReservationData = false;
             getReservationData();
+            getCustomerReservationData();
         })
     }
 
@@ -469,6 +532,8 @@ function Reserve(props) {
         .then(() => {
             gotReservationData = false;
             getReservationData();
+            setSelectedReservationToDelete(null);
+            getCustomerReservationData();
         })
     }
 
@@ -477,6 +542,13 @@ function Reserve(props) {
         return (
             dateToday.getMonth()+1+"/"+day+"/"+dateToday.getFullYear()
         )
+    }
+
+    function convertToDateFromString(str) {
+        var dateParts = str.split('/');
+        var dateRaw = new Date(dateParts[2],dateParts[0]-1,dateParts[1]);
+
+        return dateRaw;
     }
 
     function formatDate(date) {
@@ -489,13 +561,6 @@ function Reserve(props) {
         var newDate = new Date();
         newDate.setDate(newDate.getDate()+dayOffset);
         return formatDate(newDate);
-    }
-
-    function convertToDateFromString(str) {
-        var dateParts = str.split('/');
-        var dateRaw = new Date(dateParts[2],dateParts[0]-1,dateParts[1]);
-
-        return dateRaw;
     }
 
     // Rendering functions
@@ -572,6 +637,12 @@ function Reserve(props) {
                 })
             }
 
+            if(day.closed) {
+                dayTimeslots.forEach((slot) => {
+                    slot.status = 'closed'
+                })
+            }
+
             reservations.forEach((reservation) => {
                 if(reservation.date == day.date) {
                     var resStartTimeRaw = (reservation.timeStart).substring(0,(reservation.timeStart).length - 2);
@@ -582,7 +653,7 @@ function Reserve(props) {
 
                     var resIdBuffer = -1;
                     var startIndex = -1;
-                    if(reservation.court_id == currentCourt) {
+                    if(reservation.court_id.includes(currentCourt)) {
                         dayTimeslots.forEach((slot, index) => {
                             var timeRaw = (slot.time).substring(0,(slot.time).length - 2);
                             var amOrPM = (slot.time).substring((slot.time).length - 2);
@@ -731,7 +802,7 @@ function Reserve(props) {
                         {(slots[index+1].reservation != slots[index].reservation) 
                         ? 
                         <>
-                            {(currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) && <span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}
+                            {<span className="res-text-button" style={{marginRight: '0.75vmin', marginLeft: '0.75vmin', color: 'rgba(0,0,0,0.75)'}}
                                 onClick={(e) => {
                                     editing = true;
                                     var parentElement = returnData[e.currentTarget.parentNode.id];
@@ -742,6 +813,10 @@ function Reserve(props) {
                                     var testRootDuration = reservations.find(el => el.id == testRootId).duration;
                                     var testRootID = reservations.find(el => el.id == testRootId).id;
                                     var testRootType = reservations.find(el => el.id == testRootId).type_id;
+                                    var testRootNote = reservations.find(el => el.id == testRootId).note;
+                                    var testRootNumCourts = reservations.find(el => el.id == testRootId).court_id;
+                                    var testRootEquipment = reservations.find(el => el.id == testRootId).equipment_id;
+                                    var testRootCustomer = reservations.find(el => el.id == testRootId).customer_id;
 
                                     if(loggedIn) {
                                         handleToggleModal();
@@ -750,6 +825,15 @@ function Reserve(props) {
                                         setSelectedDuration(testRootDuration);
                                         setSelectedID(testRootID);
                                         setSelectedType(testRootType);
+                                        setNumCourts(testRootNumCourts.length);
+                                        setCurrentArrayCourt(testRootNumCourts);
+                                        setSelectedEquipment({
+                                            racket: testRootEquipment.includes(0),
+                                            hopper: testRootEquipment.includes(1),
+                                            ballmachine: testRootEquipment.includes(2),
+                                        });
+                                        setNote(testRootNote);
+                                        setSelectedCustomerID(testRootCustomer);
                                     }
                                     else {
                                         window.location.pathname = "/login"
@@ -758,7 +842,8 @@ function Reserve(props) {
                             >
                                 Edit
                             </span>}
-                            {(currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) && <span className="res-text-button" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.45)'}}
+                            {/* (currentUser) && (currentUser.User_id == reservations.find(el => el.id == slots[startIndex].reservation).customer_id) &&  */}
+                            {<span className="res-text-button" style={{marginRight: '0.75vmin', color: 'rgba(0,0,0,0.45)'}}
                                 onClick={(e) => {
                                     var parentElement = returnData[e.currentTarget.parentNode.id];
                                     var testRootId = parentElement.props.children[0].props.children[1].props.children;
@@ -786,12 +871,13 @@ function Reserve(props) {
         for(var i = 0; i < 7; i++) {
             const key = i;
             returnData.push(
-                <div key={key} className="lite-day-label"
+                <div key={key} className={`lite-day-label ${columnDays[i].closed ? "closed" : ""}`}
                     onClick={() => {
                         if(loggedIn) {
                             let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
                             editing = false;
                             handleToggleModal();
+                            setSelectedCustomerID(currentUser.User_id);
 
                             setSelectedDate(getFormattedDate(key));
                             setSelectedTime("7:30am");
@@ -801,8 +887,8 @@ function Reserve(props) {
                         }
                     }}
                 >
-                    {getFormattedDate(key)}
-                    <div className="lite-day-button">Reserve</div>
+                    {getFormattedDate(key)} {columnDays[i].closed ? " - CLOSED" : ""}
+                    {!columnDays[i].closed && <div className="lite-day-button">Reserve</div>}
                 </div>
             );
         }
@@ -817,8 +903,45 @@ function Reserve(props) {
             returnData.push(
                 <div key={index} className="lite-day-label" style={{height: "5vmin", fontSize: "1.5vmin"}}>
                     {reservation.Reservation_date}, Starting at {reservation.Reservation_time} - {reservation.Reservation_duration} hour(s)
-                    <span className="customer-reservation-button" style={{marginLeft: "auto"}}>Edit</span>
-                    <span className="customer-reservation-button">Delete</span>
+                    <span className="customer-reservation-button" style={{marginLeft: "auto"}}
+                        onClick={() => {
+                            if(loggedIn) {
+                                editing = true;
+                                setSelectedID(reservation.Reservation_id);
+                                setSelectedCustomerID(currentUser.User_id);
+                                setSelectedDate(reservation.Reservation_date);
+                                setSelectedTime(reservation.Reservation_time);
+                                setNumCourts(reservation.Court_id.length);
+                                setCurrentArrayCourt(reservation.Court_id);
+                                setSelectedType(reservation.Reservation_type);
+                                setSelectedEquipment({
+                                    racket: reservation.Equipment_id.includes(0),
+                                    hopper: reservation.Equipment_id.includes(1),
+                                    ballmachine: reservation.Equipment_id.includes(2),
+                                });
+                                setNote(reservation.Reservation_note);
+                                setSelectedDuration(parseFloat(reservation.Reservation_duration));
+                                handleToggleModal();
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
+                        Edit
+                    </span>
+                    <span className="customer-reservation-button"
+                        onClick={() => {
+                            if(loggedIn) {
+                                handleButtonDelete(reservation.Reservation_id);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
+                        Delete
+                    </span>
                 </div>
             );
         });
@@ -839,9 +962,26 @@ function Reserve(props) {
         }
     }
 
+    function handleCourtsAdd() {
+        if(numCourts < maxCourtReservations) {
+            setNumCourts(numCourts + 1);
+        }
+    }
+
+    function handleCourtsSubtract() {
+        if(numCourts > 1) {
+            setNumCourts(numCourts - 1);
+        }
+    }
+
     function handleToggleModal() {
         document.querySelector(".reserve-modal-main-container").classList.toggle("active");
         document.querySelector(".reserve-modal-window-container").classList.toggle("active");
+    }
+
+    function handleToggleDeleteModal() {
+        document.querySelector(".reserve-modal-delete").classList.toggle("active");
+        document.querySelector(".reserve-modal-delete-window").classList.toggle("active");
     }
 
     function handleDurationAdd() {
@@ -856,29 +996,17 @@ function Reserve(props) {
         }
     }
 
-    function handleCourtsAdd() {
-        if(numCourts < 2) {
-            setNumCourts(numCourts + 1);
-        }
-    }
-
-    function handleCourtsSubtract() {
-        if(numCourts > 1) {
-            setNumCourts(numCourts - 1);
-        }
-    }
-
-    function handleStartTimeAdd() {
-        
-    }
-
-    function handleStartTimeSubtract(){
-        
-    }
-
     function handleButtonSubmit() {
         var courtArray = [];
-        var earliestCourt = 1;
+        var equipmentArray = [];
+        var earliestCourt = currentCourt;
+        var errorBox = document.querySelector(".reserve-modal-window-error");
+
+        Object.values(selectedEquipment).forEach((val, idx) => {
+            if(val) {
+                equipmentArray.push(idx);
+            }
+        });
 
         for(var j = 0; j <= numCourts-1; j++) {
             for(var i = earliestCourt; i <= totalCourts; i++) {
@@ -891,7 +1019,8 @@ function Reserve(props) {
                         duration: selectedDuration,
                         note: note,
                         court_id: i,
-                        customer_id: currentUser.User_id
+                        equipment_id: "["+equipmentArray.toString()+"]",
+                        customer_id: selectedCustomerID
                     }
     
                     if(checkValidReservation(reservationData)) {
@@ -900,26 +1029,30 @@ function Reserve(props) {
                             earliestCourt = i;
                         }
                     }
-                    else {
-                        console.log("Invalid Reservation on Court "+i);
-                    }
                 }
             }
         }
 
-        console.log("Selected Courts: "+courtArray);
-
-        // var reservationData = {
-        //     type_id: selectedType,
-        //     status_id: 0,
-        //     date: selectedDate,
-        //     timeStart: selectedTime,
-        //     duration: selectedDuration,
-        //     note: note,
-        //     court_id: currentCourt,
-        //     customer_id: currentUser.User_id
-        // }
-
+        if(courtArray.length == 0 || courtArray.length != numCourts || hasDuplicates(courtArray)) {
+            errorBox.textContent = 'Invalid Reservation: There are no available reservations for the requested date and time!';
+        }
+        else {
+            var reservationData = {
+                type_id: selectedType,
+                status_id: 0,
+                date: selectedDate,
+                timeStart: selectedTime,
+                duration: selectedDuration,
+                note: note,
+                court_id: "["+courtArray.toString()+"]",
+                equipment_id: "["+equipmentArray.toString()+"]",
+                customer_id: selectedCustomerID
+            }
+    
+            addReservation(reservationData);
+            resetSelectedInfo();
+            handleToggleModal();
+        }
         // if(checkValidReservation(reservationData)) {
         //     addReservation(reservationData);
         //     resetSelectedInfo();
@@ -931,29 +1064,102 @@ function Reserve(props) {
     }
 
     function handleButtonEdit(rid) {
-        var reservationData = {
-            id: rid,
-            type_id: selectedType,
-            status_id: 0,
-            date: selectedDate,
-            timeStart: selectedTime,
-            duration: selectedDuration,
-            court_id: currentCourt,
-            customer_id: currentUser.User_id
+        var courtArray = [];
+        var equipmentArray = [];
+        var earliestCourt = currentArrayCourt[0];
+        var errorBox = document.querySelector(".reserve-modal-window-error");
+
+        Object.values(selectedEquipment).forEach((val, idx) => {
+            if(val) {
+                equipmentArray.push(idx);
+            }
+        });
+
+        for(var j = 0; j <= numCourts-1; j++) {
+            for(var i = earliestCourt; i <= totalCourts; i++) {
+                if(courtArray.length < numCourts) {
+                    var reservationData = {
+                        id: rid,
+                        type_id: selectedType,
+                        status_id: 0,
+                        date: selectedDate,
+                        timeStart: selectedTime,
+                        duration: selectedDuration,
+                        note: note,
+                        court_id: i,
+                        equipment_id: "["+equipmentArray.toString()+"]",
+                        customer_id: selectedCustomerID
+                    }
+    
+                    if(checkValidReservationEdit(reservationData)) {
+                        courtArray.push(i);
+                        if(j == 0) {
+                            earliestCourt = i;
+                        }
+                    }
+                }
+            }
         }
 
-        if(checkValidReservationEdit(reservationData)) {
+        if(courtArray.length == 0 || courtArray.length != numCourts || hasDuplicates(courtArray)) {
+            console.log(courtArray);
+            errorBox.textContent = 'Invalid Reservation: There are no available reservations for the requested date and time!';
+        }
+        else {
+            var reservationData = {
+                id: rid,
+                type_id: selectedType,
+                status_id: 0,
+                date: selectedDate,
+                timeStart: selectedTime,
+                duration: selectedDuration,
+                note: note,
+                court_id: "["+courtArray.toString()+"]",
+                equipment_id: "["+equipmentArray.toString()+"]",
+                customer_id: selectedCustomerID
+            }
+    
             editReservation(reservationData);
             resetSelectedInfo();
             handleToggleModal();
         }
-        else {
-            document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
-        }
+
+        // var reservationData = {
+        //     id: rid,
+        //     type_id: selectedType,
+        //     status_id: 0,
+        //     date: selectedDate,
+        //     timeStart: selectedTime,
+        //     duration: selectedDuration,
+        //     note: note,
+        //     court_id: numCourts.length,
+        //     customer_id: currentUser.User_id
+        // }
+
+        // if(checkValidReservationEdit(reservationData)) {
+        //     editReservation(reservationData);
+        //     resetSelectedInfo();
+        //     handleToggleModal();
+        // }
+        // else {
+        //     document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
+        // }
     }
 
     function handleButtonDelete(rid) {
-        deleteReservation(rid);
+        handleToggleDeleteModal();
+        setSelectedReservationToDelete(rid);
+    }
+
+    function handleDateCloseOpen(index) {
+        var dateString = columnDays[index].date;
+
+        if(columnDays[index].closed) {
+            removeClosure(dateString);
+        }
+        else {
+            addClosure(dateString);
+        }
     }
 
     function checkValidReservation(reservationData) {
@@ -1011,7 +1217,7 @@ function Reserve(props) {
             }
 
             if(res.date == reservationData.date) {
-                if(res.court_id == reservationData.court_id) {
+                if(res.court_id.includes(reservationData.court_id)) {
                     var resBufferStart = convertTo24Hour(res.timeStart);
                     var resBufferStartHours = parseInt(resBufferStart.split(':')[0]);
                     var resBufferStartMinutes = parseInt(resBufferStart.split(':')[1]);
@@ -1121,7 +1327,7 @@ function Reserve(props) {
 
             if(res.id != reservationData.id) {
                 if(res.date == reservationData.date) {
-                    if(res.court_id == reservationData.court_id) {
+                    if(res.court_id.includes(reservationData.court_id)) {
                         var resBufferStart = convertTo24Hour(res.timeStart);
                         var resBufferStartHours = parseInt(resBufferStart.split(':')[0]);
                         var resBufferStartMinutes = parseInt(resBufferStart.split(':')[1]);
@@ -1200,15 +1406,27 @@ function Reserve(props) {
         return returnValue;
     }
 
+    // Borrowed from https://stackoverflow.com/a/7376645/17127255
+    function hasDuplicates(array) {
+        return (new Set(array)).size !== array.length;
+    }
+
     function resetSelectedInfo() {
         setSelectedDate(null);
         setSelectedTime(null);
         setSelectedDuration(0.75);
-        setSelectedID(-1);
+        setSelectedID();
         setSelectedType(0);
-        setNumCourts(1);
+        setSelectedCustomerID(0);
         setNote('');
+        setCurrentArrayCourt([]);
+        setNumCourts(1);
         document.querySelector(".reserve-modal-window-error").textContent = '';
+        setSelectedEquipment({
+            racket: false,
+            hopper: false,
+            ballmachine: false
+        });
     }
 
     return (
@@ -1246,20 +1464,23 @@ function Reserve(props) {
                         ></div> 
                     </div>
                     <div className="reserve-modal-window-body-container">
-                        <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
-                        <div className="reserve-modal-window-body-text">Time: 
-                            <div className="reserve-modal-window-button-duration-sub"
-                                onClick={() => {
-                                    // handleCourtsSubtract();
-                                }}
-                            ></div>
-                            {selectedTime}
-                            <div className="reserve-modal-window-button-duration-add"
-                                onClick={() => {
-                                    // handleCourtsAdd();
-                                }}
-                            ></div>
+                        <div className="reserve-modal-window-body-row">
+                            <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
+                            <div className="reserve-modal-window-body-text">Time: 
+                                <div className="reserve-modal-window-button-duration-sub"
+                                    onClick={() => {
+                                        // handleCourtsSubtract();
+                                    }}
+                                ></div>
+                                {selectedTime}
+                                <div className="reserve-modal-window-button-duration-add"
+                                    onClick={() => {
+                                        // handleCourtsAdd();
+                                    }}
+                                ></div>
+                            </div>
                         </div>
+                        
                         <div className="reserve-modal-window-body-text">Courts: 
                             <div className="reserve-modal-window-button-duration-sub"
                                 onClick={() => {
@@ -1273,6 +1494,9 @@ function Reserve(props) {
                                 }}
                             ></div>
                         </div>
+
+                        <div className="reserve-modal-window-body-linebreak" />
+
                         <div className="reserve-modal-window-body-text">Duration: 
                             <div className="reserve-modal-window-button-duration-sub"
                                 onClick={() => {
@@ -1303,6 +1527,48 @@ function Reserve(props) {
                                 Event
                             </span>
                         </div>
+                        <div className="reserve-modal-window-body-text">
+                            Equipment: 
+                            <span className={`reserve-modal-window-button-equipment ${selectedEquipment.racket == true ? "active" : ""}`}
+                                onClick={() => {
+                                    if(selectedEquipment.racket ==  false) {
+                                        setSelectedEquipment({...selectedEquipment, racket: true});
+                                    }
+                                    else {
+                                        setSelectedEquipment({...selectedEquipment, racket: false});
+                                    }
+                                }}
+                            >
+                                Racket
+                            </span>
+                            <span className={`reserve-modal-window-button-equipment ${selectedEquipment.hopper == true ? "active" : ""}`}
+                                onClick={() => {
+                                    if(selectedEquipment.hopper ==  false) {
+                                        setSelectedEquipment({...selectedEquipment, hopper: true});
+                                    }
+                                    else {
+                                        setSelectedEquipment({...selectedEquipment, hopper: false});
+                                    }
+                                }}
+                            >
+                                Hopper
+                            </span>
+                            {(ballMachineCourts.includes(currentCourt)) && <span className={`reserve-modal-window-button-equipment ${selectedEquipment.ballmachine == true ? "active" : ""}`}
+                                onClick={() => {
+                                    if(selectedEquipment.ballmachine ==  false) {
+                                        setSelectedEquipment({...selectedEquipment, ballmachine: true});
+                                    }
+                                    else {
+                                        setSelectedEquipment({...selectedEquipment, ballmachine: false});
+                                    }
+                                }}
+                            >
+                                Ball Machine
+                            </span>}
+                        </div>
+
+                        <div className="reserve-modal-window-body-linebreak" />
+
                         <div className="reserve-modal-window-body-text">Note: </div>
                         <div className="reserve-modal-window-body-text" style={{width: "100%"}}>
                             <textarea 
@@ -1330,10 +1596,35 @@ function Reserve(props) {
                     </div>
                  </div>      
             </div>
+            <div className="reserve-modal-delete">
+                <div className="reserve-modal-delete-window">
+                    <div className="reserve-modal-delete-title">Are you sure you want to delete this reservation?</div>
+                    <div className="reserve-modal-delete-row">
+                        <div className="reserve-modal-delete-button"
+                            style={{backgroundColor: "rgba(255, 0,0, 0.55)", color: "rgba(255,255,255,1)"}}
+                            onClick={() => {
+                                deleteReservation(selectedReseervationToDelete);
+                                handleToggleDeleteModal();
+                            }}
+                        >
+                            Delete
+                        </div>
+                        <div className="reserve-modal-delete-button"
+                            style={{backgroundColor: "rgba(0, 0, 0, 0.1)"}}
+                            onClick={() => {
+                                setSelectedReservationToDelete(null);
+                                handleToggleDeleteModal();
+                            }}
+                        >
+                            Cancel
+                        </div>
+                    </div>
+                </div>
+            </div>
             <Loading timeRange={[400, 800]} />
         </>
     )
 }
 
 // Function must be 'exposed' to rest of the application at the end of the file as shown below.
-export default Reserve;
+export default ReserveCustomer;

@@ -9,7 +9,7 @@ Reservations:
     Add customer ability to edit existing reservations.
     Add customer ability to add equipment to reservations, if the equipment is available.
         ->(Equipment: Ball machine, hopper, racket)
-    Allow admin to edit/delete all reservations.
+    DONE Allow admin to edit/delete all reservations.
     CONFIRM? Customers can only make 2 reservations per day.
     Allow employee accounts to access the extended reservation page to a somewhat limited extent.
     Display notification to customers when a reservation is successfully made. Will include their reservation data.
@@ -21,7 +21,7 @@ Login:
     Allow customers to reset their password via email.
     DONE Confirm account create via email.
     Redirect appropriately if user is not logged in.
-    Only admin/manager can create other employee accounts.
+    DONE Only admin/manager can create other employee accounts.
     DONE Fully merge customer & employee databases into a USER database.
     DONE Change to email for username.
 
