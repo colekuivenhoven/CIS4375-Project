@@ -93,10 +93,8 @@
     transition: all 0.15s linear;
 }
 
-.test-add-input::placeholder {
-    color: rgba(0,0,0,0.2);
-    font-weight: bold;
-    font-family: Round;
+.test-add-input:focus {
+    border: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .test-add-select {
@@ -133,31 +131,6 @@
 
 .test-add-button:hover {
     background-color: rgb(80, 172, 95);
-}
-
-.test-cancel-btn {
-    background-color: rgba(0, 0, 0, 0.1);
-    border: 0;
-    outline: none;
-    width: calc(100% + 0.25vmin);
-    border-radius: 0.5vmin;
-    padding-left: 0.5vmin;
-    height: 3vmin;
-    font-family: Round;
-    color: rgba(0, 0, 0, 0.5);
-    font-weight: bold;
-    font-size: 1.25vmin;
-    margin-top: 0.5vmin;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.15s linear;
-}
-
-.test-cancel-btn:hover {
-    background-color: rgba(0, 0, 0, 0.2);
 }
 
 .test-user-container {
@@ -202,8 +175,8 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: calc(100% - 5vmin);
-    margin-left: 2vmin; 
+    width: calc(100% - 6vmin);
+    margin-left: 1.5vmin; 
     margin-right: auto;
     margin-top: 1vmin;
     background-color: rgba(255,0,0,0.0); 
@@ -234,7 +207,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     border-radius: 1vmin;
-    width: 80vmin;
+    width: 78vmin;
     height: calc(33% - 10vmin);
     background-color: rgba(255,255,255,1);
     box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.05);
@@ -245,11 +218,9 @@
 }
 
 .info-delete {
-    position: absolute;
-    bottom: 9vmin;
-    right: calc(1vmin + calc(50% - 40vmin));
     background-color: rgba(0,0,0,0.05);
-    width: auto;
+    width: 3vmin;
+    aspect-ratio: 1;
     margin-left: 1vmin;
     margin-top: auto;
     border-radius: 0.5vmin;
@@ -257,51 +228,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5vmin;
-    transition: all 0.15s ease-in-out;
+    transition: all 0.1s linear;
 }
 
 .info-delete:hover {
     background-color: rgba(225, 91, 91, 0.2);
 }
 
-.info-delete.selected {
-    position: absolute;
-    bottom: 9vmin;
-    right: calc(1vmin + calc(50% - 40vmin));
-    width: 20vmin;
-    height: 6vmin;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    align-content: center;
-    background-color: rgba(0,0,0,0.05);
-    border-radius: 0.5vmin;
-    cursor: auto;
-    padding: 1vmin;
-    text-align: center;
-    font-family: Round;
-    transition: all 0.15s ease-in-out;
-}
-
-.delete-confirm-btn {
-    cursor: pointer;
-    width: 30%;
-    color: rgba(30, 0, 0, 1);
-    filter: saturate(0) brightness(0);
-    user-select: none;
-    transition: all 0.1s ease-in-out;
-}
-
-.delete-confirm-btn:hover {
-    filter: saturate(5) brightness(5);
-}
-
 .info-edit {
     background-color: rgba(0,0,0,0.05);
-    width: auto;
+    width: 3vmin;
+    aspect-ratio: 1;
     margin-left: auto;
     margin-top: auto;
     border-radius: 0.5vmin;
@@ -309,7 +246,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0.5vmin;
     transition: all 0.1s linear;
 }
 

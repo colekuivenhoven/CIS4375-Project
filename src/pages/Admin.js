@@ -25,10 +25,6 @@ function Admin(props) {
     const [userListSort, setUserListSort] = useState('asc');
     const [userListSortType, setUserListSortType] = useState(0);
 
-    const [pieData, setPieData] = useState([{
-        x: "1", y: 1
-    }]);
-
     const [userItemStyle, setUserItemStyle] = useSpring(() => ({ x: 2 }))
 
     // Test data
@@ -59,33 +55,25 @@ function Admin(props) {
             {month: 12, revenue: 15400},
         ];
 
-    async function getPieData() {
-        let query = `
-            SELECT USER.User_email, COUNT(RESERVATION.Customer_id) AS total_reservations
-            FROM USER
-            JOIN RESERVATION ON USER.User_id = RESERVATION.Customer_id
-            GROUP BY USER.User_email
-            ORDER BY total_reservations DESC
-            LIMIT 5
-        `;
-        let response = await fetch("http://3.218.225.62:3040/report/download", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({report_query: query})
-        });
-        response = await response.json();
-        
-        let converted_chart_data = response.report.map((data, idx) => {
-            return {
-                x: (data.User_email).substring(0, (data.User_email).indexOf('@')),
-                y: data.total_reservations
-            }
-        })
-
-        setPieData(converted_chart_data);
-    }
+        // pie chart
+        const pieData = [
+            {x: "#1", y: 105},
+            {x: "#2", y: 89},
+            {x: "#3", y: 67},
+            {x: "#4", y: 44},
+            {x: "#5", y: 49},
+            {x: "#6", y: 27},
+            {x: "#7", y: 21},
+            {x: "#8", y: 111},
+            {x: "#9", y: 61},
+            {x: "#10", y: 59},
+            {x: "#11", y: 22},
+            {x: "#12", y: 31},
+            {x: "#13", y: 32},
+            {x: "#14", y: 24},
+            {x: "#15", y: 31},
+            {x: "#16", y: 20},
+        ];
 
     // Regular varaible declaration
     var isMobile = props.isMobile;
@@ -99,7 +87,6 @@ function Admin(props) {
                 getLogs();
             }
             getUsers();
-            getPieData();
         }
 
         return () => { isCancelled = true };
@@ -215,7 +202,7 @@ function Admin(props) {
                         <div className="container-admin2-content-item-body-report">
                             <div className="container-report-item">
                                 {/* Pie Chart - Number of Reservations for each Court over the Past Month */}
-                                <span className="admin2-chart-title">Top 5 Users by Total Reservations</span>
+                                <span className="admin2-chart-title">Total Reservations by Court <br/> (1 month)</span>
                                 <Charts chartData={pieData} chartType={"pie"}/>
                             </div>
                             <div className="container-report-item">

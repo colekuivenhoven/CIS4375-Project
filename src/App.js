@@ -10,7 +10,6 @@ import Account from './pages/Account.js';
 import About from './pages/About.js';
 import Contact from './pages/Contact.js';
 import Reserve from './pages/Reserve.js';
-import ReserveCustomer from './pages/ReserveCustomer.js';
 import ReserveAdmin from './pages/ReserveAdmin.js';
 import Login from './pages/Login.js';
 import Register from './pages/Register.js';
@@ -100,7 +99,7 @@ function App() {
             <Contact isMobile={isMobile} />
           </Route>
           <Route path="/reserve">
-            <ReserveCustomer isMobile={isMobile} />
+            <Reserve isMobile={isMobile} />
           </Route>
           <Route path="/reserveadmin">
             <ReserveAdmin isMobile={isMobile} />

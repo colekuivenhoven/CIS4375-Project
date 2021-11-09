@@ -24,8 +24,8 @@ function Reports() {
         {
             title: `All Customers`,
             description: `This report shows all customers that are registered.`,
-            category: `User`,
-            query: `SELECT User_id, User_type, User_status, User_email, User_phone, User_firstname, User_lastname, User_getAnnouncements FROM USER`,
+            category: `Customer`,
+            query: `SELECT * FROM CUSTOMER`,
         },
         {
             title: `All Reservations`,
@@ -34,16 +34,10 @@ function Reports() {
             query: `SELECT * FROM RESERVATION`,
         },
         {
-            title: `Users by Total Number of Reservations`,
-            description: `This report orders all users by the number of reservations they've made.`,
+            title: `Reservations by Duration`,
+            description: `This report shows all reservations ordered by duration of the reservation.`,
             category: `Reservation`,
-            query: `
-                SELECT USER.User_email, COUNT(RESERVATION.Customer_id) AS total_reservations
-                FROM USER
-                JOIN RESERVATION ON USER.User_id = RESERVATION.Customer_id
-                GROUP BY USER.User_email
-                ORDER BY total_reservations DESC
-            `,
+            query: `SELECT * FROM RESERVATION`,
         },
         {
             title: `Users by Number of Reservations`,
@@ -181,15 +175,7 @@ function Reports() {
                         <div className="modal-report-header">
                             {Object.keys(reportModalItems[0]).map((key, index) => {
                                 return (
-                                    <div 
-                                        className="modal-report-text" 
-                                        key={index}
-                                        style={{
-                                            minWidth: `${100 / Object.keys(reportModalItems[0]).length}%`,
-                                            maxWidth: `${100 / Object.keys(reportModalItems[0]).length}%`,
-                                        }}
-                                    
-                                    >
+                                    <div className="modal-report-text" key={index}>
                                         {key.includes(reportModalCategory) ? key.substring(key.indexOf("_") + 1) : key}
                                     </div>
                                 )
@@ -200,14 +186,7 @@ function Reports() {
                                 <div className="modal-report-item" key={index}>
                                     {Object.values(item).map((value, vIndex) => {
                                         return (
-                                            <div 
-                                                className="modal-report-text" 
-                                                key={vIndex}
-                                                style={{
-                                                    minWidth: `${100 / Object.keys(reportModalItems[0]).length}%`,
-                                                    maxWidth: `${100 / Object.keys(reportModalItems[0]).length}%`,
-                                                }}
-                                            >
+                                            <div className="modal-report-text" key={vIndex}>
                                                 
                                                 {JSON.stringify(value)}
                                             </div>

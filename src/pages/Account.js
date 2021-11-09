@@ -74,7 +74,7 @@ function Account(props) {
         window.sessionStorage.setItem("num_global", parseInt(globalNumber)+1);
     }
 
-    let firstName = currentUser.User_firstname;
+    let firstName = sessionStorage.getItem('firstName')
     let lastName = sessionStorage.getItem('lastName')
     let phone = sessionStorage.getItem('phone')
     let email = sessionStorage.getItem('email')

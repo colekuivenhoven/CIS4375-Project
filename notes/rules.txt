@@ -1,33 +1,38 @@
 Equipment:
-    If ballmachine is being used in another reservation, then the ballmachine is not available to reserve at the same time.
+    DONE Ball machine can only be assigned to Courts 1,4,5,11,12,13,16.
 
 Reservations:
+    DONE Multiple courts need to be able to be added at once. 
+        ->(Array of courts, max 14 courts, only manager can make this type of reservation)
     Fix customer reservation 'auto-timing' feature.
+    DONE Enable customers to use the 'note' feature & update database tables to reflect.
+    Add customer ability to edit existing reservations.
+    Add customer ability to add equipment to reservations, if the equipment is available.
+        ->(Equipment: Ball machine, hopper, racket)
+    Allow admin to edit/delete all reservations.
     CONFIRM? Customers can only make 2 reservations per day.
     Allow employee accounts to access the extended reservation page to a somewhat limited extent.
     Display notification to customers when a reservation is successfully made. Will include their reservation data.
-    Reservation closures send messsage to user.
-    Add num of people to reservation. Max 4 ppl.
 
 Alerts:
     Send SMS alert when a reservation is made.
 
 Login:
     Allow customers to reset their password via email.
+    DONE Confirm account create via email.
     Redirect appropriately if user is not logged in.
+    Only admin/manager can create other employee accounts.
+    DONE Fully merge customer & employee databases into a USER database.
+    DONE Change to email for username.
 
 Admin:
+    DONE Re-enable viewing of logs.
     Create 3 important reports that fit a pie chart, bar chart, and line chart, respectively.
     Admin should be able to select a user from Users list and edit/update their account.
-    Add advanced user page to admin portal.
-    Replace logs with feedback list for admin to view.
 
 Reports:
-    Add SQL-based reports to reports page.
-    Figure out 3 best reports for graphs.
-
-Account:
-    Add reset password feature to account page.
+    DONE Develop reports that allow admin to see & edit as much data as possible.
+        ->(simple listing system that supports all data, and includes edit/delete options)
 
 Contact:
     Create a contact form that allows customers to send feedback.

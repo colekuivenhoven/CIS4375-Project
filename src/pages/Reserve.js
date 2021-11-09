@@ -811,7 +811,7 @@ function Reserve(props) {
     }
 
     function renderCustomerReservations() {
-        var returnData = [];
+        var returnData = [<br/>];
 
         customerReservations.map((reservation, index) => {
             returnData.push(
@@ -1224,7 +1224,6 @@ function Reserve(props) {
                     <div className="lite-edit-label">
                         {loggedIn ? "Select your reservation" : "Please login to edit a reservation"}
                     </div>
-                    <br/>
                     {renderCustomerReservations()}
                 </div>
                 <div className="lite-warning-label">
