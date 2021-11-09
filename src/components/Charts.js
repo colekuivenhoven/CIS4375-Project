@@ -161,12 +161,12 @@ function Charts(props) {
                 animate={{
                     duration: 400
                 }}
-                categories={{x: ["Court 1", "Court 2", "Court 3", "Court 4", "Court 5"]}}
+                sortKey="y"
                 cornerRadius={10}
                 innerRadius={85}
                 labelRadius={({ innerRadius }) => 155 }
                 padAngle={2}
-                style={{ labels: { fill: "rgba(0,0,0,0.65)", fontSize: 14, fontWeight: "bold" }, data: {fillOpacity: 0.75} }}
+                style={{ labels: { fill: "rgba(0,0,0,1)", fontSize: 18, fontWeight: "bold" }, data: {fillOpacity: 0.75} }}
                 labelPlacement={({ index }) => "perpendicular"}
                 events={[{
                     target: "data",
@@ -181,7 +181,7 @@ function Charts(props) {
                             }, {
                             target: "labels",
                             mutation: (props) => {
-                                return props.text === props.datum.y ? null : { text: props.datum.y, style: {fontSize: 24}};
+                                return props.text === props.datum.y ? null : { text: props.datum.y.toFixed(0), style: {fontSize: 24}};
                             }
                             }
                         ];
@@ -196,7 +196,7 @@ function Charts(props) {
                             }, {
                             target: "labels",
                             mutation: (props) => {
-                                return props.text === props.datum.y ? null : { text: props.datum.y, style: {fontSize: 24}};
+                                return props.text === props.datum.x ? null : { text: props.datum.x, style: {fontSize: 18}};
                             }
                             }
                         ];

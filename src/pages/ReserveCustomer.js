@@ -1,10 +1,13 @@
 // All imports must be done before the main function
     // Importing this page's CSS file
 import '../assets/styles/Reserve.css';
+import 'antd/dist/antd.css';
 
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
+import { TimePicker } from 'antd';
+import moment from 'moment';
 
 // Importing the components used in this page
 import Loading from '../components/Loading';
@@ -16,6 +19,7 @@ const totalCourts = 16;
 const maxCourtReservations = 14;
 const daysArray = [0,1,2,3,4,5,6];
 const ballMachineCourts = [1,4,5,11,12,13,16];
+const format = 'H:mm a';
 
 var resArray = [];
 var resBuffer = [];
@@ -23,7 +27,7 @@ var gotReservationData = false;
 var editing = false;
 
 // Main function for the specific 'page'
-function ReserveAdmin(props) {
+function ReserveCustomer(props) {
     // 'Reactive' variables that will cause the page to update when their values change
         // 'useState' at the end of each describes their initial value
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
@@ -46,7 +50,12 @@ function ReserveAdmin(props) {
         ballmachine: false
     });
     const [selectedReseervationToDelete, setSelectedReservationToDelete] = useState(null);
-    
+    const [customerReservations, setCustomerReservations] = useState([]);
+    const [timeValue, setTimeValue] = useState("7:30am");
+
+    const timePickerRef = useRef(null);
+
+
     // Regular varaible declaration
     var isMobile = props.isMobile;
 
@@ -392,8 +401,13 @@ function ReserveAdmin(props) {
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
+        if(!loggedIn) {
+            window.location.href = '/login';
+        } 
+
         if(!gotReservationData) {
             getReservationData();
+            getCustomerReservationData();
         }
 
         getAllClosures();
@@ -415,6 +429,12 @@ function ReserveAdmin(props) {
         if(!gotReservationData) {
             convertReservations();
         }
+    }
+
+    async function getCustomerReservationData() {
+        let response = await fetch("http://3.218.225.62:3040/reservation/get-user/"+currentUser.User_id);
+        response = await response.json();
+        setCustomerReservations(response.reservations);
     }
 
     async function getAllUsers() {
@@ -490,6 +510,7 @@ function ReserveAdmin(props) {
         .then(() => {
             gotReservationData = false;
             getReservationData();
+            getCustomerReservationData();
         })
     }
 
@@ -506,6 +527,7 @@ function ReserveAdmin(props) {
         .then(() => {
             gotReservationData = false;
             getReservationData();
+            getCustomerReservationData();
         })
     }
 
@@ -523,6 +545,7 @@ function ReserveAdmin(props) {
             gotReservationData = false;
             getReservationData();
             setSelectedReservationToDelete(null);
+            getCustomerReservationData();
         })
     }
 
@@ -538,6 +561,18 @@ function ReserveAdmin(props) {
         var dateRaw = new Date(dateParts[2],dateParts[0]-1,dateParts[1]);
 
         return dateRaw;
+    }
+
+    function formatDate(date) {
+        return (
+            date.getMonth()+1+"/"+date.getDate()+"/"+date.getFullYear()
+        )
+    }
+
+    function getFormattedDate(dayOffset) {
+        var newDate = new Date();
+        newDate.setDate(newDate.getDate()+dayOffset);
+        return formatDate(newDate);
     }
 
     // Rendering functions
@@ -842,6 +877,91 @@ function ReserveAdmin(props) {
         return (returnData);
     }
 
+    function renderCustomerReservationDays() {
+        var returnData = [];
+
+        for(var i = 0; i < 7; i++) {
+            const key = i;
+            returnData.push(
+                <div key={key} className={`lite-day-label ${columnDays[i].closed ? "closed" : ""}`}
+                    onClick={() => {
+                        if(loggedIn) {
+                            let amOrPM = dateToday.getHours() >= 12 ? "pm" : "am";
+                            editing = false;
+                            handleToggleModal();
+                            setSelectedCustomerID(currentUser.User_id);
+
+                            setSelectedDate(getFormattedDate(key));
+                            setSelectedTime("7:30am");
+                        }
+                        else {
+                            window.location.pathname = "/login"
+                        }
+                    }}
+                >
+                    {getFormattedDate(key)} {columnDays[i].closed ? " - CLOSED" : ""}
+                    {!columnDays[i].closed && <div className="lite-day-button">Reserve</div>}
+                </div>
+            );
+        }
+
+        return returnData;
+    }
+
+    function renderCustomerReservations() {
+        var returnData = [];
+
+        customerReservations.map((reservation, index) => {
+            returnData.push(
+                <div key={index} className="lite-day-label" style={{height: "5vmin", fontSize: "1.5vmin"}}>
+                    {reservation.Reservation_date}, Starting at {reservation.Reservation_time} - {reservation.Reservation_duration} hour(s)
+                    <span className="customer-reservation-button" style={{marginLeft: "auto"}}
+                        onClick={() => {
+                            if(loggedIn) {
+                                editing = true;
+                                setSelectedID(reservation.Reservation_id);
+                                setSelectedCustomerID(currentUser.User_id);
+                                setSelectedDate(reservation.Reservation_date);
+                                setSelectedTime(reservation.Reservation_time);
+                                setTimeValue(reservation.Reservation_time);
+                                setNumCourts(reservation.Court_id.length);
+                                setCurrentArrayCourt(reservation.Court_id);
+                                setSelectedType(reservation.Reservation_type);
+                                setSelectedEquipment({
+                                    racket: reservation.Equipment_id.includes(0),
+                                    hopper: reservation.Equipment_id.includes(1),
+                                    ballmachine: reservation.Equipment_id.includes(2),
+                                });
+                                setNote(reservation.Reservation_note);
+                                setSelectedDuration(parseFloat(reservation.Reservation_duration));
+                                handleToggleModal();
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
+                        Edit
+                    </span>
+                    <span className="customer-reservation-button"
+                        onClick={() => {
+                            if(loggedIn) {
+                                handleButtonDelete(reservation.Reservation_id);
+                            }
+                            else {
+                                window.location.pathname = "/login"
+                            }
+                        }}
+                    >
+                        Delete
+                    </span>
+                </div>
+            );
+        });
+
+        return returnData;
+    }
+
     // Handling functions
     function handleCourtNext() {
         if(currentCourt < 16) {
@@ -995,6 +1115,7 @@ function ReserveAdmin(props) {
         }
 
         if(courtArray.length == 0 || courtArray.length != numCourts || hasDuplicates(courtArray)) {
+            console.log(courtArray);
             errorBox.textContent = 'Invalid Reservation: There are no available reservations for the requested date and time!';
         }
         else {
@@ -1077,10 +1198,17 @@ function ReserveAdmin(props) {
             }
         }
 
-        if(endTimeHour > 12) {
+        if(endTimeHour > 12 && endTimeAmOrPM == "am") {
             endTimeHour -= 12;
             endTimeAmOrPM = 'pm'
         }
+        
+        if(endTimeHour > 12 && endTimeAmOrPM == "pm") {
+            endTimeHour -= 12;
+            endTimeAmOrPM = 'am'
+        }
+
+        console.log("Start: "+startTimeRaw+", End: "+endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
 
         reservations.forEach((res) => {
             var resStartTimeRaw = (res.timeStart).substring(0,(res.timeStart).length - 2);
@@ -1103,9 +1231,14 @@ function ReserveAdmin(props) {
                 }
             }
 
-            if(resEndTimeHour > 12) {
+            if(resEndTimeHour > 12 && resEndTimeAmOrPM == "am") {
                 resEndTimeHour -= 12;
                 resEndTimeAmOrPM = 'pm'
+            }
+
+            if(resEndTimeHour > 12 && resEndTimeAmOrPM == "pm") {
+                resEndTimeHour -= 12;
+                resEndTimeAmOrPM = 'am'
             }
 
             if(res.date == reservationData.date) {
@@ -1148,6 +1281,10 @@ function ReserveAdmin(props) {
                     valid = false;
                 }
             }
+
+            if(endTimeHour < 7 && endTimeAmOrPM == "am") {
+                valid = false;
+            }
         }
         else {
             if(endTimeHour >= 6 && endTimeAmOrPM == "pm") {
@@ -1157,6 +1294,10 @@ function ReserveAdmin(props) {
                 else {
                     valid = false;
                 }
+            }
+
+            if(endTimeHour < 7 && endTimeAmOrPM == "am") {
+                valid = false;
             }
         }
 
@@ -1186,10 +1327,18 @@ function ReserveAdmin(props) {
             }
         }
 
-        if(endTimeHour > 12) {
+        if(endTimeHour > 12 && endTimeAmOrPM == "am") {
             endTimeHour -= 12;
             endTimeAmOrPM = 'pm'
         }
+        
+        if(endTimeHour > 12 && endTimeAmOrPM == "pm") {
+            endTimeHour -= 12;
+            endTimeAmOrPM = 'am'
+        }
+
+
+        console.log("Start: "+startTimeRaw+", End: "+endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
 
         reservations.forEach((res) => {
             var resStartTimeRaw = (res.timeStart).substring(0,(res.timeStart).length - 2);
@@ -1212,9 +1361,14 @@ function ReserveAdmin(props) {
                 }
             }
 
-            if(resEndTimeHour > 12) {
+            if(resEndTimeHour > 12 && resEndTimeAmOrPM == "am") {
                 resEndTimeHour -= 12;
                 resEndTimeAmOrPM = 'pm'
+            }
+
+            if(resEndTimeHour > 12 && resEndTimeAmOrPM == "pm") {
+                resEndTimeHour -= 12;
+                resEndTimeAmOrPM = 'am'
             }
 
             if(res.id != reservationData.id) {
@@ -1243,12 +1397,16 @@ function ReserveAdmin(props) {
                         var requestEnd = requestStart + reservationData.duration;
     
                         if(existingStart < requestEnd && existingEnd > requestStart) {
-                            valid = false;
+                            valid = false
                         }
                     }
                 }
             }
         });
+
+        if (!valid) {
+            console.log("invalid")
+        }
 
         if(isWeekday(reservationData.date)) {
             if(endTimeHour >= 9 && endTimeAmOrPM == "pm") {
@@ -1256,8 +1414,12 @@ function ReserveAdmin(props) {
                     valid = true;
                 }
                 else {
-                    valid = false;
+                    valid = false
                 }
+            }
+            
+            if(endTimeHour < 7 && endTimeAmOrPM == "am") {
+                valid = false;
             }
         }
         else {
@@ -1268,6 +1430,10 @@ function ReserveAdmin(props) {
                 else {
                     valid = false;
                 }
+            }
+
+            if(endTimeHour < 7 && endTimeAmOrPM == "am") {
+                valid = false;
             }
         }
 
@@ -1319,60 +1485,29 @@ function ReserveAdmin(props) {
             hopper: false,
             ballmachine: false
         });
+        setTimeValue('7:30am');
     }
 
     return (
         // Empty root element. The return can have only one root element
         <>
-            <div className="container-reserve">
-                {/* Variables can be inserted inside of brackets as shown below */}
-                <div className="reservation-content-title">
-                    <div className="court-back-button"
-                        onClick={() => {
-                            handleCourtBack();
-                        }}
-                    ></div>
-                    Court {currentCourt}
-                    <div className="court-next-button"
-                        onClick={() => {
-                            handleCourtNext();
-                        }}
-                    ></div>
+            <div className="container-reserve-lite">
+                <div className="container-option-lite">
+                    <span style={{marginBottom: "2vmin", marginTop: "2vmin", color: "rgb(0,0,0,0.5)"}}>Create a New Reservation</span>
+                    {renderCustomerReservationDays()}
                 </div>
-                <div className="reserve-form-container">
-                    <div className="table-labels-container">
-                        {daysArray.map((day, index) => {
-                            return (
-                                <div className="table-label" key={index} style={columnDays[index].closed ? {backgroundColor: "#D9D9D9", color: "rgba(0,0,0,0.5)"} : {}}>
-                                    {day == 0 ? "Today" : convertDate(dateToday.getDate()+day)}
-                                    <div className="table-label-date-close"
-                                        onClick={() => {
-                                            handleDateCloseOpen(index);
-                                        }}
-                                    >
-                                        <div className="table-label-date-close-btn" style={columnDays[index].closed ? {backgroundColor: "#8AA2FF"} : {}}>
-                                            {columnDays[index].closed == false ? "Close" : "Open"}
-                                        </div>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                <div className="container-option-lite" style={{marginTop: "2vmin"}}>
+                    Edit an Existing Reservation
+                    <div className="lite-edit-label">
+                        {loggedIn ? "Select your reservation" : "Please login to edit a reservation"}
                     </div>
-                    <div className="table-content-container">
-                        <div className="table-hours-container">
-                            {renderTimeColumn()}
-                        </div>
-
-                        {renderColumns()}
-                    </div>
-                    <div className="reservation-legend">
-                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(165, 216, 161)'}}></div>Open</span>
-                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(217, 217, 217)'}}></div>Closed</span>
-                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(179, 194, 255)'}}></div>Reserved</span>
-                        {/* <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(138, 162, 255)'}}></div>My Reservation</span> */}
-                        <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 219, 128)'}}></div>Reserved - Event</span>
-                        {/* <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 200, 60)'}}></div>My Event Reservation</span> */}
-                    </div>
+                    <br/>
+                    {renderCustomerReservations()}
+                </div>
+                <div className="lite-warning-label">
+                    ⚠️ If you are trying to schedule a tournament, or any event where you'll need 
+                    multiple courts simultaneously, you'll need to contact us directly so that
+                    a manager can properly schedule your event.
                 </div>
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
             </div>
@@ -1390,60 +1525,55 @@ function ReserveAdmin(props) {
                     <div className="reserve-modal-window-body-container">
                         <div className="reserve-modal-window-body-row">
                             <div className="reserve-modal-window-body-text">Date: {selectedDate}</div>
-                            <div className="reserve-modal-window-body-text">Time: {selectedTime}</div>
+                            <div className="reserve-modal-window-body-text">Time: 
+                                <TimePicker 
+                                    ref={timePickerRef}
+                                    classList="time-picker"
+                                    use12Hours
+                                    defaultValue={moment('7:30 AM', "h:mm A")} 
+                                    format="h:mm A"
+                                    allowClear={false}
+                                    minuteStep={15}
+                                    popupStyle={{
+                                        zIndex: '9999',
+                                    }}
+                                    value={moment(timeValue, "h:mm A")} 
+                                    size="large"
+                                    // bordered={false}
+                                    onChange={(time, timeString) => { 
+                                        let formatted_time = timeString.replace(' ', '').toLowerCase();
+                                        setSelectedTime(formatted_time);
+                                        setTimeValue(formatted_time);
+
+                                    }}
+                                    style={{
+                                        marginLeft: '0.5vmin',
+                                        borderRadius: '0.5vmin',
+                                        boxShadow: '0 2px 0.2vmin 0 rgb(0,0,0,0.1)',
+                                        border: 'none',
+                                        fontSize: '1.25vmin',
+                                        width: '12vmin'
+                                    }}
+                                />
+                            </div>
                         </div>
-                        <div className="reserve-modal-window-body-row">
-                            {editing && <div className="reserve-modal-window-body-text">Court List: {currentArrayCourt.toString()}</div>}
-                            <div className="reserve-modal-window-body-text">Courts: 
-                                <div className="reserve-modal-window-button-duration-sub"
-                                    onClick={() => {
-                                        handleCourtsSubtract();
-                                    }}
-                                ></div>
-                                {numCourts}
-                                <div className="reserve-modal-window-button-duration-add"
-                                    onClick={() => {
-                                        handleCourtsAdd();
-                                    }}
-                                ></div>
-                            </div>
-                            {!editing && <div className="reserve-modal-window-body-text">
-                                Customer:
-                                <select className="reserve-customer-select" value={selectedCustomerID}
-                                    onChange={(e) => {
-                                        setSelectedCustomerID(e.target.value);
-                                    }}
-                                >
-                                    {userArray.map((user, idx) => {
-                                        return (
-                                            <option key={idx} value={user.User_id}>{user.User_email}</option>
-                                        )
-                                    })}
-                                </select>
-                            </div>}
+                        
+                        <div className="reserve-modal-window-body-text">Courts: 
+                            <div className="reserve-modal-window-button-duration-sub"
+                                onClick={() => {
+                                    handleCourtsSubtract();
+                                }}
+                            ></div>
+                            {numCourts}
+                            <div className="reserve-modal-window-button-duration-add"
+                                onClick={() => {
+                                    handleCourtsAdd();
+                                }}
+                            ></div>
                         </div>
-                        {editing && <div className="reserve-modal-window-body-row">
-                            <div className="reserve-modal-window-body-text" style={{opacity: "50%"}}>
-                                Reservation ID: {selectedID}
-                            </div>
-                            <div className="reserve-modal-window-body-text">
-                                Customer: 
-                                <select className="reserve-customer-select" value={selectedCustomerID}
-                                    onChange={(e) => {
-                                        setSelectedCustomerID(e.target.value);
-                                    }}
-                                >
-                                    {userArray.map((user, idx) => {
-                                        return (
-                                            <option key={idx} value={user.User_id}>{user.User_email}</option>
-                                        )
-                                    })}
-                                </select>
-                            </div>
-                        </div>}
 
                         <div className="reserve-modal-window-body-linebreak" />
-                        
+
                         <div className="reserve-modal-window-body-text">Duration: 
                             <div className="reserve-modal-window-button-duration-sub"
                                 onClick={() => {
@@ -1517,7 +1647,10 @@ function ReserveAdmin(props) {
                         <div className="reserve-modal-window-body-linebreak" />
 
                         <div className="reserve-modal-window-body-text">Note: </div>
-                        <div className="reserve-modal-window-body-text" style={{width: "100%"}}>
+                        <div className="reserve-modal-window-body-text" 
+                            style={{
+                                width: "100%"
+                            }}>
                             <textarea 
                                 className="reserve-modal-window-textarea"
                                 placeholder="Enter any special requests or additional information here"
@@ -1527,7 +1660,9 @@ function ReserveAdmin(props) {
                                 }}
                             ></textarea>
                         </div>
-                        <div className="reserve-modal-window-button-submit"
+                        
+                        <div 
+                            className="reserve-modal-window-button-submit"
                             style={{
                                 height: "4vmin",
                                 width: "100%",
@@ -1545,7 +1680,7 @@ function ReserveAdmin(props) {
                         </div>
                         <div className="reserve-modal-window-error"></div>
                     </div>
-                 </div>      
+                 </div>  
             </div>
             <div className="reserve-modal-delete">
                 <div className="reserve-modal-delete-window">
@@ -1572,10 +1707,10 @@ function ReserveAdmin(props) {
                     </div>
                 </div>
             </div>
-            <Loading timeRange={[1000,2000]}/>
+            <Loading timeRange={[400, 800]} />
         </>
     )
 }
 
 // Function must be 'exposed' to rest of the application at the end of the file as shown below.
-export default ReserveAdmin;
+export default ReserveCustomer;
