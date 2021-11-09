@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Added more reports, limited number of customer courts."
+git commit -m "Added alert system and 'number of people' attribute to reservations. Hid IP address on verification."
 
 // Push to remote repo
 git push -u origin master

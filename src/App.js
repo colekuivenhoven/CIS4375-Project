@@ -57,7 +57,7 @@ function App() {
             <Link className="new-route-link-menu" to="/about">About</Link>
             <Link className="new-route-link-menu" to="/contact">Contact</Link>
             {loggedIn && <Link className="new-route-link-menu" to="/account">Account</Link>}
-            <Link className="new-route-link-menu" to="/reserve">Reserve</Link>
+            <Link className="new-route-link-menu" to={loggedIn ? "/reserve" : "/login"}>Reserve</Link>
             {(currentUser && currentUser.User_type == 2) && <Link className="new-route-link-menu" to="/admin">Admin</Link>}
             {loggedIn && 
               <div className="new-route-link-menu-2"
