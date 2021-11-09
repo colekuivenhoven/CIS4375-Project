@@ -65,7 +65,7 @@ function Login(props) {
                         User_email: responseObj.User_email,
                         User_phone: responseObj.User_phone,
                         User_firstname: responseObj.User_firstname,
-                        User_lastname: responseObj.User_firstname,
+                        User_lastname: responseObj.User_lastname,
                         User_getAnnouncements: responseObj.User_getAnnouncements,
                         User_status: responseObj.User_status,
                     }

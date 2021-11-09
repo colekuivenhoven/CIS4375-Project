@@ -22,10 +22,10 @@ function Reports() {
 
     const reports = [
         {
-            title: `All Customers`,
+            title: `All Users`,
             description: `This report shows all customers that are registered.`,
-            category: `Customer`,
-            query: `SELECT * FROM CUSTOMER`,
+            category: `User`,
+            query: `SELECT User_id, User_type, User_status, User_email, User_phone, User_firstname, User_lastname, User_getAnnouncements FROM USER`,
         },
         {
             title: `All Reservations`,
@@ -34,16 +34,100 @@ function Reports() {
             query: `SELECT * FROM RESERVATION`,
         },
         {
-            title: `Reservations by Duration`,
-            description: `This report shows all reservations ordered by duration of the reservation.`,
+            title: `Planned Event Reservations`,
+            description: `This report shows all future special event reservations that have been made.`,
             category: `Reservation`,
-            query: `SELECT * FROM RESERVATION`,
+            query: `
+                SELECT USER.User_email, date_format(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y'), '%m/%e/%Y') AS Date, RESERVATION.Reservation_time, RESERVATION.Reservation_duration, RESERVATION.Reservation_note
+                FROM RESERVATION
+                JOIN USER ON USER.User_id = RESERVATION.Customer_id
+                WHERE Reservation_type = 1
+                ORDER BY UNIX_TIMESTAMP(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y')) ASC
+            `,
         },
         {
-            title: `Users by Number of Reservations`,
-            description: `This report shows all users ordered by the number of reservations they've made`,
+            title: `Most Frequent Users`,
+            description: `This report orders all users by the number of reservations they've made.`,
+            category: `Reservation`,
+            query: `
+                SELECT USER.User_email, COUNT(RESERVATION.Customer_id) AS Total_Reservations
+                FROM USER
+                JOIN RESERVATION ON USER.User_id = RESERVATION.Customer_id
+                GROUP BY USER.User_email
+                ORDER BY total_reservations DESC
+            `,
+        },
+        {
+            title: `All Active Employees`,
+            description: `All active employees in the database system`,
             category: `User`,
-            query: `SELECT * FROM RESERVATION`,
+            query: `
+                SELECT User_id, User_email, User_firstname, User_lastname, User_type, User_status
+                FROM USER
+                WHERE User_type = 1 
+                OR User_type = 2
+                AND User_status = 1
+                ORDER BY User_id DESC
+            `,
+        },
+        {
+            title: `All Active Customers`,
+            description: `All active customers in the database system`,
+            category: `User`,
+            query: `
+                SELECT User_id, User_email, User_firstname, User_lastname, User_type, User_status
+                FROM USER
+                WHERE User_type = 0 
+                AND User_status = 1
+                ORDER BY User_id DESC
+            `,
+        },
+        {
+            title: `Upcoming Business Closures`,
+            description: `Any business closures that have been planned over the next year`,
+            category: `Closure`,
+            query: `
+                SELECT CLOSURE.Closure_id, date_format(STR_TO_DATE(CLOSURE.Closure_date, '%m/%e/%Y'), '%m/%d/%Y') AS Date
+                FROM CLOSURE
+                WHERE CLOSURE.Closure_date <= date_format(curdate(), '%m/%e/%Y')
+                ORDER BY UNIX_TIMESTAMP(STR_TO_DATE(CLOSURE.Closure_date, '%m/%e/%Y')) ASC
+            `,
+        },
+        {
+            title: `Today's Reservations`,
+            description: `This report will show the number of customer reservations at the end of the day`,
+            category: `Reservation`,
+            query: `
+                SELECT date_format(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y'), '%m/%e/%Y') AS Date, COUNT(RESERVATION.Customer_id) AS Todays_Reservations
+                FROM RESERVATION
+                WHERE RESERVATION.Reservation_date = date_format(curdate(), '%m/%e/%Y')
+            `,
+        },
+        {
+            title: `Anticipated Reservations`,
+            description: `This report will show the number of future customer reservations that have been made`,
+            category: `Reservation`,
+            query: `
+                SELECT date_format(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y'), '%m/%d/%Y') AS Date, COUNT(RESERVATION.Customer_id) AS Todays_Reservations
+                FROM RESERVATION
+                WHERE RESERVATION.Reservation_date <= date_format(curdate(), '%m/%e/%Y')
+                GROUP BY Date
+                ORDER BY Date ASC
+            `,
+        },
+        {
+            title: `Number of Courts Used Today`,
+            description: `This report will show the number of courts that were used for the day.`,
+            category: `Reservation`,
+            query: `
+                SELECT 
+                    date_format(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y'), '%m/%d/%Y') AS Date, 
+                    SUM(JSON_LENGTH(RESERVATION.Court_id)) AS Total_Courts_Used
+                    
+                FROM RESERVATION
+                WHERE RESERVATION.Reservation_date = date_format(curdate(), '%m/%e/%Y')
+                ORDER BY UNIX_TIMESTAMP(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y')) ASC
+            `,
         },
     ]
 
@@ -175,7 +259,15 @@ function Reports() {
                         <div className="modal-report-header">
                             {Object.keys(reportModalItems[0]).map((key, index) => {
                                 return (
-                                    <div className="modal-report-text" key={index}>
+                                    <div 
+                                        className="modal-report-text" 
+                                        key={index}
+                                        style={{
+                                            minWidth: `${100 / Object.keys(reportModalItems[0]).length}%`,
+                                            maxWidth: `${100 / Object.keys(reportModalItems[0]).length}%`,
+                                        }}
+                                    
+                                    >
                                         {key.includes(reportModalCategory) ? key.substring(key.indexOf("_") + 1) : key}
                                     </div>
                                 )
@@ -186,7 +278,14 @@ function Reports() {
                                 <div className="modal-report-item" key={index}>
                                     {Object.values(item).map((value, vIndex) => {
                                         return (
-                                            <div className="modal-report-text" key={vIndex}>
+                                            <div 
+                                                className="modal-report-text" 
+                                                key={vIndex}
+                                                style={{
+                                                    minWidth: `${100 / Object.keys(reportModalItems[0]).length}%`,
+                                                    maxWidth: `${100 / Object.keys(reportModalItems[0]).length}%`,
+                                                }}
+                                            >
                                                 
                                                 {JSON.stringify(value)}
                                             </div>

@@ -2,10 +2,15 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Added Equipment to admin reservation app."
+git commit -m "Added more reports, limited number of customer courts."
 
 // Push to remote repo
 git push -u origin master
 
 // Pull changes
 git pull
+
+// Pull a large amount of changes that will require overwriting
+git fetch origin master
+git reset --hard FETCH_HEAD
+git clean -df

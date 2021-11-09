@@ -5,6 +5,13 @@ import '../assets/styles/Admin2.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 import { useSpring, animated, useTrail, config } from 'react-spring';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams
+  } from "react-router-dom";
 import Charts from '../components/Charts';
 
 // Importing the components used in this page
@@ -246,7 +253,7 @@ function Admin(props) {
                         <div className="container-admin2-content-item-body-user">
                             {sortObjectList(userListFinal, userListSortType, userListSort).map((user,index) => {
                                 return (
-                                    <animated.div key={index} className="container-user-item"
+                                    <Link key={index} className="container-user-item" to="/test"
                                         // style={{
                                         //     transform: userItemStyle.x
                                         //         .to({
@@ -270,7 +277,7 @@ function Admin(props) {
                                         }}
                                     >
                                         {user.User_id} - {user.User_email}
-                                    </animated.div>
+                                    </Link>
                                 )
                             })}
                         </div>
@@ -287,7 +294,7 @@ function Admin(props) {
                                 ></div>
                                 <div>{selectedFilename}</div>
                             </> 
-                            : "Server Logs"}
+                            : "Feedback"}
                         </span>
                         <div className="container-admin2-content-item-body-log" id="log-scroller">
                             {loglistFinal.map((log, index) => {
