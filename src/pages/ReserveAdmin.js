@@ -496,13 +496,13 @@ function ReserveAdmin(props) {
     async function addClosure(date) {
         let response = await fetch("http://3.218.225.62:3040/closure/add/"+date);
         response = await response.json();
-        window.location.reload();
+        fastRefresh()
     }
 
     async function removeClosure(date) {
         let response = await fetch("http://3.218.225.62:3040/closure/remove/"+date);
         response = await response.json();
-        window.location.reload();
+        fastRefresh()
     }
 
     function convertReservations() {

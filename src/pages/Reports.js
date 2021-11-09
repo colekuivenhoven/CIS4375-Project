@@ -34,13 +34,15 @@ function Reports() {
             query: `SELECT * FROM RESERVATION`,
         },
         {
-            title: `All Event Reservations`,
-            description: `This report shows all active special event reservations that have been made.`,
+            title: `Planned Event Reservations`,
+            description: `This report shows all future special event reservations that have been made.`,
             category: `Reservation`,
             query: `
-                SELECT * FROM RESERVATION
+                SELECT USER.User_email, date_format(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y'), '%m/%e/%Y') AS Date, RESERVATION.Reservation_time, RESERVATION.Reservation_duration, RESERVATION.Reservation_note
+                FROM RESERVATION
+                JOIN USER ON USER.User_id = RESERVATION.Customer_id
                 WHERE Reservation_type = 1
-                ORDER BY Reservation_id DESC
+                ORDER BY UNIX_TIMESTAMP(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y')) ASC
             `,
         },
         {
@@ -48,7 +50,7 @@ function Reports() {
             description: `This report orders all users by the number of reservations they've made.`,
             category: `Reservation`,
             query: `
-                SELECT USER.User_email, COUNT(RESERVATION.Customer_id) AS total_reservations
+                SELECT USER.User_email, COUNT(RESERVATION.Customer_id) AS Total_Reservations
                 FROM USER
                 JOIN RESERVATION ON USER.User_id = RESERVATION.Customer_id
                 GROUP BY USER.User_email
@@ -81,11 +83,50 @@ function Reports() {
             `,
         },
         {
-            title: `All Closures`,
-            description: `All active closures that have been made`,
+            title: `Upcoming Business Closures`,
+            description: `Any business closures that have been planned over the next year`,
             category: `Closure`,
             query: `
-                SELECT * FROM CLOSURE
+                SELECT CLOSURE.Closure_id, date_format(STR_TO_DATE(CLOSURE.Closure_date, '%m/%e/%Y'), '%m/%d/%Y') AS Date
+                FROM CLOSURE
+                WHERE CLOSURE.Closure_date <= date_format(curdate(), '%m/%e/%Y')
+                ORDER BY UNIX_TIMESTAMP(STR_TO_DATE(CLOSURE.Closure_date, '%m/%e/%Y')) ASC
+            `,
+        },
+        {
+            title: `Today's Reservations`,
+            description: `This report will show the number of customer reservations at the end of the day`,
+            category: `Reservation`,
+            query: `
+                SELECT date_format(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y'), '%m/%e/%Y') AS Date, COUNT(RESERVATION.Customer_id) AS Todays_Reservations
+                FROM RESERVATION
+                WHERE RESERVATION.Reservation_date = date_format(curdate(), '%m/%e/%Y')
+            `,
+        },
+        {
+            title: `Anticipated Reservations`,
+            description: `This report will show the number of future customer reservations that have been made`,
+            category: `Reservation`,
+            query: `
+                SELECT date_format(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y'), '%m/%d/%Y') AS Date, COUNT(RESERVATION.Customer_id) AS Todays_Reservations
+                FROM RESERVATION
+                WHERE RESERVATION.Reservation_date <= date_format(curdate(), '%m/%e/%Y')
+                GROUP BY Date
+                ORDER BY Date ASC
+            `,
+        },
+        {
+            title: `Number of Courts Used Today`,
+            description: `This report will show the number of courts that were used for the day.`,
+            category: `Reservation`,
+            query: `
+                SELECT 
+                    date_format(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y'), '%m/%d/%Y') AS Date, 
+                    SUM(JSON_LENGTH(RESERVATION.Court_id)) AS Total_Courts_Used
+                    
+                FROM RESERVATION
+                WHERE RESERVATION.Reservation_date = date_format(curdate(), '%m/%e/%Y')
+                ORDER BY UNIX_TIMESTAMP(STR_TO_DATE(RESERVATION.Reservation_date, '%m/%e/%Y')) ASC
             `,
         },
     ]

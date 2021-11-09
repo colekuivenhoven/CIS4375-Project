@@ -979,7 +979,7 @@ function ReserveCustomer(props) {
     }
 
     function handleCourtsAdd() {
-        if(numCourts < maxCourtReservations) {
+        if(numCourts < 2) {
             setNumCourts(numCourts + 1);
         }
     }
