@@ -21,6 +21,10 @@ const daysArray = [0,1,2,3,4,5,6];
 const ballMachineCourts = [1,4,5,11,12,13,16];
 const format = 'H:mm a';
 
+var timeOpen = moment('7:30am', 'H:mm a');
+var timeClosedWeek = moment('9:00pm', 'H:mm a');
+var timeClosedWeekend = moment('6:00pm', 'H:mm a');
+
 var resArray = [];
 var resBuffer = [];
 var gotReservationData = false;
@@ -54,7 +58,6 @@ function ReserveCustomer(props) {
     const [timeValue, setTimeValue] = useState("7:30am");
 
     const timePickerRef = useRef(null);
-
 
     // Regular varaible declaration
     var isMobile = props.isMobile;
@@ -1066,14 +1069,6 @@ function ReserveCustomer(props) {
             resetSelectedInfo();
             handleToggleModal();
         }
-        // if(checkValidReservation(reservationData)) {
-        //     addReservation(reservationData);
-        //     resetSelectedInfo();
-        //     handleToggleModal();
-        // }
-        // else {
-        //     document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
-        // }
     }
 
     function handleButtonEdit(rid) {
@@ -1136,27 +1131,6 @@ function ReserveCustomer(props) {
             resetSelectedInfo();
             handleToggleModal();
         }
-
-        // var reservationData = {
-        //     id: rid,
-        //     type_id: selectedType,
-        //     status_id: 0,
-        //     date: selectedDate,
-        //     timeStart: selectedTime,
-        //     duration: selectedDuration,
-        //     note: note,
-        //     court_id: numCourts.length,
-        //     customer_id: currentUser.User_id
-        // }
-
-        // if(checkValidReservationEdit(reservationData)) {
-        //     editReservation(reservationData);
-        //     resetSelectedInfo();
-        //     handleToggleModal();
-        // }
-        // else {
-        //     document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
-        // }
     }
 
     function handleButtonDelete(rid) {
@@ -1208,7 +1182,29 @@ function ReserveCustomer(props) {
             endTimeAmOrPM = 'am'
         }
 
-        console.log("Start: "+startTimeRaw+", End: "+endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
+        if(isNaN(endTimeMinutes)) {
+            endTimeMinutes = '00';
+        }
+
+        // console.log("Start: "+startTimeRaw+startTimeAmOrPM+", End: "+endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
+
+        var timeStart_moment = moment(startTimeRaw+startTimeAmOrPM, 'H:mm a');
+        var timeEnd_moment = moment(endTimeHour+":"+endTimeMinutes+endTimeAmOrPM, 'H:mm a');
+
+        if(isWeekday(reservationData.date)) {
+            if(!timeStart_moment.isBetween(timeOpen,timeClosedWeek) || !timeEnd_moment.isBetween(timeOpen,timeClosedWeek)) {
+                if(!timeStart_moment.isSame(timeOpen) && !timeEnd_moment.isSame(timeClosedWeek)) {
+                    return false;
+                }
+            }
+        }
+        else {
+            if(!timeStart_moment.isBetween(timeOpen,timeClosedWeekend) || !timeEnd_moment.isBetween(timeOpen,timeClosedWeekend)) {
+                if(!timeStart_moment.isSame(timeOpen) && !timeEnd_moment.isSame(timeClosedWeekend)) {
+                    return false;
+                }
+            }
+        }
 
         reservations.forEach((res) => {
             var resStartTimeRaw = (res.timeStart).substring(0,(res.timeStart).length - 2);
@@ -1337,8 +1333,29 @@ function ReserveCustomer(props) {
             endTimeAmOrPM = 'am'
         }
 
+        if(isNaN(endTimeMinutes)) {
+            endTimeMinutes = '00';
+        }
 
-        console.log("Start: "+startTimeRaw+", End: "+endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
+        // console.log("Start: "+startTimeRaw+startTimeAmOrPM+", End: "+endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
+
+        var timeStart_moment = moment(startTimeRaw+startTimeAmOrPM, 'H:mm a');
+        var timeEnd_moment = moment(endTimeHour+":"+endTimeMinutes+endTimeAmOrPM, 'H:mm a');
+
+        if(isWeekday(reservationData.date)) {
+            if(!timeStart_moment.isBetween(timeOpen,timeClosedWeek) || !timeEnd_moment.isBetween(timeOpen,timeClosedWeek)) {
+                if(!timeStart_moment.isSame(timeOpen) && !timeEnd_moment.isSame(timeClosedWeek)) {
+                    return false;
+                }
+            }
+        }
+        else {
+            if(!timeStart_moment.isBetween(timeOpen,timeClosedWeekend) || !timeEnd_moment.isBetween(timeOpen,timeClosedWeekend)) {
+                if(!timeStart_moment.isSame(timeOpen) && !timeEnd_moment.isSame(timeClosedWeekend)) {
+                    return false;
+                }
+            }
+        }
 
         reservations.forEach((res) => {
             var resStartTimeRaw = (res.timeStart).substring(0,(res.timeStart).length - 2);
@@ -1558,18 +1575,21 @@ function ReserveCustomer(props) {
                             </div>
                         </div>
                         
-                        <div className="reserve-modal-window-body-text">Courts: 
-                            <div className="reserve-modal-window-button-duration-sub"
-                                onClick={() => {
-                                    handleCourtsSubtract();
-                                }}
-                            ></div>
-                            {numCourts}
-                            <div className="reserve-modal-window-button-duration-add"
-                                onClick={() => {
-                                    handleCourtsAdd();
-                                }}
-                            ></div>
+                        <div className="reserve-modal-window-body-row">
+                            {editing && <div className="reserve-modal-window-body-text">Court List: {currentArrayCourt.toString()}</div>}
+                            <div className="reserve-modal-window-body-text">Courts: 
+                                <div className="reserve-modal-window-button-duration-sub"
+                                    onClick={() => {
+                                        handleCourtsSubtract();
+                                    }}
+                                ></div>
+                                {numCourts}
+                                <div className="reserve-modal-window-button-duration-add"
+                                    onClick={() => {
+                                        handleCourtsAdd();
+                                    }}
+                                ></div>
+                            </div>
                         </div>
 
                         <div className="reserve-modal-window-body-linebreak" />

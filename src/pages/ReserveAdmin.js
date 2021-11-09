@@ -5,16 +5,31 @@ import '../assets/styles/Reserve.css';
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
 import ReactDOM from 'react-dom';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useHistory
+  } from "react-router-dom";
 
 // Importing the components used in this page
 import Loading from '../components/Loading';
+import bg_redo from '../assets/images/svgs/icons/solid/redo.svg';
+import bg_back from '../assets/images/svgs/icons/solid/angle-double-left.svg';
 
-// Variables declared that will persist even if page is changed
-var localNumberRaw = 0;
-const dateToday = new Date();
+var dateToday;
+
+if(!sessionStorage.getItem("adminGlobalDate")) {
+    sessionStorage.setItem("adminGlobalDate", 0);
+}
+var newDate = new Date();
+newDate.setDate(newDate.getDate()+(7 * sessionStorage.getItem("adminGlobalDate")));
+
 const totalCourts = 16;
 const maxCourtReservations = 14;
 const daysArray = [0,1,2,3,4,5,6];
+const courtsNumberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 const ballMachineCourts = [1,4,5,11,12,13,16];
 
 var resArray = [];
@@ -22,10 +37,13 @@ var resBuffer = [];
 var gotReservationData = false;
 var editing = false;
 
-// Main function for the specific 'page'
 function ReserveAdmin(props) {
-    // 'Reactive' variables that will cause the page to update when their values change
-        // 'useState' at the end of each describes their initial value
+    dateToday = newDate;
+    // let bufferDate = new Date();
+    // bufferDate.setDate(bufferDate.getDate()+(adminCurrentWeek*7));
+    // var dateToday = bufferDate;
+
+    // const [dateBuffer, setDateBuffer] = useState(window.sessionStorage.getItem("adminGlobalDate"));
     const [loggedIn, setLogginIn] = useState(window.sessionStorage.getItem('current_user') ? true : false);
     const [currentUser, setCurrentUser] = useState(JSON.parse(window.sessionStorage.getItem('current_user')));
     const [userArray, setUserArray] = useState([]);
@@ -46,6 +64,7 @@ function ReserveAdmin(props) {
         ballmachine: false
     });
     const [selectedReseervationToDelete, setSelectedReservationToDelete] = useState(null);
+    const history = useHistory();
     
     // Regular varaible declaration
     var isMobile = props.isMobile;
@@ -354,37 +373,37 @@ function ReserveAdmin(props) {
 
     const [columnDays, setColumnDays] = useState([
         {
-            date: convertDate(dateToday.getDate()),
+            date: getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 0),
             slots: timeslotsJSON,
             closed: false
         },
         {
-            date: convertDate(dateToday.getDate()+1),
+            date: getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 1),
             slots: timeslotsJSON,
             closed: false
         },
         {
-            date: convertDate(dateToday.getDate()+2),
+            date: getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 2),
             slots: timeslotsJSON,
             closed: false
         },
         {
-            date: convertDate(dateToday.getDate()+3),
+            date: getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 3),
             slots: timeslotsJSON,
             closed: false
         },
         {
-            date: convertDate(dateToday.getDate()+4),
+            date: getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 4),
             slots: timeslotsJSON,
             closed: false
         },
         {
-            date: convertDate(dateToday.getDate()+5),
+            date: getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 5),
             slots: timeslotsJSON,
             closed: false
         },
         {
-            date: convertDate(dateToday.getDate()+6),
+            date: getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 6),
             slots: timeslotsJSON,
             closed: false
         }
@@ -398,12 +417,43 @@ function ReserveAdmin(props) {
 
         getAllClosures();
         getAllUsers();
-        
 
         return () => {
             gotReservationData = false;
         }
     }, []);
+
+    function formatDate(date) {
+        return (
+            date.getMonth()+1+"/"+date.getDate()+"/"+date.getFullYear()
+        )
+    }
+
+    function getFormattedDate(dayOffset) {
+        var newDate = new Date();
+        newDate.setDate(newDate.getDate()+dayOffset);
+        return formatDate(newDate);
+    }
+
+    function handleWeekNext() {
+        sessionStorage.setItem("adminGlobalDate", parseInt(sessionStorage.getItem("adminGlobalDate"))+1);
+        fastRefresh() 
+    }
+
+    function handleWeekPrev() {
+        sessionStorage.setItem("adminGlobalDate", parseInt(sessionStorage.getItem("adminGlobalDate"))-1);
+        fastRefresh() 
+    }
+
+    function handleWeekReset() {
+        sessionStorage.setItem("adminGlobalDate", 0);
+        fastRefresh() 
+    }
+
+    function fastRefresh() {
+        history.push("/temp");
+        history.goBack();
+    }
 
     // Server functions
     async function getReservationData() {
@@ -853,6 +903,19 @@ function ReserveAdmin(props) {
         if(currentCourt > 1) {
             setCurrentCourt(currentCourt - 1);
         }
+    }
+
+    function handleCourtSelect(value, e) {
+        let position = {
+            x: e.currentTarget.getBoundingClientRect().x,
+            y: e.currentTarget.getBoundingClientRect().top
+        }
+        let follower = document.querySelector('.court-follower');
+        follower.style.left = position.x + 'px';
+        follower.style.top = position.y + 'px';
+        // follower.style.width = Math.abs(follower.style.left + position.x) + 'px';
+
+        setCurrentCourt(value);
     }
 
     function handleCourtsAdd() {
@@ -1327,24 +1390,39 @@ function ReserveAdmin(props) {
             <div className="container-reserve">
                 {/* Variables can be inserted inside of brackets as shown below */}
                 <div className="reservation-content-title">
-                    <div className="court-back-button"
+                    {/* <div className="court-back-button"
                         onClick={() => {
                             handleCourtBack();
                         }}
-                    ></div>
-                    Court {currentCourt}
-                    <div className="court-next-button"
+                    ></div> */}
+                    {courtsNumberArray.map((val, idx) => {
+                        return (
+                            <span
+                                key={idx}
+                                id={`court-item-id-${idx}`}
+                                className={`court-list-item ${currentCourt == val ? "active" : ""}`}
+                                onClick={(e) => {
+                                    handleCourtSelect(val, e);
+                                }}
+                            >
+                                Court {val}
+                            </span>
+                        )
+                    })}
+                    {/* <div className="court-next-button"
                         onClick={() => {
                             handleCourtNext();
                         }}
-                    ></div>
+                    ></div> */}
                 </div>
                 <div className="reserve-form-container">
                     <div className="table-labels-container">
                         {daysArray.map((day, index) => {
                             return (
                                 <div className="table-label" key={index} style={columnDays[index].closed ? {backgroundColor: "#D9D9D9", color: "rgba(0,0,0,0.5)"} : {}}>
-                                    {day == 0 ? "Today" : convertDate(dateToday.getDate()+day)}
+                                    {/* {day == 0 ? "Today" : convertDate(dateToday.getDate()+day)} */}
+                                    {/* {convertDate(dateToday.getDate()+day)} */}
+                                    {getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + day)}
                                     <div className="table-label-date-close"
                                         onClick={() => {
                                             handleDateCloseOpen(index);
@@ -1374,7 +1452,46 @@ function ReserveAdmin(props) {
                         {/* <span className="legend-item"><div className="legend-item-color" style={{backgroundColor: 'rgb(255, 200, 60)'}}></div>My Event Reservation</span> */}
                     </div>
                 </div>
-                {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
+                <div className="week-selector-container">
+                    <button className="week-selector-btn"
+                        onClick={() => {
+                            handleWeekNext();
+                        }}
+                    >
+                        <div className="week-btn-label">
+                            {getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 7).substring(0,getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 7).lastIndexOf('/'))}
+                            &nbsp;-&nbsp;
+                            {getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 13).substring(0,getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) + 13).lastIndexOf('/'))}
+                        </div>
+                    </button>
+                    <button className="week-selector-btn" 
+                        style={{ 
+                            backgroundImage: `url("${bg_redo}")`,
+
+                        }}
+                        onClick={() => {
+                           handleWeekReset();
+                        }}
+                    >
+                        <div className="week-btn-label">Reset</div>
+                    </button>
+                    <button className="week-selector-btn"
+                        style={{ 
+                            backgroundImage: `url("${bg_back}")`,
+
+                        }}
+                        onClick={() => {
+                            handleWeekPrev();
+                        }}
+                    >
+                        <div className="week-btn-label">
+                        {getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) - 7).substring(0,getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) - 7).lastIndexOf('/'))}
+                            &nbsp;-&nbsp;
+                            {getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) - 1).substring(0,getFormattedDate((7 * sessionStorage.getItem("adminGlobalDate")) - 1).lastIndexOf('/'))}
+                        </div>
+                    </button>
+                </div>
+                {/* {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>} */}
             </div>
             <div className="reserve-modal-main-container">
                 <div className="reserve-modal-window-container">
@@ -1572,7 +1689,15 @@ function ReserveAdmin(props) {
                     </div>
                 </div>
             </div>
-            <Loading timeRange={[1000,2000]}/>
+            {/* <Loading timeRange={[1000,2000]}/> */}
+            {document.getElementById('court-item-id-0') && 
+                <div className="court-follower" style={{
+                    left: document.getElementById('court-item-id-0').getBoundingClientRect().x + "px",
+                    top: document.getElementById('court-item-id-0').getBoundingClientRect().top + "px",
+                }}>
+                    <div className="court-follower-bar" />
+                </div>
+            }
         </>
     )
 }

@@ -22,7 +22,7 @@ function Reports() {
 
     const reports = [
         {
-            title: `All Customers`,
+            title: `All Users`,
             description: `This report shows all customers that are registered.`,
             category: `User`,
             query: `SELECT User_id, User_type, User_status, User_email, User_phone, User_firstname, User_lastname, User_getAnnouncements FROM USER`,
@@ -34,7 +34,17 @@ function Reports() {
             query: `SELECT * FROM RESERVATION`,
         },
         {
-            title: `Users by Total Number of Reservations`,
+            title: `All Event Reservations`,
+            description: `This report shows all active special event reservations that have been made.`,
+            category: `Reservation`,
+            query: `
+                SELECT * FROM RESERVATION
+                WHERE Reservation_type = 1
+                ORDER BY Reservation_id DESC
+            `,
+        },
+        {
+            title: `Most Frequent Users`,
             description: `This report orders all users by the number of reservations they've made.`,
             category: `Reservation`,
             query: `
@@ -46,10 +56,37 @@ function Reports() {
             `,
         },
         {
-            title: `Users by Number of Reservations`,
-            description: `This report shows all users ordered by the number of reservations they've made`,
+            title: `All Active Employees`,
+            description: `All active employees in the database system`,
             category: `User`,
-            query: `SELECT * FROM RESERVATION`,
+            query: `
+                SELECT User_id, User_email, User_firstname, User_lastname, User_type, User_status
+                FROM USER
+                WHERE User_type = 1 
+                OR User_type = 2
+                AND User_status = 1
+                ORDER BY User_id DESC
+            `,
+        },
+        {
+            title: `All Active Customers`,
+            description: `All active customers in the database system`,
+            category: `User`,
+            query: `
+                SELECT User_id, User_email, User_firstname, User_lastname, User_type, User_status
+                FROM USER
+                WHERE User_type = 0 
+                AND User_status = 1
+                ORDER BY User_id DESC
+            `,
+        },
+        {
+            title: `All Closures`,
+            description: `All active closures that have been made`,
+            category: `Closure`,
+            query: `
+                SELECT * FROM CLOSURE
+            `,
         },
     ]
 

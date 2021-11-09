@@ -14,6 +14,7 @@
     align-items: center;
     padding-top: 2vmin;
     background-color: rgb(250, 250, 250);
+    overflow: hidden;
 }
 
 .reservation-content-title {
@@ -22,12 +23,60 @@
     left: calc(50% - 50vmin);
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     font-size: 2vmin;
     font-weight: bold;
     font-family: Round;
     color: rgba(0,0,0,0.5);
+    background-color: rgba(172, 172, 172, 0);
+    width: 100vmin;
+}
+
+.court-list-item {
+    background-color: rgba(255,0,0,0.0);
+    width: 6vmin;
+    height: auto;
+    font-size: 1.25vmin;
+    opacity: 100%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    color: rgba(0,0,0,0.5);
+    transition: all 0.15s ease-in-out;
+}
+
+.court-list-item.active {
+    color: rgb(255, 170, 60);
+    opacity: 70%;
+}
+
+.court-list-item:hover {
+    opacity: 40%;
+}
+
+.court-follower {
+    position: absolute;
+    width: 6vmin;
+    height: 2.25vmin;
+    background-color: rgba(0,0,255,0.0);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    pointer-events: none;
+    transition: all 0.35s cubic-bezier(.74,-0.06,0,.94);
+    z-index: 9999;
+}
+
+.court-follower-bar {
+    width: 85%;
+    height: 0.35vmin;
+    border-radius: 50vmin;
+    background-color: rgb(255, 200, 60);
 }
 
 .court-next-button {
@@ -116,14 +165,14 @@
 
 .table-label-date-close {
     position: absolute;
-    top: 0.5vmin;
-    background-color: rgba(255,0,0,0.0);
+    top: 2.25vmin;
+    background-color: rgba(0,0,255,0.0);
     width: 13.25vmin;
     height: 0vmin;
     display: none;
     flex-direction: row;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
     font-family: Round;
     font-size: 1.25vmin;
     font-weight: bold;
@@ -131,11 +180,10 @@
 }
 
 .table-label:hover > .table-label-date-close {
-    height: 4vmin !important;
+    height: 2.5vmin !important;
     display: flex;
     z-index: 5000;
     cursor: pointer;
-    background-color: rgba(255,0,0,0.0);
 }
 
 .table-label-date-close-btn {
@@ -1149,6 +1197,77 @@
 .customer-reservation-button:hover {
     background-color: rgba(0, 132, 255, 0.1);
     color: rgba(0, 132, 255, 0.75);
+}
+
+.week-selector-container {
+    position: absolute;
+    top: 3vmin;
+    right: calc(calc(50% - 4vmin) - 53vmin);
+    background-color: rgba(0,0,0,0.0);
+    border-radius: 0.5vmin;
+    width: 7vmin;
+    height: 20vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vmin;
+    color: rgba(0,0,0, 0.4);
+    font-size: 1.25vmin;
+}
+
+.week-selector-btn {
+    width: 100%;
+    height: 5vmin;
+    border: none;
+    outline: none;
+    user-select: none;
+    border-radius: 1vmin;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.1); */
+    font-weight: bold;
+    font-family: Round;
+    font-size: 1.15vmin;
+    color: rgba(0, 0, 0, 0.78);
+    cursor: pointer;
+    background: url('../images/svgs/icons/solid/angle-double-right.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
+    opacity: 60%;
+    transition: all 0.1s ease-in-out;
+}
+
+.week-selector-btn:hover {
+    opacity: 80%;
+    background-size: 60% 60%;
+}
+
+.week-btn-label {
+    position: absolute;
+    background-color: rgba(255,0,0,0);
+    box-shadow: 0px 4px 8px 0px rgba(0,0,0,0.0);
+    border-radius: 0.75vmin;
+    padding: 0.5vmin;
+    opacity: 0;
+    width: 10vmin;
+    user-select: none;
+    pointer-events: none;
+    transform: translateX(10vmin);
+    font-size: 1.25vmin;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    transition: all 0.1s ease-in-out;
+}
+
+.week-selector-btn:hover > .week-btn-label {
+    transform: translateX(7vmin);
+    opacity: 100%;
 }
 
 /* Animations */

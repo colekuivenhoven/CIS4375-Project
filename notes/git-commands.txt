@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Fixed issue with notes containing quotes. Finished detailed user management page."
+git commit -m "Fixed reservation issues, added multi-week reservation view for admin, split court selector."
 
 // Push to remote repo
 git push -u origin master

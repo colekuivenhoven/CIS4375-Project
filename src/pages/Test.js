@@ -4,6 +4,13 @@ import '../assets/styles/Test.css';
 
 // Importing common files used in react
 import React, { useEffect, useRef, useState } from "react";
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link,
+    useParams
+  } from "react-router-dom";
 import bcrypt from "bcryptjs";
 
 // Imorting the components used in this page
@@ -34,6 +41,7 @@ function Test(props) {
     const [editing, setEditing] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(false);
 
+    let { id } = useParams();
     const [guessMatched, setGuessMatched] = useState('false');
 
     // Regular varaible declaration
