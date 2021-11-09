@@ -2,14 +2,9 @@ Equipment:
     If ballmachine is being used in another reservation, then the ballmachine is not available to reserve at the same time.
 
 Reservations:
-    CONFIRM? Customers can only make 2 reservations per day.
     Allow employee accounts to access the extended reservation page to a somewhat limited extent.
-    Display notification to customers when a reservation is successfully made. Will include their reservation data.
-    Reservation closures send messsage to user.
-    --Add num of people to reservation. Max 4 ppl.
 
 Alerts:
-    Send SMS alert when a reservation is made.
 
 Login:
     --Allow customers to reset their password via email.
@@ -17,8 +12,6 @@ Login:
 
 Admin:
     Create 3 important reports that fit a pie chart, bar chart, and line chart, respectively.
-    Admin should be able to select a user from Users list and edit/update their account.
-    Add advanced user page to admin portal.
     --Replace logs with feedback list for admin to view.
     --If you delete your own account, log out user.
 

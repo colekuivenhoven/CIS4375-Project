@@ -22,18 +22,6 @@ function Reports() {
 
     const reports = [
         {
-            title: `All Users`,
-            description: `This report shows all customers that are registered.`,
-            category: `User`,
-            query: `SELECT User_id, User_type, User_status, User_email, User_phone, User_firstname, User_lastname, User_getAnnouncements FROM USER`,
-        },
-        {
-            title: `All Reservations`,
-            description: `This report shows all reservations that have ever been made.`,
-            category: `Reservation`,
-            query: `SELECT * FROM RESERVATION`,
-        },
-        {
             title: `Planned Event Reservations`,
             description: `This report shows all future special event reservations that have been made.`,
             category: `Reservation`,

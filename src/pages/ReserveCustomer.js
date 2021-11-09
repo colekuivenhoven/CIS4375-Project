@@ -47,6 +47,7 @@ function ReserveCustomer(props) {
     const [selectedDuration, setSelectedDuration] = useState(0.75);
     const [selectedID, setSelectedID] = useState();
     const [selectedCustomerID, setSelectedCustomerID] = useState(1);
+    const [selectedPeople, setSelectedPeople] = useState(1);
     const [reservations, setReservations] = useState([]);
     const [selectedEquipment, setSelectedEquipment] = useState({
         racket: false,
@@ -404,10 +405,6 @@ function ReserveCustomer(props) {
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
-        if(!loggedIn) {
-            window.location.href = '/login';
-        } 
-
         if(!gotReservationData) {
             getReservationData();
             getCustomerReservationData();
@@ -491,7 +488,8 @@ function ReserveCustomer(props) {
                     note: res.Reservation_note,
                     court_id: res.Court_id,
                     equipment_id: res.Equipment_id,
-                    customer_id: res.Customer_id
+                    customer_id: res.Customer_id,
+                    people: res.Reservation_people,
                 }
             )
         });
@@ -515,6 +513,22 @@ function ReserveCustomer(props) {
             getReservationData();
             getCustomerReservationData();
         })
+        .then(() => {
+            let alertData = {
+                start: data.timeStart,
+                date: data.date,
+                court: data.court_id,
+                email: currentUser.User_email
+            }
+
+            fetch("http://3.218.225.62:3040/alert/send/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(alertData)
+            })
+        })
     }
 
     function editReservation(data) {
@@ -531,6 +545,22 @@ function ReserveCustomer(props) {
             gotReservationData = false;
             getReservationData();
             getCustomerReservationData();
+        })
+        .then(() => {
+            let alertData = {
+                start: data.timeStart,
+                date: data.date,
+                court: data.court_id,
+                email: currentUser.User_email
+            }
+
+            fetch("http://3.218.225.62:3040/alert/edit/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(alertData)
+            })
         })
     }
 
@@ -549,6 +579,27 @@ function ReserveCustomer(props) {
             getReservationData();
             setSelectedReservationToDelete(null);
             getCustomerReservationData();
+        })
+        .then(() => {
+            let alertData = {
+                date: selectedDate,
+                email: currentUser.User_email
+            }
+
+            fetch("http://3.218.225.62:3040/alert/delete/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(alertData)
+            })
+            .then(() => {
+                gotReservationData = false;
+                getReservationData();
+                setSelectedReservationToDelete(null);
+                getCustomerReservationData();
+                setSelectedDate(null);
+            })
         })
     }
 
@@ -930,6 +981,7 @@ function ReserveCustomer(props) {
                                 setNumCourts(reservation.Court_id.length);
                                 setCurrentArrayCourt(reservation.Court_id);
                                 setSelectedType(reservation.Reservation_type);
+                                setSelectedPeople(reservation.Reservation_people);
                                 setSelectedEquipment({
                                     racket: reservation.Equipment_id.includes(0),
                                     hopper: reservation.Equipment_id.includes(1),
@@ -949,7 +1001,7 @@ function ReserveCustomer(props) {
                     <span className="customer-reservation-button"
                         onClick={() => {
                             if(loggedIn) {
-                                handleButtonDelete(reservation.Reservation_id);
+                                handleButtonDelete(reservation.Reservation_id, reservation.Reservation_date);
                             }
                             else {
                                 window.location.pathname = "/login"
@@ -966,15 +1018,15 @@ function ReserveCustomer(props) {
     }
 
     // Handling functions
-    function handleCourtNext() {
-        if(currentCourt < 16) {
-            setCurrentCourt(currentCourt + 1);
+    function handlePeopleAdd() {
+        if(selectedPeople < 4) {
+            setSelectedPeople(selectedPeople + 1);
         }
     }
 
-    function handleCourtBack() {
-        if(currentCourt > 1) {
-            setCurrentCourt(currentCourt - 1);
+    function handlePeopleSubtract() {
+        if(selectedPeople > 1) {
+            setSelectedPeople(selectedPeople - 1);
         }
     }
 
@@ -1036,7 +1088,8 @@ function ReserveCustomer(props) {
                         note: note.replace(/"/g, '\''),
                         court_id: i,
                         equipment_id: "["+equipmentArray.toString()+"]",
-                        customer_id: selectedCustomerID
+                        customer_id: selectedCustomerID,
+                        people: selectedPeople
                     }
     
                     if(checkValidReservation(reservationData)) {
@@ -1062,7 +1115,8 @@ function ReserveCustomer(props) {
                 note: note.replace(/"/g, '\''),
                 court_id: "["+courtArray.toString()+"]",
                 equipment_id: "["+equipmentArray.toString()+"]",
-                customer_id: selectedCustomerID
+                customer_id: selectedCustomerID,
+                people: selectedPeople
             }
     
             addReservation(reservationData);
@@ -1096,7 +1150,8 @@ function ReserveCustomer(props) {
                         note: note.replace(/"/g, '\''),
                         court_id: i,
                         equipment_id: "["+equipmentArray.toString()+"]",
-                        customer_id: selectedCustomerID
+                        customer_id: selectedCustomerID,
+                        people: selectedPeople
                     }
     
                     if(checkValidReservationEdit(reservationData)) {
@@ -1124,7 +1179,8 @@ function ReserveCustomer(props) {
                 note: note.replace(/"/g, '\''),
                 court_id: "["+courtArray.toString()+"]",
                 equipment_id: "["+equipmentArray.toString()+"]",
-                customer_id: selectedCustomerID
+                customer_id: selectedCustomerID,
+                people: selectedPeople
             }
     
             editReservation(reservationData);
@@ -1133,9 +1189,10 @@ function ReserveCustomer(props) {
         }
     }
 
-    function handleButtonDelete(rid) {
+    function handleButtonDelete(rid, date) {
         handleToggleDeleteModal();
         setSelectedReservationToDelete(rid);
+        setSelectedDate(date);
     }
 
     function handleDateCloseOpen(index) {
@@ -1495,6 +1552,7 @@ function ReserveCustomer(props) {
         setSelectedCustomerID(1);
         setNote('');
         setCurrentArrayCourt([]);
+        setSelectedPeople(1);
         setNumCourts(1);
         document.querySelector(".reserve-modal-window-error").textContent = '';
         setSelectedEquipment({
@@ -1662,6 +1720,19 @@ function ReserveCustomer(props) {
                             >
                                 Ball Machine
                             </span>}
+                        </div>
+                        <div className="reserve-modal-window-body-text">Number of People: 
+                            <div className="reserve-modal-window-button-duration-sub"
+                                onClick={() => {
+                                    handlePeopleSubtract();
+                                }}
+                            />
+                            {selectedPeople}
+                            <div className="reserve-modal-window-button-duration-add"
+                                onClick={() => {
+                                    handlePeopleAdd();
+                                }}
+                            />
                         </div>
 
                         <div className="reserve-modal-window-body-linebreak" />

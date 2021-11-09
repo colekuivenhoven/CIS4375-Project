@@ -27,7 +27,7 @@ var newDate = new Date();
 newDate.setDate(newDate.getDate()+(7 * sessionStorage.getItem("adminGlobalDate")));
 
 const totalCourts = 16;
-const maxCourtReservations = 14;
+const maxCourtReservations = 16;
 const daysArray = [0,1,2,3,4,5,6];
 const courtsNumberArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
 const ballMachineCourts = [1,4,5,11,12,13,16];
@@ -58,6 +58,7 @@ function ReserveAdmin(props) {
     const [selectedID, setSelectedID] = useState();
     const [selectedCustomerID, setSelectedCustomerID] = useState(1);
     const [reservations, setReservations] = useState([]);
+    const [selectedPeople, setSelectedPeople] = useState(1);
     const [selectedEquipment, setSelectedEquipment] = useState({
         racket: false,
         hopper: false,
@@ -518,7 +519,8 @@ function ReserveAdmin(props) {
                     note: res.Reservation_note,
                     court_id: res.Court_id,
                     equipment_id: res.Equipment_id,
-                    customer_id: res.Customer_id
+                    customer_id: res.Customer_id,
+                    people: res.Reservation_people
                 }
             )
         });
@@ -541,6 +543,24 @@ function ReserveAdmin(props) {
             gotReservationData = false;
             getReservationData();
         })
+        .then(() => {
+            let user = userArray.find(user => user.User_id == data.customer_id);
+
+            let alertData = {
+                start: data.timeStart,
+                date: data.date,
+                court: data.court_id,
+                email: user.User_email
+            }
+
+            fetch("http://3.218.225.62:3040/alert/send/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(alertData)
+            })
+        })
     }
 
     function editReservation(data) {
@@ -556,6 +576,24 @@ function ReserveAdmin(props) {
         .then(() => {
             gotReservationData = false;
             getReservationData();
+        })
+        .then(() => {
+            let user = userArray.find(user => user.User_id == data.customer_id);
+
+            let alertData = {
+                start: data.timeStart,
+                date: data.date,
+                court: data.court_id,
+                email: user.User_email
+            }
+
+            fetch("http://3.218.225.62:3040/alert/edit/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(alertData)
+            })
         })
     }
 
@@ -573,6 +611,26 @@ function ReserveAdmin(props) {
             gotReservationData = false;
             getReservationData();
             setSelectedReservationToDelete(null);
+        })
+        .then(() => {
+            let alertData = {
+                date: reservations.find(res => res.id == rid).date,
+                email: userArray.find(user => user.User_id == reservations.find(res => res.id == rid).customer_id).User_email
+            }
+
+            fetch("http://3.218.225.62:3040/alert/delete/", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(alertData)
+            })
+            .then(() => {
+                gotReservationData = false;
+                getReservationData();
+                setSelectedReservationToDelete(null);
+                setSelectedDate(null);
+            })
         })
     }
 
@@ -844,6 +902,7 @@ function ReserveAdmin(props) {
                                     var testRootNumCourts = reservations.find(el => el.id == testRootId).court_id;
                                     var testRootEquipment = reservations.find(el => el.id == testRootId).equipment_id;
                                     var testRootCustomer = reservations.find(el => el.id == testRootId).customer_id;
+                                    var testRootPeople = reservations.find(el => el.id == testRootId).people;
 
                                     if(loggedIn) {
                                         handleToggleModal();
@@ -860,6 +919,7 @@ function ReserveAdmin(props) {
                                             ballmachine: testRootEquipment.includes(2),
                                         });
                                         setNote(testRootNote);
+                                        setSelectedPeople(testRootPeople);
                                         setSelectedCustomerID(testRootCustomer);
                                     }
                                     else {
@@ -893,15 +953,15 @@ function ReserveAdmin(props) {
     }
 
     // Handling functions
-    function handleCourtNext() {
-        if(currentCourt < 16) {
-            setCurrentCourt(currentCourt + 1);
+    function handlePeopleAdd() {
+        if(selectedPeople < 4) {
+            setSelectedPeople(selectedPeople + 1);
         }
     }
 
-    function handleCourtBack() {
-        if(currentCourt > 1) {
-            setCurrentCourt(currentCourt - 1);
+    function handlePeopleSubtract() {
+        if(selectedPeople > 1) {
+            setSelectedPeople(selectedPeople - 1);
         }
     }
 
@@ -941,7 +1001,7 @@ function ReserveAdmin(props) {
     }
 
     function handleDurationAdd() {
-        if(selectedDuration < 5) {
+        if(selectedDuration < 12) {
             setSelectedDuration(selectedDuration + 0.25);
         }
     }
@@ -976,7 +1036,8 @@ function ReserveAdmin(props) {
                         note: note.replace(/"/g, '\''),
                         court_id: i,
                         equipment_id: "["+equipmentArray.toString()+"]",
-                        customer_id: selectedCustomerID
+                        customer_id: selectedCustomerID,
+                        people: selectedPeople
                     }
     
                     if(checkValidReservation(reservationData)) {
@@ -1002,7 +1063,8 @@ function ReserveAdmin(props) {
                 note: note.replace(/"/g, '\''),
                 court_id: "["+courtArray.toString()+"]",
                 equipment_id: "["+equipmentArray.toString()+"]",
-                customer_id: selectedCustomerID
+                customer_id: selectedCustomerID,
+                people: selectedPeople
             }
     
             addReservation(reservationData);
@@ -1044,7 +1106,8 @@ function ReserveAdmin(props) {
                         note: note.replace(/"/g, '\''),
                         court_id: i,
                         equipment_id: "["+equipmentArray.toString()+"]",
-                        customer_id: selectedCustomerID
+                        customer_id: selectedCustomerID,
+                        people: selectedPeople
                     }
     
                     if(checkValidReservationEdit(reservationData)) {
@@ -1071,7 +1134,8 @@ function ReserveAdmin(props) {
                 note: note.replace(/"/g, '\''),
                 court_id: "["+courtArray.toString()+"]",
                 equipment_id: "["+equipmentArray.toString()+"]",
-                customer_id: selectedCustomerID
+                customer_id: selectedCustomerID,
+                people: selectedPeople
             }
     
             editReservation(reservationData);
@@ -1376,6 +1440,7 @@ function ReserveAdmin(props) {
         setNote('');
         setCurrentArrayCourt([]);
         setNumCourts(1);
+        setSelectedPeople(1);
         document.querySelector(".reserve-modal-window-error").textContent = '';
         setSelectedEquipment({
             racket: false,
@@ -1538,7 +1603,9 @@ function ReserveAdmin(props) {
                                     })}
                                 </select>
                             </div>}
+                            
                         </div>
+                        {/* <a href="#" style={{marginLeft: "auto"}}>User Link</a> */}
                         {editing && <div className="reserve-modal-window-body-row">
                             <div className="reserve-modal-window-body-text" style={{opacity: "50%"}}>
                                 Reservation ID: {selectedID}
@@ -1629,6 +1696,19 @@ function ReserveAdmin(props) {
                             >
                                 Ball Machine
                             </span>}
+                        </div>
+                        <div className="reserve-modal-window-body-text">Number of People: 
+                            <div className="reserve-modal-window-button-duration-sub"
+                                onClick={() => {
+                                    handlePeopleSubtract();
+                                }}
+                            />
+                            {selectedPeople}
+                            <div className="reserve-modal-window-button-duration-add"
+                                onClick={() => {
+                                    handlePeopleAdd();
+                                }}
+                            />
                         </div>
 
                         <div className="reserve-modal-window-body-linebreak" />
