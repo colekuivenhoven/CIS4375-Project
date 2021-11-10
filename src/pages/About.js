@@ -29,42 +29,7 @@ function About(props) {
 
     // 'useEffect' runs once for every render of the page
     useEffect(() => {
-        var mainContainer = document.querySelector(".container-about");
-        var fontLarge = document.querySelectorAll(".font-round-large");
-        var fontMed = document.querySelectorAll(".font-round-medium");
-        var addButton = document.querySelectorAll(".container-add");
 
-        if(isMobile) {
-            mainContainer.style.top = "15vmin"
-
-            fontLarge.forEach(el => {
-                el.style.fontSize = "10vmin"
-            });
-
-            fontMed.forEach(el => {
-                el.style.fontSize = "5.5vmin"
-            });
-
-            addButton.forEach(el => {
-                el.style.width = "5.5vmin"
-                el.style.marginLeft = "3vmin"
-            });
-        }
-        else {
-            mainContainer.style.top = "7vmin"
-            fontLarge.forEach(el => {
-                el.style.fontSize = "4vmin"
-            });
-
-            fontMed.forEach(el => {
-                el.style.fontSize = "2.25vmin"
-            });
-
-            addButton.forEach(el => {
-                el.style.width = "2.5vmin"
-                el.style.marginLeft = "1vmin"
-            });
-        }
     });
 
     // Handling functions
@@ -147,16 +112,8 @@ Pets are not allowed within the gates of our facility.
 If you have any further questions, please contact our manager: 
 <br/>
 Roger White: (832)373-8798  </strong>
-                        
-
-                    
-                    
                     </div>
-                    
-                    
                 </div>
-                
-                
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
             </div>
             <Loading timeRange={[250, 500]} />

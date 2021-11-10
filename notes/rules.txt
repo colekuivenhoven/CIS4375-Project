@@ -21,9 +21,11 @@ Reports:
 
 Account:
     Add reset password feature to account page.
+    Business pics
 
 Contact:
     Create a contact form that allows customers to send feedback.
+    Feedback form
 
 Documentation:
     1. Combine System architecture diagram & Network architecture diagram

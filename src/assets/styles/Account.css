@@ -14,6 +14,183 @@
     align-items: center;
     padding-top: 2vmin;
     background-color: rgb(250, 250, 250);
+    font-family: Round;
+}
+
+.account-content-container {
+    width: 100vmin;
+    height: calc(100% - 1vmin);
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgba(255,0,0,0.0);
+}
+
+.account-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: rgba(255,0,0,0.0);
+    width: 100%;
+    height: 50%;
+}
+
+.account-column {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: flex-start;
+    align-content: flex-start;
+    background-color: rgba(0,255,0,0.0);
+    width: 100%;
+    padding-left: 1vmin;
+    height: 50%;
+    padding-top: 5vmin;
+    overflow-y: scroll;
+}
+
+.account-column::-webkit-scrollbar {
+    width: 0.5vmin;
+    height: 95%;
+    background-color: transparent;
+    transition: all 0.25s linear;
+}
+
+.account-column::-webkit-scrollbar-thumb {
+    border-radius: 1vmin;
+    width: 1vmin;
+    background-color: rgba(124, 124, 124, 0.75);
+    transition: all 0.25s linear;
+}
+
+.account-column-title {
+    position: absolute;
+    top: calc(50% + 3vmin);
+    left: calc(50% - 47.75vmin);
+    font-size: 1.5vmin;
+    opacity: 30%;
+    font-weight: bold;
+}
+
+.account-column-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 17%;
+    height: 8vmin;
+    min-height: 6vmin;
+    font-size: 1.15vmin;
+    font-weight: bold;
+    text-align: right;
+    margin-left: 0vmin;
+    box-sizing: border-box;
+    padding: 0.75vmin;
+    background-color: rgba(255,255,255,1);
+    color: rgba(0,0,0,0.55);
+    border-radius: 1vmin;
+    margin: 1vmin;
+    box-shadow: 0px 0.5vmin 1vmin 0px rgba(0,0,0,0.1);
+    border: 0.25vmin solid rgba(0, 119, 255, 0.0);
+    background: url('../images/team-images/ball.png');
+    background-repeat: no-repeat;
+    background-position: calc(100% - 1vmin) center;
+    background-size: 4vmin 4vmin;
+    filter: drop-shadow(0 0.5vmin 0.5vmin rgba(0, 0, 0, 0.25));
+    transition: all 0.15s ease-in-out;
+}
+
+.account-column-item:hover {
+    border: 0.25vmin solid rgba(0, 119, 255, 0.3);
+}
+
+.account-img {
+    background: url('../images/team-images/woman.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 70% 70%;
+    width: 50%;
+    aspect-ratio: 1;
+    background-color: rgba(255,0,0,0.0);
+    opacity: 0.7;
+    filter: drop-shadow(0 0.2vmin 0.8vmin rgba(0, 0, 0, 0.4));
+}
+
+.account-info-container {
+    width: 50%;
+    height: 100%;
+    background-color: rgba(255,255,255,0);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 1vmin;
+    padding-top: 2vmin;
+    /* box-shadow: 0px 1vmin 2vmin 0px rgba(0,0,0,0.1); */
+}
+
+.account-info-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    height: 12%;
+    padding-right: 2vmin;
+    font-size: 3vmin;
+    font-weight: bold;
+    text-align: left;
+    color: rgba(0,0,0,0.55);
+    margin-left: 4vmin;
+}
+
+.account-password-reset-btn {
+    background-color: rgba(255, 72, 0, 0.6);
+    width: 20vmin;
+    height: 80%;
+    padding: 2vmin;
+    font-size: 2vmin;
+    font-weight: bold;
+    color: white;
+    border-radius: 1vmin;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2vmin;
+    opacity: 40%;
+    border: 0.25vmin solid rgba(0,0,0,0);
+    filter: saturate(1);
+    box-shadow: 0px 0.5vmin 1vmin 0px rgba(0,0,0,0.25);
+    transition: all 0.25s ease-in-out;
+}
+
+.account-password-reset-btn:hover {
+    border: 0.25vmin solid rgba(0,0,0,0.25);
+    box-shadow: 0px 0.75vmin 1vmin 0px rgba(0,0,0,0.25);
+}
+
+.account-password-reset-btn.active {
+    background-color: rgba(255, 72, 0, 0.6);
+    width: 20vmin;
+    height: 80%;
+    padding: 2vmin;
+    font-size: 2vmin;
+    font-weight: bold;
+    color: white;
+    border-radius: 1vmin;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2vmin;
+    opacity: 100%;
 }
 
 /* Animations */

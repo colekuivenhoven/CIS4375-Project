@@ -12,11 +12,16 @@ import {
     Link,
     useHistory
   } from "react-router-dom";
+import moment from 'moment';
 
 // Importing the components used in this page
 import Loading from '../components/Loading';
 import bg_redo from '../assets/images/svgs/icons/solid/redo.svg';
 import bg_back from '../assets/images/svgs/icons/solid/angle-double-left.svg';
+
+var timeOpen = moment('7:30am', 'H:mm a');
+var timeClosedWeek = moment('9:00pm', 'H:mm a');
+var timeClosedWeekend = moment('6:00pm', 'H:mm a');
 
 var dateToday;
 
@@ -553,13 +558,15 @@ function ReserveAdmin(props) {
                 email: user.User_email
             }
 
-            fetch("http://3.218.225.62:3040/alert/send/", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(alertData)
-            })
+            if(user.User_getAnnouncements != 0) {
+                fetch("http://3.218.225.62:3040/alert/send/", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(alertData)
+                })
+            }
         })
     }
 
@@ -587,13 +594,15 @@ function ReserveAdmin(props) {
                 email: user.User_email
             }
 
-            fetch("http://3.218.225.62:3040/alert/edit/", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(alertData)
-            })
+            if(user.User_getAnnouncements != 0) {
+                fetch("http://3.218.225.62:3040/alert/edit/", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(alertData)
+                })
+            }
         })
     }
 
@@ -613,24 +622,28 @@ function ReserveAdmin(props) {
             setSelectedReservationToDelete(null);
         })
         .then(() => {
+            let user = userArray.find(user => user.User_id == reservations.find(res => res.id == rid).customer_id);
+
             let alertData = {
                 date: reservations.find(res => res.id == rid).date,
                 email: userArray.find(user => user.User_id == reservations.find(res => res.id == rid).customer_id).User_email
             }
 
-            fetch("http://3.218.225.62:3040/alert/delete/", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(alertData)
-            })
-            .then(() => {
-                gotReservationData = false;
-                getReservationData();
-                setSelectedReservationToDelete(null);
-                setSelectedDate(null);
-            })
+            if(user.User_getAnnouncements != 0) {
+                fetch("http://3.218.225.62:3040/alert/delete/", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(alertData)
+                })
+                .then(() => {
+                    gotReservationData = false;
+                    getReservationData();
+                    setSelectedReservationToDelete(null);
+                    setSelectedDate(null);
+                })
+            }
         })
     }
 
@@ -1040,7 +1053,7 @@ function ReserveAdmin(props) {
                         people: selectedPeople
                     }
     
-                    if(checkValidReservation(reservationData)) {
+                    if(checkValidReservation(reservationData, false)) {
                         courtArray.push(i);
                         if(j == 0) {
                             earliestCourt = i;
@@ -1071,14 +1084,6 @@ function ReserveAdmin(props) {
             resetSelectedInfo();
             handleToggleModal();
         }
-        // if(checkValidReservation(reservationData)) {
-        //     addReservation(reservationData);
-        //     resetSelectedInfo();
-        //     handleToggleModal();
-        // }
-        // else {
-        //     document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
-        // }
     }
 
     function handleButtonEdit(rid) {
@@ -1110,7 +1115,7 @@ function ReserveAdmin(props) {
                         people: selectedPeople
                     }
     
-                    if(checkValidReservationEdit(reservationData)) {
+                    if(checkValidReservation(reservationData, true)) {
                         courtArray.push(i);
                         if(j == 0) {
                             earliestCourt = i;
@@ -1142,27 +1147,6 @@ function ReserveAdmin(props) {
             resetSelectedInfo();
             handleToggleModal();
         }
-
-        // var reservationData = {
-        //     id: rid,
-        //     type_id: selectedType,
-        //     status_id: 0,
-        //     date: selectedDate,
-        //     timeStart: selectedTime,
-        //     duration: selectedDuration,
-        //     note: note,
-        //     court_id: numCourts.length,
-        //     customer_id: currentUser.User_id
-        // }
-
-        // if(checkValidReservationEdit(reservationData)) {
-        //     editReservation(reservationData);
-        //     resetSelectedInfo();
-        //     handleToggleModal();
-        // }
-        // else {
-        //     document.querySelector(".reserve-modal-window-error").textContent = 'Invalid Reservation: Your reservation overlaps another, or is scheduled outside of business hours!';
-        // }
     }
 
     function handleButtonDelete(rid) {
@@ -1181,236 +1165,71 @@ function ReserveAdmin(props) {
         }
     }
 
-    function checkValidReservation(reservationData) {
-        var valid = true;
+    function checkValidReservation(reservationData, editing) {
+        let valid = true;
 
-        var startTimeRaw = (reservationData.timeStart).substring(0,(reservationData.timeStart).length - 2);
-        var startTimeAmOrPM = (reservationData.timeStart).substring((reservationData.timeStart).length - 2);
-        var startTimeHour = startTimeRaw.split(':')[0];
-        var startTimeMinutes = startTimeRaw.split(':')[1];
-        var durationHours = parseInt(reservationData.duration.toString().split('.')[0]);
-        var durationMinutes = parseInt(parseFloat("."+reservationData.duration.toString().split('.')[1]) * 60);
+        let time_start = moment(reservationData.timeStart, 'H:mm a');
+        let duration = moment.duration(reservationData.duration, 'hours');
+        let time_end = moment(time_start).add(duration);
 
-        var endTimeAmOrPM = startTimeAmOrPM;
-        var endTimeHour = parseInt(startTimeHour) + parseInt(durationHours);
-        var endTimeMinutes = parseInt(startTimeMinutes) + parseInt(durationMinutes);
-
-        if(endTimeMinutes >= 60) {
-            endTimeHour += parseInt(endTimeMinutes / 60);
-            endTimeMinutes = parseInt(parseFloat("."+parseFloat(endTimeMinutes / 60).toString().split('.')[1]) * 60);
-
-            if(isNaN(endTimeMinutes)) {
-                endTimeMinutes = '00';
-            }
-        }
-
-        if(endTimeHour > 12) {
-            endTimeHour -= 12;
-            endTimeAmOrPM = 'pm'
-        }
-
-        reservations.forEach((res) => {
-            var resStartTimeRaw = (res.timeStart).substring(0,(res.timeStart).length - 2);
-            var resAmOrPM = (res.timeStart).substring((res.timeStart).length - 2);
-            var resTimeHour = resStartTimeRaw.split(':')[0];
-            var resTimeMinutes = resStartTimeRaw.split(':')[1];
-            var resDurationHours = parseInt(res.duration.toString().split('.')[0]);
-            var resDurationMinutes = parseInt(parseFloat("."+res.duration.toString().split('.')[1]) * 60);
-
-            var resEndTimeAmOrPM = resAmOrPM;
-            var resEndTimeHour = parseInt(resTimeHour) + parseInt(resDurationHours);
-            var resEndTimeMinutes = parseInt(resTimeMinutes) + parseInt(resDurationMinutes);
-
-            if(resEndTimeMinutes >= 60) {
-                resEndTimeHour += parseInt(resEndTimeMinutes / 60);
-                resEndTimeMinutes = parseInt(parseFloat("."+parseFloat(resEndTimeMinutes / 60).toString().split('.')[1]) * 60);
-
-                if(isNaN(resEndTimeMinutes)) {
-                    resEndTimeMinutes = '00';
-                }
-            }
-
-            if(resEndTimeHour > 12) {
-                resEndTimeHour -= 12;
-                resEndTimeAmOrPM = 'pm'
-            }
-
-            if(res.date == reservationData.date) {
-                if(res.court_id.includes(reservationData.court_id)) {
-                    var resBufferStart = convertTo24Hour(res.timeStart);
-                    var resBufferStartHours = parseInt(resBufferStart.split(':')[0]);
-                    var resBufferStartMinutes = parseInt(resBufferStart.split(':')[1]);
-
-                    var resBufferEnd = convertTo24Hour(resEndTimeHour+":"+resEndTimeMinutes+resEndTimeAmOrPM);
-                    var resBufferEndHours = parseInt(resBufferEnd.split(':')[0]);
-                    var resBufferEndMinutes = parseInt(resBufferEnd.split(':')[1]);
-
-                    var reqBufferStart = convertTo24Hour(reservationData.timeStart);
-                    var reqBufferStartHours = parseInt(reqBufferStart.split(':')[0]);
-                    var reqBufferStartMinutes = parseInt(reqBufferStart.split(':')[1]);
-
-                    var reqBufferEnd = convertTo24Hour(endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
-                    var reqBufferEndHours = parseInt(reqBufferEnd.split(':')[0]);
-                    var reqBufferEndMinutes = parseInt(reqBufferEnd.split(':')[1]);
-
-                    var existingStart = parseFloat(resBufferStartHours+parseFloat(resBufferStartMinutes/60));
-                    var existingEnd = existingStart + res.duration;
-
-                    var requestStart = parseFloat(reqBufferStartHours+parseFloat(reqBufferStartMinutes/60));
-                    var requestEnd = requestStart + reservationData.duration;
-
-                    if(existingStart < requestEnd && existingEnd > requestStart) {
-                        valid = false;
-                    }
-                }
-            }
-        });
+        // console.log("Start: "+time_start.format('H:mm')+", End: "+time_end.format('H:mm'));
 
         if(isWeekday(reservationData.date)) {
-            if(endTimeHour >= 9 && endTimeAmOrPM == "pm") {
-                if(endTimeMinutes == "00" && endTimeHour == 9) {
-                    valid = true;
-                }
-                else {
-                    valid = false;
+            if(!time_start.isBetween(timeOpen,timeClosedWeek) || !time_end.isBetween(timeOpen,timeClosedWeek)) {
+                if(!time_start.isSame(timeOpen) && !time_end.isSame(timeClosedWeek)) {
+                    return false;
                 }
             }
         }
         else {
-            if(endTimeHour >= 6 && endTimeAmOrPM == "pm") {
-                if(endTimeMinutes == "00" && endTimeHour == 6) {
-                    valid = true;
-                }
-                else {
-                    valid = false;
+            if(!time_start.isBetween(timeOpen,timeClosedWeekend) || !time_end.isBetween(timeOpen,timeClosedWeekend)) {
+                if(!time_start.isSame(timeOpen) && !time_end.isSame(timeClosedWeekend)) {
+                    return false;
                 }
             }
         }
 
-        return valid;
-    }
-
-    function checkValidReservationEdit(reservationData) {
-        var valid = true;
-
-        var startTimeRaw = (reservationData.timeStart).substring(0,(reservationData.timeStart).length - 2);
-        var startTimeAmOrPM = (reservationData.timeStart).substring((reservationData.timeStart).length - 2);
-        var startTimeHour = startTimeRaw.split(':')[0];
-        var startTimeMinutes = startTimeRaw.split(':')[1];
-        var durationHours = parseInt(reservationData.duration.toString().split('.')[0]);
-        var durationMinutes = parseInt(parseFloat("."+reservationData.duration.toString().split('.')[1]) * 60);
-
-        var endTimeAmOrPM = startTimeAmOrPM;
-        var endTimeHour = parseInt(startTimeHour) + parseInt(durationHours);
-        var endTimeMinutes = parseInt(startTimeMinutes) + parseInt(durationMinutes);
-
-        if(endTimeMinutes >= 60) {
-            endTimeHour += parseInt(endTimeMinutes / 60);
-            endTimeMinutes = parseInt(parseFloat("."+parseFloat(endTimeMinutes / 60).toString().split('.')[1]) * 60);
-
-            if(isNaN(endTimeMinutes)) {
-                endTimeMinutes = '00';
-            }
-        }
-
-        if(endTimeHour > 12) {
-            endTimeHour -= 12;
-            endTimeAmOrPM = 'pm'
-        }
-
-        reservations.forEach((res) => {
-            var resStartTimeRaw = (res.timeStart).substring(0,(res.timeStart).length - 2);
-            var resAmOrPM = (res.timeStart).substring((res.timeStart).length - 2);
-            var resTimeHour = resStartTimeRaw.split(':')[0];
-            var resTimeMinutes = resStartTimeRaw.split(':')[1];
-            var resDurationHours = parseInt(res.duration.toString().split('.')[0]);
-            var resDurationMinutes = parseInt(parseFloat("."+res.duration.toString().split('.')[1]) * 60);
-
-            var resEndTimeAmOrPM = resAmOrPM;
-            var resEndTimeHour = parseInt(resTimeHour) + parseInt(resDurationHours);
-            var resEndTimeMinutes = parseInt(resTimeMinutes) + parseInt(resDurationMinutes);
-
-            if(resEndTimeMinutes >= 60) {
-                resEndTimeHour += parseInt(resEndTimeMinutes / 60);
-                resEndTimeMinutes = parseInt(parseFloat("."+parseFloat(resEndTimeMinutes / 60).toString().split('.')[1]) * 60);
-
-                if(isNaN(resEndTimeMinutes)) {
-                    resEndTimeMinutes = '00';
-                }
-            }
-
-            if(resEndTimeHour > 12) {
-                resEndTimeHour -= 12;
-                resEndTimeAmOrPM = 'pm'
-            }
-
-            if(res.id != reservationData.id) {
+        // Make sure the reservation doesn't overlap with any other reservations
+        reservations.forEach((res, idx) => {
+            if(!editing) {
                 if(res.date == reservationData.date) {
                     if(res.court_id.includes(reservationData.court_id)) {
-                        var resBufferStart = convertTo24Hour(res.timeStart);
-                        var resBufferStartHours = parseInt(resBufferStart.split(':')[0]);
-                        var resBufferStartMinutes = parseInt(resBufferStart.split(':')[1]);
+                        var resStartTime = moment(res.timeStart, 'H:mm a');
+                        var resDuration = moment.duration(res.duration, 'hours');
+                        var resEndTime = moment(resStartTime).add(resDuration);
     
-                        var resBufferEnd = convertTo24Hour(resEndTimeHour+":"+resEndTimeMinutes+resEndTimeAmOrPM);
-                        var resBufferEndHours = parseInt(resBufferEnd.split(':')[0]);
-                        var resBufferEndMinutes = parseInt(resBufferEnd.split(':')[1]);
+                        if(time_start.isBetween(resStartTime,resEndTime) || time_end.isBetween(resStartTime,resEndTime)) {
+                            valid = false;
+                        }
     
-                        var reqBufferStart = convertTo24Hour(reservationData.timeStart);
-                        var reqBufferStartHours = parseInt(reqBufferStart.split(':')[0]);
-                        var reqBufferStartMinutes = parseInt(reqBufferStart.split(':')[1]);
-    
-                        var reqBufferEnd = convertTo24Hour(endTimeHour+":"+endTimeMinutes+endTimeAmOrPM);
-                        var reqBufferEndHours = parseInt(reqBufferEnd.split(':')[0]);
-                        var reqBufferEndMinutes = parseInt(reqBufferEnd.split(':')[1]);
-    
-                        var existingStart = parseFloat(resBufferStartHours+parseFloat(resBufferStartMinutes/60));
-                        var existingEnd = existingStart + res.duration;
-    
-                        var requestStart = parseFloat(reqBufferStartHours+parseFloat(reqBufferStartMinutes/60));
-                        var requestEnd = requestStart + reservationData.duration;
-    
-                        if(existingStart < requestEnd && existingEnd > requestStart) {
+                        if(time_start.isSame(resStartTime) || time_end.isSame(resEndTime)) {
                             valid = false;
                         }
                     }
                 }
             }
-        });
-
-        if(isWeekday(reservationData.date)) {
-            if(endTimeHour >= 9 && endTimeAmOrPM == "pm") {
-                if(endTimeMinutes == "00" && endTimeHour == 9) {
-                    valid = true;
+            else {
+                if(res.id != reservationData.id) {
+                    if(res.date == reservationData.date) {
+                        if(res.court_id.includes(reservationData.court_id)) {
+                            var resStartTime = moment(res.timeStart, 'H:mm a');
+                            var resDuration = moment.duration(res.duration, 'hours');
+                            var resEndTime = moment(resStartTime).add(resDuration);
+        
+                            if(time_start.isBetween(resStartTime,resEndTime) || time_end.isBetween(resStartTime,resEndTime)) {
+                                valid = false;
+                            }
+        
+                            if(time_start.isSame(resStartTime) || time_end.isSame(resEndTime)) {
+                                valid = false;
+                            }
+                        }
+                    }
                 }
-                else {
-                    valid = false;
-                }
-            }
-        }
-        else {
-            if(endTimeHour >= 6 && endTimeAmOrPM == "pm") {
-                if(endTimeMinutes == "00" && endTimeHour == 6) {
-                    valid = true;
-                }
-                else {
-                    valid = false;
-                }
-            }
-        }
+            } 
+        })
 
         return valid;
-    }
-
-    // Borrowed from https://stackoverflow.com/a/17555888
-    function convertTo24Hour(time) {
-        var hours = parseInt(time.substr(0, 2));
-        if(time.indexOf('am') != -1 && hours == 12) {
-            time = time.replace('12', '0');
-        }
-        if(time.indexOf('pm')  != -1 && hours < 12) {
-            time = time.replace(hours, (hours + 12));
-        }
-        return time.replace(/(am|pm)/, '');
     }
 
     function isWeekday(date) {
@@ -1453,13 +1272,7 @@ function ReserveAdmin(props) {
         // Empty root element. The return can have only one root element
         <>
             <div className="container-reserve">
-                {/* Variables can be inserted inside of brackets as shown below */}
                 <div className="reservation-content-title">
-                    {/* <div className="court-back-button"
-                        onClick={() => {
-                            handleCourtBack();
-                        }}
-                    ></div> */}
                     {courtsNumberArray.map((val, idx) => {
                         return (
                             <span
@@ -1474,11 +1287,6 @@ function ReserveAdmin(props) {
                             </span>
                         )
                     })}
-                    {/* <div className="court-next-button"
-                        onClick={() => {
-                            handleCourtNext();
-                        }}
-                    ></div> */}
                 </div>
                 <div className="reserve-form-container">
                     <div className="table-labels-container">

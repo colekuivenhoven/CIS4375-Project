@@ -2,7 +2,7 @@
 git add .
 
 // Commit local repo with message
-git commit -m "Added alert system and 'number of people' attribute to reservations. Hid IP address on verification."
+git commit -m "Recreated reservation verification system."
 
 // Push to remote repo
 git push -u origin master

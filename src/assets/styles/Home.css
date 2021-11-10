@@ -140,12 +140,14 @@
     font-size: 2vmin;
     background-color: rgb(255, 200, 60);
     color: rgba(255,255,255,0.9);
-    border-radius: 5vmin;
+    border-radius: 15vmin;
     padding: 1vmin;
     margin-left: 0vmin;
     margin-right: 1vmin;
     cursor: pointer;
     text-decoration: none;
+    padding-left: 2vmin;
+    padding-right: 2vmin;
     transition: all 0.15s linear;
 }
 
@@ -158,11 +160,13 @@
     font-size: 2vmin;
     background-color: rgba(0,0,0,0.05);
     color: rgba(0,0,0,0.3);
-    border-radius: 5vmin;
+    border-radius: 15vmin;
     padding: 1vmin;
     margin-right: auto;
     cursor: pointer;
     text-decoration: none;
+    padding-left: 2vmin;
+    padding-right: 2vmin;
     transition: all 0.15s linear;
 }
 

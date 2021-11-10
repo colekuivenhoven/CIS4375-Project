@@ -92,6 +92,17 @@ function Reports() {
             `,
         },
         {
+            title: `Today's Reservations(New)`,
+            description: `This report will show the number of customer reservations at the end of the day`,
+            category: `Reservation`,
+            query: `
+                SELECT USER.User_firstname, USER.User_lastname, USER.User_phone, RESERVATION.Reservation_time, NOW() - INTERVAL 1 DAY AS Date
+                FROM RESERVATION
+                JOIN USER ON USER.User_id = RESERVATION.Customer_id
+                WHERE RESERVATION.Reservation_date = date_format(NOW() - INTERVAL 1 DAY, '%m/%e/%Y')
+            `,
+        },
+        {
             title: `Anticipated Reservations`,
             description: `This report will show the number of future customer reservations that have been made`,
             category: `Reservation`,

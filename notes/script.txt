@@ -1,0 +1,26 @@
+Pre:
+    1. Media carousel to give visitors an idea of what they type of facilities that are available.
+    2. Quick and easily accessible information about what our system offers.
+    3. Quick-access buttons to commonly used features on the application.
+
+Customer: 
+    1. Before signing up, a potential customer might want to know a little bit more about the tennis 
+       courts. (Go to ABOUT page)
+
+    2. An existing customer will know that this page is where they can find the tennis court number that 
+       they'll be playing on.
+
+    3. When a customer decides that they want to book a reservation with the tennis court, they'll 
+       need to create an account so that the reservation can be tracked and maintained by the system.
+
+    4. The customer will first need to click the 'Login' button to register for an account. Once they've
+       created an account with valid information, they'll need to verify their email address by clicking
+       the link in the email they receive from our system.
+
+    5. Once they've verified their email address, they'll be able to log in to their account and make a 
+       reservation by clicking the 'Reserve' button.
+
+Employee:
+
+
+Admin:

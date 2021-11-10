@@ -80,11 +80,11 @@ function Home(props) {
                 <div className="new-home-content">
                     <div className="main-text-panel">
                         <div className="main-text-title">Schedule Your Next Tennis Session With Us</div>
-                        <div className="main-text-body">The Homer Ford Tennis Center is the perfect place to play tennis. Whether it's a tournament, 
+                        <div className="main-text-body" style={{fontSize: "1.75vmin"}}>The Homer Ford Tennis Center is the perfect place to play tennis. Whether it's a tournament, 
                                                         a practice game, or even a couples' date night, the Homer Ford Tennis Center is the place for you!
                         </div>
                         <div className="main-text-body-button-container">
-                            <Link className="main-text-body-button" to="/reserve">Schedule Now</Link>
+                            <Link className="main-text-body-button" to={loggedIn ? "/reserve" : "/login"}>Schedule Now</Link>
                             <Link className="main-text-body-button-2" to="/about">More Info</Link>
                         </div>
                     </div>

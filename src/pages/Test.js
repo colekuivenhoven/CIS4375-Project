@@ -9,9 +9,11 @@ import {
     Switch,
     Route,
     Link,
-    useParams
+    useParams,
+    useHistory
   } from "react-router-dom";
 import bcrypt from "bcryptjs";
+import validator from 'validator';
 
 // Imorting the components used in this page
 import AlertMessage from '../components/AlertMessage';
@@ -40,6 +42,7 @@ function Test(props) {
     const [testGetAnnouncements, setTestGetAnnouncements] = useState('0');
     const [editing, setEditing] = useState(false);
     const [deleteConfirm, setDeleteConfirm] = useState(false);
+    const history = useHistory();
 
     let { id } = useParams();
     const [guessMatched, setGuessMatched] = useState('false');
@@ -66,9 +69,10 @@ function Test(props) {
         testDataRaw = response[Object.keys(response)[1]].reverse();
         testDataConverted = [];
 
-        if (!gotTestData) {
-            convertTestData();
-        }
+        // if (!gotTestData) {
+        //     convertTestData();
+        // }
+        convertTestData();
     }
 
     function selectItem(index) {
@@ -87,6 +91,25 @@ function Test(props) {
                 val.setAttribute("style", "border: ")
             })
         }
+    }
+
+    function setUser(user_id, users) {
+        let select_user = users.find(user => user.User_id == user_id);
+
+        if(select_user) {
+            setSelectedUser(select_user);
+            resetSelected();
+            selectItem(users.indexOf(select_user));
+            handleEdit(select_user);
+        }
+        // else {
+        //     sendAlertMessage("User not found", "Bad");
+        // }
+    }
+
+    function fastRefresh() {
+        history.push("/temp");
+        history.goBack();
     }
 
     function convertTestData() {
@@ -116,8 +139,12 @@ function Test(props) {
         });
 
         setTestData(testDataConverted);
-        gotTestData = true;
         resetSelected();
+        if (!gotTestData) {
+            setUser(id, testDataRaw)
+        }
+
+        gotTestData = true;
     }
 
     function addUser(data) {
@@ -131,7 +158,6 @@ function Test(props) {
         .then(response => response.json())
         .then(response => {
             if(response.message.includes("Success")) {
-                gotTestData = false;
                 getTestData();
                 resetSelected();
                 sendAlertMessage("Successfully Added User!", "Good");
@@ -153,7 +179,7 @@ function Test(props) {
         .then(response => response.json())
         .then(response => {
             if(response.message.includes("Success")) {
-                gotTestData = false;
+                // gotTestData = false;
                 getTestData();
                 handleCancel();
                 sendAlertMessage("Successfully Edited User!", "Good");
@@ -174,9 +200,88 @@ function Test(props) {
         })
         .then(response => response.json())
         .then(() => {
-            gotTestData = false;
             getTestData();
         })
+    }
+
+    function isValid(userdata, includesPassword) {
+        let formdata = {
+            email: userdata.email,
+            phone: userdata.phone,
+            firstname: userdata.firstname,
+            lastname: userdata.lastname,
+            password1: includesPassword ? userdata.password : null,
+            password2: includesPassword ? userdata.password : null,
+            announcements: userdata.getannouncements,
+        }
+
+        let validationTest = Object.values(formdata).map((value, index) => {
+            // Email validation
+            if(index == 0) {
+                if(!validator.isEmail(value)) {
+                    return false;
+                }
+                return true;
+            }
+
+            // Phone validation
+            if(index == 1) {
+                let regex = /^\d{3}-\d{3}-\d{4}$/;
+                if(value.match(regex) == null) {
+                    return false;
+                }
+                return true;
+            }
+
+            // Firstname validation
+            if(index == 2) {
+                let regex = /^[a-zA-Z]{1,50}$/;
+                if(value.match(regex) == null) {
+                    return false;
+                }
+                return true;
+            }
+
+            // Lastname validation
+            if(index == 3) {
+                let regex = /^[a-zA-Z]{1,50}$/;
+                if(value.match(regex) == null) {
+                    return false;
+                }
+                return true;
+            }
+
+            // Password 1 validation
+            if(includesPassword) {
+                if(index == 4) {
+                    let regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+                    if(value.match(regex) == null) {
+    
+                        return false;
+                    }
+                    return true;
+                }
+    
+                // Password 2 validation
+                if(index == 5) {
+                    if(value != formdata.password1) {
+                        return false;
+                    }
+                    return true;
+                }
+            }
+
+            // Announcement validation
+            if(index == 6) {
+                return true;
+            }
+        });
+
+        if(validationTest.includes(false)) {
+            return false;
+        }
+
+        return true;
     }
 
     // Handling functions
@@ -192,8 +297,8 @@ function Test(props) {
             getannouncements: testGetAnnouncements
         }
 
-        if(data.firstname == '' || data.lastname == '' || data.password == '' || data.phone == '' || data.email == '') {
-            sendAlertMessage("One of the required fields is blank!", "Bad");
+        if(!isValid(data, true)) {
+            sendAlertMessage("Invalid information entered!", "Bad");
         }
         else {
             addUser(data)
@@ -212,6 +317,7 @@ function Test(props) {
     }
 
     function handleUserUpdate(includesPassword) {
+        console.log(testGetAnnouncements);
         if (includesPassword) {
             var data = {
                 firstname: testFirstname,
@@ -221,10 +327,11 @@ function Test(props) {
                 type: testType,
                 status: testStatus,
                 password: testPassword,
-                id: selectedUser.User_id
+                id: selectedUser.User_id,
+                getannouncements: testGetAnnouncements
             }
     
-            if(data.firstname == '' || data.lastname == '' || data.phone == '' || data.email == '' || data.password == '') {
+            if(!isValid(data, true)) {
                 sendAlertMessage("One of the required fields is blank!", "Bad");
             }
             else {
@@ -239,11 +346,12 @@ function Test(props) {
                 email: testEmail,
                 type: testType,
                 status: testStatus,
-                id: selectedUser.User_id
+                id: selectedUser.User_id,
+                getannouncements: testGetAnnouncements
             }
     
-            if(data.firstname == '' || data.lastname == '' || data.phone == '' || data.email == '') {
-                sendAlertMessage("One of the required fields is blank!", "Bad");
+            if(!isValid(data, false)) {
+                sendAlertMessage("Invalid information entered!", "Bad");
             }
             else {
                 editUser(data)
@@ -291,15 +399,6 @@ function Test(props) {
         setSelectedUser(null);
     }
 
-    function passwordGuess(guess, hashedAnswer) {
-        if (bcrypt.compareSync(guess, hashedAnswer)) {
-            setGuessMatched('true');
-        }
-        else {
-            setGuessMatched('false');
-        }
-    }
-
     return (
         // Empty root element. The return can have only one root element
         <>
@@ -334,7 +433,6 @@ function Test(props) {
                         </div>
                     </div>
                     <div className="test-object-container">
-                        
                         <div style={{display: 'flex', flexDirection: 'column', width: '100%', transition: 'all 0.25s linear'}}>{testData}</div>
                     </div>
                     <div className="test-add-container">
@@ -477,7 +575,7 @@ function Test(props) {
                                 </div> */}
                             </div>
                             
-                            <div 
+                            {(currentUser.User_id != selectedUser.User_id) && <div 
                                 className={`info-delete ${deleteConfirm ? "selected" : ""}`}
                                 onClick={() => {
                                     // handleDelete(selectedUser.User_id);
@@ -518,7 +616,7 @@ function Test(props) {
                                         Cancel
                                     </div>
                                 </>}
-                            </div>
+                            </div>}
                         </>
                     }
                     {selectedUser == null && 

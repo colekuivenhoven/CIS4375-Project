@@ -402,7 +402,7 @@ function Login(props) {
                                 <div className="register-input-tip-container">Must match the password entered above.</div>
                             </div>
                             <div className="register-getannouncements-checkbox-container">
-                                <input type="checkbox" className="register-getannouncements-checkbox" defaultChecked={true} />
+                                <input type="checkbox" className="register-getannouncements-checkbox" defaultChecked={false} />
                                 <span className="register-input-label" style={{ fontSize: '1.5vmin' }}>Receive Announcements?</span>
                             </div>
                             <button className="register-submit-button" style={{height: '5vmin', marginBottom: '1vmin', border: "none"}}>

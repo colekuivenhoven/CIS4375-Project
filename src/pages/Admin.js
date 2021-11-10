@@ -68,10 +68,10 @@ function Admin(props) {
 
     async function getPieData() {
         let query = `
-            SELECT USER.User_email, COUNT(RESERVATION.Customer_id) AS total_reservations
+            SELECT USER.User_id, COUNT(RESERVATION.Customer_id) AS total_reservations
             FROM USER
             JOIN RESERVATION ON USER.User_id = RESERVATION.Customer_id
-            GROUP BY USER.User_email
+            GROUP BY USER.User_id
             ORDER BY total_reservations DESC
             LIMIT 5
         `;
@@ -86,7 +86,7 @@ function Admin(props) {
         
         let converted_chart_data = response.report.map((data, idx) => {
             return {
-                x: (data.User_email).substring(0, (data.User_email).indexOf('@')),
+                x: `ID: ${data.User_id}`,
                 y: data.total_reservations
             }
         })
@@ -266,7 +266,7 @@ function Admin(props) {
                         <div className="container-admin2-content-item-body-user">
                             {sortObjectList(userListFinal, userListSortType, userListSort).map((user,index) => {
                                 return (
-                                    <Link key={index} className="container-user-item" to="/test"
+                                    <Link key={index} className="container-user-item" to={"/test/"+user.User_id}
                                         // style={{
                                         //     transform: userItemStyle.x
                                         //         .to({

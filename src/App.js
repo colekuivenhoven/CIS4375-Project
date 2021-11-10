@@ -111,7 +111,7 @@ function App() {
           <Route path="/register">
             <Register isMobile={isMobile} currentUser={currentUser} />
           </Route>
-          <Route path="/test">
+          <Route path="/test/:id">
             <Test isMobile={isMobile} currentUser={currentUser} />
           </Route>
           <Route path="/practice">
