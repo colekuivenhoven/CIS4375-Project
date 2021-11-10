@@ -88,9 +88,10 @@ function About(props) {
                 
                 <div className="test-container">
                     
-                    <div class="main-text-panel">
-                    
-                        FAQ 
+                <div class = "split left">    
+           <br/>    
+           <br/> 
+FAQ 
 <br/><strong>
 Are the courts open to the public? </strong>
 <br/>
@@ -148,11 +149,14 @@ If you have any further questions, please contact our manager:
 <br/>
 Roger White: (832)373-8798  </strong>
                         
-
+</div> 
                     
-                    
-                    </div>
-                    
+                   <div class="split right">
+                       
+                       <div class="map" onclick="window.open('anotherpage.html', _blank);"></div>
+                       <div class="map2" onclick="window.open('anotherpage.html', _blank);"></div>
+                       
+                       </div> 
                     
                 </div>
                 

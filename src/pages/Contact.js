@@ -108,19 +108,9 @@ function Contact(props) {
                 </div>
                 <div>
 
-                    <div className="row-container">
-
-                            <div className="map"></div>
-            
-
-                            <div className="map2"></div>
-
-                        
- 
+                    
                 </div>
-                </div>
-                <div className="map"></div>
-                <div className="map2"></div>
+     
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}
             </div>
             <Loading timeRange={[250, 500]} />
