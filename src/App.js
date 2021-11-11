@@ -1,6 +1,6 @@
 // All imports must be done before the main function
   // Importing main CSS file. This CSS file can be used in other pages without importing it in each file.
-import './assets/styles/App.css';
+  import './assets/styles/App.css';
 
   // Importing 'pages' that will be used
 import Home from './pages/Home.js';
@@ -25,9 +25,13 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import socketIOClient from "socket.io-client";
 
 // Importing common files used in react
 import React, { useEffect, useRef, useState, useLayoutEffect } from "react";
+
+const socket_ip = "http://3.218.225.62:4001";
+const socket = socketIOClient(socket_ip);
 
 // Root application function
 function App() {
@@ -45,6 +49,14 @@ function App() {
     updateSize();
     return () => window.removeEventListener('resize', updateSize);
   }, []);
+
+  if(loggedIn) {
+    socket.on(`logout-user-${currentUser.User_id}`, () => {
+      window.sessionStorage.removeItem('current_user');
+      window.sessionStorage.removeItem('current_user_object');
+      window.location.href = '/';
+    });
+  }
 
   return (
     // Root 'Router' element for switching between pages. The return can have only one root element.
@@ -100,10 +112,10 @@ function App() {
             <Contact isMobile={isMobile} />
           </Route>
           <Route path="/reserve">
-            <ReserveCustomer isMobile={isMobile} />
+            <ReserveCustomer isMobile={isMobile} socket={socket}/>
           </Route>
           <Route path="/reserveadmin">
-            <ReserveAdmin isMobile={isMobile} />
+            <ReserveAdmin isMobile={isMobile} socket={socket}/>
           </Route>
           <Route path="/login">
             <Login isMobile={isMobile} />
@@ -112,7 +124,7 @@ function App() {
             <Register isMobile={isMobile} currentUser={currentUser} />
           </Route>
           <Route path="/test/:id">
-            <Test isMobile={isMobile} currentUser={currentUser} />
+            <Test isMobile={isMobile} currentUser={currentUser} socket={socket}/>
           </Route>
           <Route path="/practice">
             <Practice isMobile={isMobile} currentUser={currentUser} />

@@ -86,10 +86,10 @@
 .test-add-input {
     border: 1px solid rgba(0, 0, 0, 0.1);
     outline: none;
-    width: calc(100% - 0.5vmin);
+    width: calc(100%);
     border-radius: 0.5vmin;
     padding-left: 0.5vmin;
-    height: 2vmin;
+    height: 3vmin;
     transition: all 0.15s linear;
 }
 
