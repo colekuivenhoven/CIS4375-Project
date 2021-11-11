@@ -107,8 +107,13 @@ function Contact(props) {
                     
                 </div>
                 <div>
-
+                <form>
+                        <p>Please submit feedback about your experience!</p>
                     
+                        <textarea id="feedback" name="feedback" rows="4" cols="50"></textarea>
+                        
+                    </form>
+                    <input type="submit" value="Submit"></input>
                 </div>
      
                 {loggedIn && <div className="user-welcome">Welcome back, <b style={{marginLeft: '0.5vmin'}}>{currentUser.User_firstname}</b>!</div>}

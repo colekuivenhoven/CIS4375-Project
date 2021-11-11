@@ -22,7 +22,7 @@
     background-position: top;
     float:none;
     position: absolute;
-    background-color: rgb(126, 41, 41);
+  
 }
 .map2{
     background-image: url('../images/team-images/map2.png');
@@ -33,7 +33,7 @@
     height: 60%;
     float:none;
     position: absolute;
-    background-color: rgb(126, 41, 41);
+ 
    bottom: 0;
 
    
